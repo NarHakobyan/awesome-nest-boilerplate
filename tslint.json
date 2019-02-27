@@ -12,7 +12,6 @@
     "no-unused-expression": true
   },
   "rules": {
-    "prettier": true,
     "no-angle-bracket-type-assertion": false,
     "adjacent-overload-signatures": true,
     "array-type": [
