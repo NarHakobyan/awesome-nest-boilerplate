@@ -1,0 +1,19 @@
+version: "3"
+services:
+  app:
+    env_file:
+      - .env
+    container_name: pop_migrate
+    restart: always
+    build: .
+    ports:
+      - "$PORT:$PORT"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./mongo/data:/data/db
+    ports:
+      - "27017:27017"
