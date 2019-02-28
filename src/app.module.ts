@@ -1,6 +1,5 @@
-import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module, ValidationPipe, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 
 import { AuthController } from './controllers/auth.controller';
 import { ConfigService } from './providers/config.service';
@@ -17,16 +16,7 @@ import { CoreModule } from './core.module';
         }),
     ],
     controllers: [AuthController],
-    providers: [
-        {
-            provide: APP_PIPE,
-            useValue: new ValidationPipe({
-                whitelist: true, exceptionFactory: (errors) => {
-                errors[0].constraints.IsString = 'string';
-                },
-            }),
-        },
-    ],
+    providers: [],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {

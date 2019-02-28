@@ -5,6 +5,7 @@ import { Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './viveo-swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 const env = process.env.NODE_ENV || 'development';
 dotEnv.config({ path: env, debug: env === 'development' });
@@ -13,6 +14,10 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, { cors: true });
     app.set('trust proxy', true);
     app.use(morgan('combined'));
+
+    app.useGlobalPipes(new ValidationPipe({
+        whitelist: true,
+    }));
 
     app.connectMicroservice({
         transport: Transport.TCP,

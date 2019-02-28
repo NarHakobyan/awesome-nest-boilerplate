@@ -8,10 +8,9 @@
         "build": "tsc -p tsconfig.build.json",
         "format": "prettier --write \"src/**/*.ts\"",
         "start": "ts-node -r tsconfig-paths/register src/main.ts",
-        "start:dev": "nodemon --config nodemon.viveo.json",
-        "debug:dev": "nodemon --config nodemon-debug.viveo.json",
-        "typeorm:migration:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig.viveo -d src/migrations -n",
-        "start:debug": "nodemon --config nodemon-debug.json",
+        "start:dev": "nodemon --config nodemon.json",
+        "debug:dev": "nodemon --config nodemon-debug.json",
+        "typeorm:migration:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig.js -d src/migrations -n",
         "prestart:prod": "rimraf dist && npm run build",
         "start:prod": "node dist/main.js",
         "lint": "tslint -p tsconfig.json -c tslint.json",
@@ -96,8 +95,8 @@
         }
     },
     "lint-staged": {
-        "*.ts": [
-            "npm run lint:fix",
+        "*.@(ts)": [
+            "tslint --fix -p .",
             "git add"
         ]
     }

@@ -13,7 +13,7 @@ export class AuthController {
         public readonly userRepository: Repository<UserEntity>,
     ) {}
 
-    @Post()
+    @Post('login')
     @HttpCode(HttpStatus.ACCEPTED)
     async userLogin(@Body() userLoginDto: UserLoginDto) {
         const user = await this.userRepository.findOne({ email: userLoginDto.email });

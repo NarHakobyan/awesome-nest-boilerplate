@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["src/**/*.spec.ts"],
-  "exec": "ts-node --inspect=9229 -r tsconfig-paths/register -P tsconfig.json src/main.ts"
+  "exec": "node --inspect -r ts-node/register src/main.ts"
 }
