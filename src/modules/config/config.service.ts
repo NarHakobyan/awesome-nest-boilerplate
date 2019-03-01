@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import * as dotenvExpand from 'dotenv-expand';
-import { ITypeOrmConfig } from '../interfaces/typeorm-config.interface';
+import { ITypeOrmConfig } from '../../interfaces/typeorm-config.interface';
 
 export class ConfigService {
     private readonly _config: { [property: string]: string };
@@ -30,7 +30,7 @@ export class ConfigService {
         return {
             type: 'postgres',
             host: this.get('POSTGRES_HOST'),
-            port: +this.get('POSTGRES_PORT'),
+            port: this.getNumber('POSTGRES_PORT'),
             username: this.get('POSTGRES_USERNAME'),
             password: this.get('POSTGRES_PASSWORD'),
             database: this.get('POSTGRES_DATABASE'),

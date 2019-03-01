@@ -20,6 +20,7 @@
     ],
     "arrow-parens": true,
     "arrow-return-shorthand": true,
+    "no-multi-spaces": true,
     "ban-comma-operator": true,
     "class-name": true,
     "comment-format": [
