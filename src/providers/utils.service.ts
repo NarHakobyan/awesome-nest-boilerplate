@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UtilsService {
@@ -18,5 +19,24 @@ export class UtilsService {
         }
 
         return new model(user);
+    }
+
+    /**
+     * generate hash from password or string
+     * @param {string} password
+     * @returns {Promise<string>}
+     */
+    generateHash(password: string): Promise<string> {
+        return bcrypt.hash(password, 10);
+    }
+
+    /**
+     * validate text with hash
+     * @param {string} password
+     * @param {string} hash
+     * @returns {Promise<boolean>}
+     */
+    validateHash(password: string, hash: string = ''): Promise<boolean> {
+        return bcrypt.compare(password, hash);
     }
 }

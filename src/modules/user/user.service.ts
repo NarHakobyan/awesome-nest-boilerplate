@@ -6,7 +6,6 @@ import { UserDto } from '../auth/dto/UserDto';
 import { UserEntity } from './user.entity';
 import { UtilsService } from '../../providers/utils.service';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -14,7 +13,6 @@ export class UserService {
         @InjectRepository(UserEntity)
         public readonly userRepository: Repository<UserEntity>,
         public readonly utilsService: UtilsService,
-        public readonly authService: AuthService,
     ) {}
 
     /**
@@ -45,7 +43,7 @@ export class UserService {
 
     async createUser(userRegisterDto: UserRegisterDto) {
 
-        const passwordHash = await this.authService.generateHash(userRegisterDto.password);
+        const passwordHash = await this.utilsService.generateHash(userRegisterDto.password);
         const user = this.userRepository.create({ ...userRegisterDto, passwordHash });
 
         return this.userRepository.save(user);
