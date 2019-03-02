@@ -21,7 +21,7 @@ module.exports = {
   password: config.POSTGRES_PASSWORD,
   database: config.POSTGRES_DATABASE,
   entities: [
-    'src/entities/**/*.entity{.ts,.js}',
+    'src/modules/**/*.entity{.ts,.js}',
   ],
   migrations: [
     'src/migrations/*{.ts,.js}',

@@ -1,21 +1,14 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module, HttpModule } from '@nestjs/common';
-
-import { ConfigService } from './modules/config/config.service';
-import { UserEntity } from './modules/user/user.entity';
+import { Module, Global } from '@nestjs/common';
 import { UtilsService } from './providers/utils.service';
 
+const providers = [
+    UtilsService,
+];
+
+@Global()
 @Module({
-    imports: [
-        HttpModule,
-        TypeOrmModule.forFeature([
-            UserEntity,
-        ]),
-    ],
-    providers: [
-        ConfigService,
-        UtilsService,
-    ],
-    exports: [ConfigService, UtilsService],
+    providers,
+    imports: [],
+    exports: [...providers],
 })
 export class SharedModule {}

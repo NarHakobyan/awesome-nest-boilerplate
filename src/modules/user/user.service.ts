@@ -1,44 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindConditions } from 'typeorm';
+import { FindConditions } from 'typeorm';
 
 import { UserDto } from '../auth/dto/UserDto';
 import { UserEntity } from './user.entity';
 import { UtilsService } from '../../providers/utils.service';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(UserEntity)
-        public readonly userRepository: Repository<UserEntity>,
+        @InjectRepository(UserRepository)
+        public readonly userRepository: UserRepository,
         public readonly utilsService: UtilsService,
     ) {}
 
     /**
      * Find single user
      */
-    async findUser(findData: FindConditions<UserEntity>): Promise<UserEntity>;
-    async findUser(findData: FindConditions<UserEntity>, dto): Promise<UserDto>;
-    async findUser(findData: FindConditions<UserEntity>, dto: boolean = false): Promise<UserEntity | UserDto> {
+    async findUser(findData: FindConditions<UserEntity>): Promise<UserDto>;
+    async findUser(findData: FindConditions<UserEntity>, returnEntity: true): Promise<UserEntity>;
+    async findUser(findData: FindConditions<UserEntity>, returnEntity: boolean = false): Promise<UserEntity | UserDto> {
         const user = await this.userRepository.findOne(findData);
 
         if (!user) {
             return null;
         }
 
-        return dto ? this.utilsService.toDto(UserDto, user) : user;
+        return returnEntity ? user : this.utilsService.toDto(UserDto, user);
     }
 
     /**
      * Find all users
      */
-    async findUsers(findData: FindConditions<UserEntity>): Promise<UserEntity[]>;
-    async findUsers(findData: FindConditions<UserEntity>, dto): Promise<UserDto[]>;
-    async findUsers(findData: FindConditions<UserEntity>, dto: boolean = false): Promise<Array<UserEntity | UserDto>> {
+    async findUsers(findData: FindConditions<UserEntity>): Promise<UserDto[]>;
+    async findUsers(findData: FindConditions<UserEntity>, returnEntity: true): Promise<UserEntity[]>;
+    async findUsers(findData: FindConditions<UserEntity>, returnEntity = false): Promise<Array<UserEntity | UserDto>> {
         const users: UserEntity[] = await this.userRepository.find(findData);
 
-        return dto ? this.utilsService.toDto(UserDto, users) : users;
+        return returnEntity ? users : this.utilsService.toDto(UserDto, users);
     }
 
     async createUser(userRegisterDto: UserRegisterDto) {

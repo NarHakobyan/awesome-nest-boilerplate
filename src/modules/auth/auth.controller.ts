@@ -1,20 +1,19 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Controller, Post, Body, HttpCode, HttpStatus, Get, BadRequestException } from '@nestjs/common';
 import { UserLoginDto } from './dto/UserLoginDto';
-import { UserEntity } from '../user/user.entity';
-import { Repository } from 'typeorm';
 import { UserRegisterDto } from './dto/UserRegisterDto';
 import { UserService } from '../user/user.service';
 import { UtilsService } from '../../providers/utils.service';
 import { UserDto } from './dto/UserDto';
 import { AuthService } from './auth.service';
+import { UserRepository } from '../user/user.repository';
 
 @Controller('auth')
 export class AuthController {
 
     constructor(
-        @InjectRepository(UserEntity)
-        public readonly userRepository: Repository<UserEntity>,
+        @InjectRepository(UserRepository)
+        public readonly userRepository: UserRepository,
         public readonly userService: UserService,
         public readonly authService: AuthService,
         public readonly utilsService: UtilsService,
