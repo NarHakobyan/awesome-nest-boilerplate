@@ -37,7 +37,7 @@ export class ConfigService {
             entities: [__dirname + '/../../modules/**/*.entity{.ts,.js}'],
             migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
             migrationsRun: true,
-            logging: true,
+            logging: process.env.NODE_ENV === 'development',
         };
     }
 }
