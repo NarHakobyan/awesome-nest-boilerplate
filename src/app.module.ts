@@ -6,13 +6,11 @@ import { ConfigModule } from './modules/config/config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { contextMiddleware } from './middlewares';
-import { SharedModule } from './shared.module';
 
 @Module({
     imports: [
         AuthModule,
         UserModule,
-        SharedModule,
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => configService.typeOrmConfig,
