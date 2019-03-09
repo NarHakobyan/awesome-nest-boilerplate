@@ -1,9 +1,6 @@
 import { Module, Global } from '@nestjs/common';
-import { UtilsService } from './providers/utils.service';
 
-const providers = [
-    UtilsService,
-];
+const providers = [];
 
 @Global()
 @Module({

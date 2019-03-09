@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FindConditions } from 'typeorm';
 
 import { UserDto } from '../auth/dto/UserDto';
@@ -11,9 +10,7 @@ import { UserRepository } from './user.repository';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(UserRepository)
         public readonly userRepository: UserRepository,
-        public readonly utilsService: UtilsService,
     ) {}
 
     /**
@@ -28,7 +25,7 @@ export class UserService {
             return null;
         }
 
-        return returnEntity ? user : this.utilsService.toDto(UserDto, user);
+        return returnEntity ? user : UtilsService.toDto(UserDto, user);
     }
 
     /**
@@ -39,12 +36,12 @@ export class UserService {
     async findUsers(findData: FindConditions<UserEntity>, returnEntity = false): Promise<Array<UserEntity | UserDto>> {
         const users: UserEntity[] = await this.userRepository.find(findData);
 
-        return returnEntity ? users : this.utilsService.toDto(UserDto, users);
+        return returnEntity ? users : UtilsService.toDto(UserDto, users);
     }
 
-    async createUser(userRegisterDto: UserRegisterDto) {
+    async createUser(userRegisterDto: UserRegisterDto): Promise<UserEntity> {
 
-        const passwordHash = await this.utilsService.generateHash(userRegisterDto.password);
+        const passwordHash = await UtilsService.generateHash(userRegisterDto.password);
         const user = this.userRepository.create({ ...userRegisterDto, passwordHash });
 
         return this.userRepository.save(user);

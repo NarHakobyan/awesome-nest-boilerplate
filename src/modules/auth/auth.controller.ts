@@ -1,31 +1,25 @@
-import { InjectRepository } from '@nestjs/typeorm';
 import { Controller, Post, Body, HttpCode, HttpStatus, Get, BadRequestException } from '@nestjs/common';
 import { UserLoginDto } from './dto/UserLoginDto';
 import { UserRegisterDto } from './dto/UserRegisterDto';
 import { UserService } from '../user/user.service';
-import { UtilsService } from '../../providers/utils.service';
-import { UserDto } from './dto/UserDto';
 import { AuthService } from './auth.service';
-import { UserRepository } from '../user/user.repository';
+import { UserDto } from './dto/UserDto';
 
 @Controller('auth')
 export class AuthController {
 
     constructor(
-        @InjectRepository(UserRepository)
-        public readonly userRepository: UserRepository,
         public readonly userService: UserService,
         public readonly authService: AuthService,
-        public readonly utilsService: UtilsService,
     ) {}
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
     async userLogin(@Body() userLoginDto: UserLoginDto) {
-        const user = await this.authService.validateUser(userLoginDto);
+        const userEntity = await this.authService.validateUser(userLoginDto);
 
-        // TODO add JWT token
-        return this.utilsService.toDto(UserDto, user);
+        const [user, token] = await Promise.all([userEntity.toJSON(), this.authService.createToken(userEntity)]);
+        return { user, token };
     }
 
     @Post('register')
@@ -38,7 +32,7 @@ export class AuthController {
 
         const createdUser = await this.userService.createUser(userRegisterDto);
 
-        return this.utilsService.toDto(UserDto, createdUser);
+        return createdUser.toJSON();
     }
 
     @Get('me')

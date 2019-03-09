@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
-import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-@Injectable()
 export class UtilsService {
 
     /**
@@ -11,9 +9,9 @@ export class UtilsService {
      * @param {E[] | E} user
      * @returns {T[] | T}
      */
-    public toDto<T, E>(model: new (entity: E) => T, user: E): T;
-    public toDto<T, E>(model: new (entity: E) => T, user: E[]): T[];
-    public toDto<T, E>(model: new (entity: E) => T, user: E | E[]): T | T[] {
+    public static toDto<T, E>(model: new (entity: E) => T, user: E): T;
+    public static toDto<T, E>(model: new (entity: E) => T, user: E[]): T[];
+    public static toDto<T, E>(model: new (entity: E) => T, user: E | E[]): T | T[] {
         if (_.isArray(user)) {
             return user.map((u) => new model(u));
         }
@@ -26,7 +24,7 @@ export class UtilsService {
      * @param {string} password
      * @returns {Promise<string>}
      */
-    generateHash(password: string): Promise<string> {
+    static generateHash(password: string): Promise<string> {
         return bcrypt.hash(password, 10);
     }
 
@@ -36,7 +34,7 @@ export class UtilsService {
      * @param {string} hash
      * @returns {Promise<boolean>}
      */
-    validateHash(password: string, hash: string = ''): Promise<boolean> {
+    static validateHash(password: string, hash: string = ''): Promise<boolean> {
         return bcrypt.compare(password, hash);
     }
 }

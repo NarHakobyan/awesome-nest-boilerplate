@@ -1,8 +1,9 @@
 'use strict';
 
 import { UserEntity } from '../../user/user.entity';
+import { AbstractDto } from '../../../core/AbstractDto';
 
-export class UserDto {
+export class UserDto extends AbstractDto {
     readonly firstName: string;
 
     readonly lastName: string;
@@ -13,17 +14,12 @@ export class UserDto {
 
     readonly thumbnail: string;
 
-    readonly createdAt: Date;
-
-    readonly updatedAt: Date;
-
     constructor(user: UserEntity) {
+        super(user);
         this.firstName = user.firstName;
         this.lastName = user.lastName;
         this.age = user.age;
         this.email = user.email;
         this.thumbnail = user.thumbnail;
-        this.createdAt = user.createdAt;
-        this.updatedAt = user.updatedAt;
     }
 }

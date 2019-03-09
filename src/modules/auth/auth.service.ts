@@ -7,6 +7,7 @@ import { UserLoginDto } from './dto/UserLoginDto';
 import { UserNotFoundException } from '../../exceptions/user-not-found.exception';
 import { UtilsService } from '../../providers/utils.service';
 import { UserService } from '../user/user.service';
+import { UserDto } from './dto/UserDto';
 
 @Injectable()
 export class AuthService {
@@ -14,10 +15,9 @@ export class AuthService {
         public readonly jwtService: JwtService,
         public readonly configService: ConfigService,
         public readonly userService: UserService,
-        public readonly utilsService: UtilsService,
     ) { }
 
-    async createToken(user: UserEntity) {
+    async createToken(user: UserEntity | UserDto) {
         return {
             expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
             accessToken: this.jwtService.sign({ id: user.id }),
@@ -26,7 +26,7 @@ export class AuthService {
 
     async validateUser(userLoginDto: UserLoginDto): Promise<UserEntity> {
         const user = await this.userService.findUser({ email: userLoginDto.email }, true);
-        const isPasswordValid = await this.utilsService.validateHash(userLoginDto.password, user && user.passwordHash);
+        const isPasswordValid = await UtilsService.validateHash(userLoginDto.password, user && user.passwordHash);
         if (!user || !isPasswordValid) {
             throw new UserNotFoundException();
         }

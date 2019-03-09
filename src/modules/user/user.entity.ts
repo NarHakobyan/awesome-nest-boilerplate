@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column } from 'typeorm';
+
+import { AbstractEntity } from '../../core/abstract.entity';
+import { UserDto } from '../auth/dto/UserDto';
 
 @Entity({ name: 'users' })
-export class UserEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
+export class UserEntity extends AbstractEntity<UserDto> {
     @Column()
     firstName: string;
 
@@ -23,9 +23,5 @@ export class UserEntity {
     @Column({ nullable: true })
     thumbnail: string;
 
-    @CreateDateColumn({ type: 'timestamp without time zone' })
-    createdAt: Date;
-
-    @UpdateDateColumn({ type: 'timestamp without time zone' })
-    updatedAt: Date;
+    dtoClass = UserDto;
 }
