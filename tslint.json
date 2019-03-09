@@ -190,6 +190,7 @@
         ],
         "format": [
           "camelCase",
+          "PascalCase",
           "UPPER_CASE"
         ]
       },

@@ -1,25 +1,24 @@
 /* tslint:disable:quotemark object-literal-sort-keys */
 import * as dotenv from 'dotenv';
-import * as dotenvExpand from 'dotenv-expand';
-import * as fs from 'fs';
 
-const env = process.env.NODE_ENV || 'development';
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-let config = dotenv.parse(fs.readFileSync(`.${env}.env`));
-config = dotenvExpand({ parsed: config }).parsed;
+dotenv.config({
+    path: `.${process.env.NODE_ENV}.env`,
+});
 
 // Replace \\n with \n to support multiline strings in AWS
-config = Object.keys(config).reduce((object, key) => {
-  return { ...object, [key]: config[key].replace(/\\n/g, "\n") };
-}, {});
+for (const envName of Object.keys(process.env)) {
+    process.env[envName] = process.env[envName].replace(/\\n/g, '\n');
+}
 
 module.exports = {
   type: 'postgres',
-  host: config.POSTGRES_HOST,
-  port: +config.POSTGRES_PORT,
-  username: config.POSTGRES_USERNAME,
-  password: config.POSTGRES_PASSWORD,
-  database: config.POSTGRES_DATABASE,
+  host: process.env.POSTGRES_HOST,
+  port: +process.env.POSTGRES_PORT,
+  username: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
   entities: [
     'src/modules/**/*.entity{.ts,.js}',
   ],

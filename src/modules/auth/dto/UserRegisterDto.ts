@@ -1,6 +1,7 @@
 'use strict';
 
-import { IsString, IsEmail, IsInt, MinLength, IsNotEmpty, Min } from 'class-validator';
+import { IsString, IsEmail, IsInt, MinLength, IsNotEmpty, Min, IsEnum } from 'class-validator';
+import { RoleType } from '../../../constants/role-type';
 
 export class UserRegisterDto {
     @IsString()
@@ -20,6 +21,10 @@ export class UserRegisterDto {
     @IsEmail()
     @IsNotEmpty()
     readonly email: string;
+
+    @IsEnum(RoleType)
+    @IsNotEmpty()
+    readonly role: RoleType = RoleType.User;
 
     @IsString()
     @MinLength(6)

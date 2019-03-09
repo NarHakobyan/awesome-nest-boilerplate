@@ -6,9 +6,11 @@ import { UserEntity } from './user.entity';
 import { UtilsService } from '../../providers/utils.service';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
 import { UserRepository } from './user.repository';
+import { ContextService } from '../../providers/context.service';
 
 @Injectable()
 export class UserService {
+    private static _authUserKey = 'user_key';
     constructor(
         public readonly userRepository: UserRepository,
     ) {}
@@ -46,5 +48,13 @@ export class UserService {
 
         return this.userRepository.save(user);
 
+    }
+
+    static setAuthUser(user: UserEntity) {
+        ContextService.set(UserService._authUserKey, user);
+    }
+
+    static getAuthRole(): UserEntity {
+        return ContextService.get(UserService._authUserKey);
     }
 }
