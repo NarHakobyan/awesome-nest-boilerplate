@@ -36,7 +36,6 @@
         "class-transformer": "^0.2.0",
         "class-validator": "^0.9.1",
         "dotenv": "^6.2.0",
-        "dotenv-expand": "^4.2.0",
         "file-type": "^10.8.0",
         "jsonwebtoken": "^8.4.0",
         "lodash": "^4.17.11",

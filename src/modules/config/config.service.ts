@@ -1,25 +1,22 @@
-import * as fs from 'fs';
 import * as dotenv from 'dotenv';
-import * as dotenvExpand from 'dotenv-expand';
 import { ITypeOrmConfig } from '../../interfaces/typeorm-config.interface';
 
 export class ConfigService {
-    private readonly _config: { [property: string]: string };
-
     constructor() {
-        const env = process.env.NODE_ENV || 'development';
+        process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-        this._config = dotenv.parse(fs.readFileSync(`.${env}.env`));
-        this._config = dotenvExpand({ parsed: this._config }).parsed;
+        dotenv.config({
+            path: `.${process.env.NODE_ENV}.env`,
+        });
 
         // Replace \\n with \n to support multiline strings in AWS
-        this._config = Object.keys(this._config).reduce((object, key) => {
-            return { ...object, [key]: this._config[key].replace(/\\n/g, '\n') };
-        }, {});
+        for (const envName of Object.keys(process.env)) {
+            process.env[envName] = process.env[envName].replace(/\\n/g, '\n');
+        }
     }
 
     public get(key: string): string {
-        return this._config[key];
+        return process.env[key];
     }
 
     public getNumber(key: string): number {
@@ -37,7 +34,7 @@ export class ConfigService {
             entities: [__dirname + '/../../modules/**/*.entity{.ts,.js}'],
             migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
             migrationsRun: true,
-            logging: process.env.NODE_ENV === 'development',
+            logging: this.get('NODE_ENV') === 'development',
         };
     }
 }
