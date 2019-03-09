@@ -8,9 +8,12 @@ import { UserNotFoundException } from '../../exceptions/user-not-found.exception
 import { UtilsService } from '../../providers/utils.service';
 import { UserService } from '../user/user.service';
 import { UserDto } from './dto/UserDto';
+import { ContextService } from '../../providers/context.service';
 
 @Injectable()
 export class AuthService {
+    private static _authUserKey = 'user_key';
+
     constructor(
         public readonly jwtService: JwtService,
         public readonly configService: ConfigService,
@@ -31,5 +34,21 @@ export class AuthService {
             throw new UserNotFoundException();
         }
         return user;
+    }
+
+    setAuthUser(user: UserEntity) {
+        return AuthService.setAuthUser(user);
+    }
+
+    getAuthUser() {
+        return AuthService.getAuthUser();
+    }
+
+    static setAuthUser(user: UserEntity) {
+        ContextService.set(AuthService._authUserKey, user);
+    }
+
+    static getAuthUser(): UserEntity {
+        return ContextService.get(AuthService._authUserKey);
     }
 }
