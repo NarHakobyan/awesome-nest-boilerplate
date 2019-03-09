@@ -1,7 +1,7 @@
 'use strict';
 
 import { UserEntity } from '../../user/user.entity';
-import { AbstractDto } from '../../../core/AbstractDto';
+import { AbstractDto } from '../../../abstract/AbstractDto';
 
 export class UserDto extends AbstractDto {
     readonly firstName: string;

@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
 
-import { AbstractEntity } from '../../core/abstract.entity';
+import { AbstractEntity } from '../../abstract/abstract.entity';
 import { UserDto } from '../auth/dto/UserDto';
 
 @Entity({ name: 'users' })

@@ -1,14 +1,10 @@
-import * as dotEnv from 'dotenv';
 import * as morgan from 'morgan';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './viveo-swagger';
-import { ValidationPipe } from '@nestjs/common';
-
-const env = process.env.NODE_ENV || 'development';
-dotEnv.config({ path: env, debug: env === 'development' });
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, { cors: true });
@@ -28,7 +24,7 @@ async function bootstrap() {
 
     await app.startAllMicroservicesAsync();
 
-    if (['development', 'staging'].includes(env)) {
+    if (['development', 'staging'].includes(process.env.NODE_ENV || 'development')) {
         setupSwagger(app);
     }
 
