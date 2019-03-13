@@ -1,12 +1,11 @@
 'use strict';
 
-import { classToPlain } from 'class-transformer';
 import { PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { UtilsService } from '../providers/utils.service';
 import { AbstractDto } from './AbstractDto';
 
-export abstract class AbstractEntity<T extends AbstractDto> {
+export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -16,9 +15,9 @@ export abstract class AbstractEntity<T extends AbstractDto> {
     @UpdateDateColumn({ type: 'timestamp without time zone' })
     updatedAt: Date;
 
-    abstract dtoClass: new (...args: any[]) => void;
+    abstract dtoClass: new (entity: AbstractEntity) => T;
 
-    toJSON(): T {
-        return <T>classToPlain(UtilsService.toDto(this.dtoClass, this));
+    toDto() {
+        return UtilsService.toDto(this.dtoClass, this);
     }
 }

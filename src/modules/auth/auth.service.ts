@@ -9,6 +9,7 @@ import { UtilsService } from '../../providers/utils.service';
 import { UserService } from '../user/user.service';
 import { UserDto } from './dto/UserDto';
 import { ContextService } from '../../providers/context.service';
+import { TokenPayloadDto } from './dto/TokenPayloadDto';
 
 @Injectable()
 export class AuthService {
@@ -20,11 +21,11 @@ export class AuthService {
         public readonly userService: UserService,
     ) { }
 
-    async createToken(user: UserEntity | UserDto) {
-        return {
+    async createToken(user: UserEntity | UserDto): Promise<TokenPayloadDto> {
+        return new TokenPayloadDto({
             expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
-            accessToken: this.jwtService.sign({ id: user.id }),
-        };
+            accessToken: await this.jwtService.signAsync({ id: user.id }),
+        });
     }
 
     async validateUser(userLoginDto: UserLoginDto): Promise<UserEntity> {
