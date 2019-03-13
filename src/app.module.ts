@@ -6,11 +6,13 @@ import { ConfigModule } from './modules/config/config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { contextMiddleware } from './middlewares';
+import { MathModule } from './modules/math/math.module';
 
 @Module({
     imports: [
         AuthModule,
         UserModule,
+        MathModule,
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => configService.typeOrmConfig,

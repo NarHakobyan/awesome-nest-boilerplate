@@ -1,5 +1,4 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, Get, BadRequestException } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
 
 import { UserLoginDto } from './dto/UserLoginDto';
 import { UserRegisterDto } from './dto/UserRegisterDto';
@@ -14,11 +13,6 @@ export class AuthController {
         public readonly userService: UserService,
         public readonly authService: AuthService,
     ) {}
-
-    @MessagePattern({ cmd: 'login' })
-    login(data: UserLoginDto) {
-        return this.userLogin(data);
-    }
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
