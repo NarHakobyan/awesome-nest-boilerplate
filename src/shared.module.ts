@@ -1,12 +1,12 @@
-import { Module, Global } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from './modules/config/config.module';
+import { MicroserviceModule } from './modules/microservice/microservice.module';
 
 const providers = [];
 
-@Global()
 @Module({
     providers,
-    imports: [ConfigModule],
-    exports: [...providers, ConfigModule],
+    imports: [ConfigModule, MicroserviceModule.forRoot({ autoConnect: true })],
+    exports: [...providers, ConfigModule, MicroserviceModule],
 })
 export class SharedModule {}

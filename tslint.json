@@ -223,11 +223,6 @@
         "format": "PascalCase"
       },
       {
-        "type": "class",
-        "modifiers": "abstract",
-        "prefix": "Abstract"
-      },
-      {
         "type": "interface",
         "prefix": "I"
       },

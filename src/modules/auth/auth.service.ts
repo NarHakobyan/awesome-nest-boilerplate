@@ -9,6 +9,7 @@ import { UtilsService } from '../../providers/utils.service';
 import { UserService } from '../user/user.service';
 import { UserDto } from './dto/UserDto';
 import { ContextService } from '../../providers/context.service';
+import { MessageQueueService } from '../microservice/message-queue.service';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
         public readonly jwtService: JwtService,
         public readonly configService: ConfigService,
         public readonly userService: UserService,
+        public readonly messageQueueService: MessageQueueService,
     ) { }
 
     async createToken(user: UserEntity | UserDto) {
@@ -25,6 +27,14 @@ export class AuthService {
             expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
             accessToken: this.jwtService.sign({ id: user.id }),
         };
+    }
+
+    public async sendLogin() {
+        const a = await this.messageQueueService.send({ cmd: 'login' }, {
+            email: 'admin@mailinator.com',
+            password: 'admin',
+        }).toPromise();
+        console.info(a);
     }
 
     async validateUser(userLoginDto: UserLoginDto): Promise<UserEntity> {

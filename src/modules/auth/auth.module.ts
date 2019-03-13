@@ -8,10 +8,12 @@ import { ConfigModule } from '../config/config.module';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
+import { SharedModule } from '../../shared.module';
 
 @Module({
     imports: [
         forwardRef(() => UserModule),
+        SharedModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
             imports: [
