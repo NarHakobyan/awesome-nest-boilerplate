@@ -24,13 +24,14 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
-        "@nestjs/common": "^5.4.0",
-        "@nestjs/core": "^5.4.0",
-        "@nestjs/jwt": "^0.3.0",
-        "@nestjs/microservices": "^5.4.0",
-        "@nestjs/passport": "^5.1.0",
-        "@nestjs/swagger": "^2.5.1",
-        "@nestjs/typeorm": "^5.3.0",
+        "@nestjs/common": "^6.0.1",
+        "@nestjs/core": "^6.0.1",
+        "@nestjs/jwt": "^6.0.0",
+        "@nestjs/microservices": "^6.0.1",
+        "@nestjs/passport": "^6.0.0",
+        "@nestjs/platform-express": "^6.0.1",
+        "@nestjs/swagger": "^3.0.1",
+        "@nestjs/typeorm": "^6.0.0",
         "aws-sdk": "^2.405.0",
         "axios": "^0.18.0",
         "bcrypt": "^3.0.4",
@@ -58,7 +59,7 @@
         "uuid": "^3.3.2"
     },
     "devDependencies": {
-        "@nestjs/testing": "^5.1.0",
+        "@nestjs/testing": "^6.0.1",
         "@types/bcrypt": "^3.0.0",
         "@types/compression": "^0.0.36",
         "@types/dotenv": "^6.1.0",

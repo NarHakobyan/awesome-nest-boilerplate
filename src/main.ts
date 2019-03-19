@@ -1,6 +1,7 @@
 import * as morgan from 'morgan';
 import * as helmet from 'helmet';
 import * as RateLimit from 'express-rate-limit';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as compression from 'compression';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
@@ -12,7 +13,7 @@ import { ConfigModule } from './modules/config/config.module';
 import { ConfigService } from './modules/config/config.service';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule, { cors: true });
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
     app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
     app.use(helmet());
     app.use(new RateLimit({
