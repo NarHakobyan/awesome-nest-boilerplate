@@ -3,6 +3,8 @@
 - [Setup and development](#setup-and-development)
   - [First-time setup](#first-time-setup)
   - [Installation](#installation)
+  - [Database](#database)
+    - [Configuration](#configuration)
   - [Dev server](#dev-server)
   - [Generators](#generators)
 
@@ -23,6 +25,30 @@ Then update the following files to suit your application:
 yarn install
 ```
 
+## Database
+
+> Note: Awesome nest boilerplate uses [TypeORM](https://github.com/typeorm/typeorm) with Data Mapper pattern.
+
+### Configuration
+
+Before start please install PostgreSQL and fill correct configurations in `.development.env` file
+
+```env
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USERNAME=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DATABASE=nest_boilerplate
+```
+
+```bash
+# To create new migration file
+yarn typeorm:migration:create migration_name
+
+# Truncate full database (note: it's not deleting the database)
+yarn typeorm:schema:drop
+```
+
 ## Dev server
 
 > Note: If you're on Linux and see an `ENOSPC` error when running the commands below, you must [increase the number of available file watchers](https://stackoverflow.com/questions/22475849/node-js-error-enospc#answer-32600959).
@@ -31,7 +57,7 @@ yarn install
 # Launch the dev server
 yarn start:dev
 
-# Launch the dev server and anable remote debugger
+# Launch the dev server and enable remote debugger
 yarn debug:dev
 ```
 
