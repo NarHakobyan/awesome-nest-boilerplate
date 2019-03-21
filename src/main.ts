@@ -3,8 +3,8 @@ import * as helmet from 'helmet';
 import * as RateLimit from 'express-rate-limit';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as compression from 'compression';
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
@@ -22,6 +22,10 @@ async function bootstrap() {
     }));
     app.use(compression());
     app.use(morgan('combined'));
+
+    const reflector = app.get(Reflector);
+
+    app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
     app.useGlobalPipes(new ValidationPipe({
         whitelist: true,

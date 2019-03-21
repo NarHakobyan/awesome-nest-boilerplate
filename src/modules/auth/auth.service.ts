@@ -7,7 +7,7 @@ import { UserLoginDto } from './dto/UserLoginDto';
 import { UserNotFoundException } from '../../exceptions/user-not-found.exception';
 import { UtilsService } from '../../providers/utils.service';
 import { UserService } from '../user/user.service';
-import { UserDto } from './dto/UserDto';
+import { UserDto } from '../user/dto/UserDto';
 import { ContextService } from '../../providers/context.service';
 import { TokenPayloadDto } from './dto/TokenPayloadDto';
 

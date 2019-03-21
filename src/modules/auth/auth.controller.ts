@@ -1,22 +1,11 @@
-import {
-    Controller,
-    Post,
-    Body,
-    HttpCode,
-    HttpStatus,
-    Get,
-    BadRequestException,
-    UseInterceptors,
-    ClassSerializerInterceptor,
-    UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, BadRequestException, UseInterceptors, UseGuards } from '@nestjs/common';
 import { ApiOkResponse, ApiUseTags, ApiBadRequestResponse, ApiBearerAuth } from '@nestjs/swagger';
 
 import { UserLoginDto } from './dto/UserLoginDto';
 import { UserRegisterDto } from './dto/UserRegisterDto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { UserDto } from './dto/UserDto';
+import { UserDto } from '../user/dto/UserDto';
 import { LoginPayloadDto } from './dto/LoginPayloadDto';
 import { AuthUser } from '../../decorators/auth-user.decorator';
 import { UserEntity } from '../user/user.entity';
@@ -25,7 +14,6 @@ import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.se
 
 @Controller('auth')
 @ApiUseTags('auth')
-@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
 
     constructor(

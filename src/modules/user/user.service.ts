@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FindConditions } from 'typeorm';
 
-import { UserDto } from '../auth/dto/UserDto';
+import { UserDto } from './dto/UserDto';
 import { UserEntity } from './user.entity';
 import { UtilsService } from '../../providers/utils.service';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
@@ -34,7 +34,7 @@ export class UserService {
     async findUsers(findData: FindConditions<UserEntity>): Promise<UserDto[]>;
     async findUsers(findData: FindConditions<UserEntity>, returnEntity: true): Promise<UserEntity[]>;
     async findUsers(findData: FindConditions<UserEntity>, returnEntity = false): Promise<Array<UserEntity | UserDto>> {
-        const users: UserEntity[] = await this.userRepository.find(findData);
+        const users = await this.userRepository.find(findData);
 
         return returnEntity ? users : UtilsService.toDto(UserDto, users);
     }

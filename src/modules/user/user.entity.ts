@@ -1,7 +1,7 @@
 import { Entity, Column } from 'typeorm';
 
 import { AbstractEntity } from '../../abstract/abstract.entity';
-import { UserDto } from '../auth/dto/UserDto';
+import { UserDto } from './dto/UserDto';
 import { RoleType } from '../../constants/role-type';
 
 @Entity({ name: 'users' })
