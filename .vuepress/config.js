@@ -2,7 +2,7 @@
 module.exports = {
   title: 'Awesome nest boilerplate 🎉',
   description: `An ultimate and awesome nodejs boilerplate wrote in typescript`,
-  base: process.env.DEPLOY_ENV === 'gh-pages' ? '/awesome-vue-boilerplate/': '/',
+  base: process.env.DEPLOY_ENV === 'gh-pages' ? '/awesome-nest-boilerplate/': '/',
   themeConfig: {
     sidebar: [
       ['/', 'Introduction'],

@@ -23,7 +23,8 @@
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "docs:dev": "vuepress dev -p 7070",
-        "docs:build": "vuepress build docs"
+        "docs:build": "DEPLOY_ENV=gh-pages vuepress build",
+        "docs:deploy": "yarn docs:build && gh-pages -d .vuepress/dist"
     },
     "dependencies": {
         "@nestjs/common": "^6.0.1",
