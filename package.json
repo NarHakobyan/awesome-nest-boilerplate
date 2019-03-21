@@ -21,7 +21,9 @@
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "docs:dev": "vuepress dev -p 7070",
+        "docs:build": "vuepress build docs"
     },
     "dependencies": {
         "@nestjs/common": "^6.0.1",
@@ -88,7 +90,8 @@
         "tslint-config-prettier": "^1.18.0",
         "tslint-consistent-codestyle": "^1.15.0",
         "tslint-eslint-rules": "^5.4.0",
-        "tslint-plugin-prettier": "^2.0.1"
+        "tslint-plugin-prettier": "^2.0.1",
+        "vuepress": "^0.14.10"
     },
     "jest": {
         "moduleFileExtensions": [

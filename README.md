@@ -1,43 +1,33 @@
-## Description
+# Awesome Nest v6 Boilerplate
 
-Pop migration backend
+> This is an ever-evolving, very opinionated architecture and dev environment for new node projects using [NestJS](https://nestjs.com). Questions, feedback, and for now, even bikeshedding are welcome. 😄
 
-## Installation
+## Features
 
-```bash
-$ npm install
-```
+- [**Thorough documentation**](#documentation): Written with the same care as Vue's core docs to quickly train new team members and consolidate knowledge.
+- [**Guaranteed consistency**](docs/linting.md): Opinionated linting for Vue, JavaScript/JSON, SCSS, and Markdown, integrated into Visual Studio Code and run against staged files on pre-commit.
+- [**Speedy development**](docs/development.md): Between [configurable generators](docs/development.md#generators), [handy aliases](docs/development.md#aliases), and [global base components](docs/development.md#base-components), your productivity will skyrocket.
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
+## Getting started
 
 ```bash
-# unit tests
-$ npm run test
+# 1. Clone the repository.
+git clone https://github.com/NarHakobyan/awesome-nest-boilerplate.git my-new-project
 
-# e2e tests
-$ npm run test:e2e
+# 2. Enter your newly-cloned folder.
+cd my-new-project
 
-# test coverage
-$ npm run test:cov
+# 3. Install dependencies. Make sure yarn is installed: https://yarnpkg.com/lang/en/docs/install
+yarn
+
+# 4. Run development server and open http://localhost:3000
+start:dev
+
+# 5. Read the documentation linked below for "Setup and development".
 ```
 
-## Support
+## Documentation
 
-Project is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers.
+This project includes a `docs` folder with more details on:
 
-## License
-
-  Nest is [MIT licensed](LICENSE).
+1.  [Setup and development](/docs/development.html)
