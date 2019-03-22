@@ -4,9 +4,7 @@ import { IsString, IsEmail } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class UserLoginDto {
-    @IsString({
-        message: 'error.custom_message',
-    })
+    @IsString()
     @IsEmail()
     @ApiModelProperty()
     readonly email: string;
