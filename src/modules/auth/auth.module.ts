@@ -12,7 +12,6 @@ import { SharedModule } from '../../shared.module';
 @Module({
     imports: [
         forwardRef(() => UserModule),
-        SharedModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
             imports: [

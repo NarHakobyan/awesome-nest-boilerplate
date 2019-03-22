@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { ConfigService } from './shared/services/config.service';
 
 const providers = [ConfigService];
 
+@Global()
 @Module({
     providers,
     imports: [],
