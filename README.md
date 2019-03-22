@@ -2,12 +2,6 @@
 
 > This is an ever-evolving, very opinionated architecture and dev environment for new node projects using [NestJS](https://nestjs.com). Questions, feedback, and for now, even bikeshedding are welcome. 😄
 
-## Features
-
-- [**Thorough documentation**](#documentation): Written with the same care as Vue's core docs to quickly train new team members and consolidate knowledge.
-- [**Guaranteed consistency**](docs/linting.md): Opinionated linting for Vue, JavaScript/JSON, SCSS, and Markdown, integrated into Visual Studio Code and run against staged files on pre-commit.
-- [**Speedy development**](docs/development.md): Between [configurable generators](docs/development.md#generators), [handy aliases](docs/development.md#aliases), and [global base components](docs/development.md#base-components), your productivity will skyrocket.
-
 ## Getting started
 
 ```bash
@@ -31,3 +25,12 @@ start:dev
 This project includes a `docs` folder with more details on:
 
 1.  [Setup and development](/docs/development.html)
+1.  [Architecture](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/architecture.html)
+1.  [Languages and technologies](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/tech.html)
+1.  [Routing, layouts, and views](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/routing.html)
+1.  [State management](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/state.html)
+1.  [Tests and mocking the API](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/tests.html)
+1.  [Linting and formatting](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/linting.html)
+1.  [Editor integration](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/editors.html)
+1.  [Building and deploying to production](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/production.html)
+1.  [Troubleshooting](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/troubleshooting.html)

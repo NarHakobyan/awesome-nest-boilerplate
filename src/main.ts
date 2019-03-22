@@ -11,6 +11,7 @@ import { AppModule } from './app.module';
 import { setupSwagger } from './viveo-swagger';
 import { ConfigModule } from './modules/config/config.module';
 import { ConfigService } from './modules/config/config.service';
+import { HttpExceptionFilter } from './filters/bad-request.filter';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
@@ -25,11 +26,17 @@ async function bootstrap() {
 
     const reflector = app.get(Reflector);
 
+    app.useGlobalFilters(new HttpExceptionFilter(reflector));
+
     app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
     app.useGlobalPipes(new ValidationPipe({
         whitelist: true,
         transform: true,
+        dismissDefaultMessages: true,
+        validationError: {
+            target: false,
+        },
     }));
 
     const configService = app.select(ConfigModule).get(ConfigService);
