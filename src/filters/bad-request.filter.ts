@@ -1,8 +1,9 @@
 import * as _ from 'lodash';
 import { Reflector } from '@nestjs/core';
 import { Response } from 'express';
-import { ExceptionFilter, Catch, ArgumentsHost, BadRequestException } from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, BadRequestException, HttpStatus } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
+import { STATUS_CODES } from 'http';
 
 @Catch(BadRequestException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -12,12 +13,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     catch(exception: BadRequestException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        const status = exception.getStatus();
+        let status = exception.getStatus();
 
         if (_.isArray(exception.message.message) && exception.message.message[0] instanceof ValidationError) {
+            status = HttpStatus.UNPROCESSABLE_ENTITY;
             const validationErrors = <ValidationError[]> exception.message.message;
             this._validationFilter(validationErrors);
         }
+
+        exception.message.error = STATUS_CODES[status];
 
         response
             .status(status)

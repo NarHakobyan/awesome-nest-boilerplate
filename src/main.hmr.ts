@@ -4,7 +4,7 @@ import * as compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
 import { Transport } from '@nestjs/microservices';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 
 import { AppModule } from './app.module';
@@ -12,10 +12,11 @@ import { setupSwagger } from './viveo-swagger';
 import { ConfigService } from './shared/services/config.service';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { SharedModule } from './shared.module';
-import { QueryFailedFilter } from './filters/query-failed.filter';
+
+declare const module: any;
 
 async function bootstrap() {
-    const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(), { cors: true });
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true, bodyParser: true });
     app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
     app.use(helmet());
     app.use(new RateLimit({
@@ -27,7 +28,7 @@ async function bootstrap() {
 
     const reflector = app.get(Reflector);
 
-    app.useGlobalFilters(new HttpExceptionFilter(reflector), new QueryFailedFilter(reflector));
+    app.useGlobalFilters(new HttpExceptionFilter(reflector));
 
     app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
@@ -61,6 +62,11 @@ async function bootstrap() {
     await app.listen(port);
 
     console.info(`server running on port ${port}`);
+
+    if (module.hot) {
+        module.hot.accept();
+        module.hot.dispose(() => app.close());
+    }
 }
 
 bootstrap();

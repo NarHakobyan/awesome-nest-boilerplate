@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 
-import { ConfigService } from '../config/config.service';
+import { ConfigService } from '../../shared/services/config.service';
 import { UserEntity } from '../user/user.entity';
 import { UserLoginDto } from './dto/UserLoginDto';
 import { UserNotFoundException } from '../../exceptions/user-not-found.exception';

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from './modules/config/config.module';
+import { ConfigService } from './shared/services/config.service';
 
-const providers = [];
+const providers = [ConfigService];
 
 @Module({
     providers,
-    imports: [ConfigModule],
-    exports: [...providers, ConfigModule],
+    imports: [],
+    exports: [...providers],
 })
 export class SharedModule {}

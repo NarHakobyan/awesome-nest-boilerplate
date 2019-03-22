@@ -7,10 +7,13 @@
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
         "format": "prettier --write \"src/**/*.ts\"",
-        "start": "ts-node -r tsconfig-paths/register src/main.ts",
+        "start:hmr": "node dist/main",
+        "start:dev": "ts-node -r tsconfig-paths/register src/main.ts",
         "migration:generate": "ts-node node_modules/typeorm/cli.js migration:generate -f ormconfig -d src/migrations -n",
-        "start:dev": "nodemon --config nodemon.json",
+        "migration:revert": "ts-node node_modules/typeorm/cli.js migration:revert -f ormconfig",
+        "watch:dev": "nodemon --config nodemon.json",
         "debug:dev": "nodemon --config nodemon-debug.json",
+        "webpack": "webpack --config webpack.config.js --progress",
         "migration:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig -d src/migrations -n",
         "schema:drop": "ts-node node_modules/typeorm/cli.js schema:drop -f ormconfig",
         "prestart:prod": "rimraf dist && npm run build",
@@ -94,7 +97,10 @@
         "tslint-consistent-codestyle": "^1.15.0",
         "tslint-eslint-rules": "^5.4.0",
         "tslint-plugin-prettier": "^2.0.1",
-        "vuepress": "^0.14.10"
+        "vuepress": "^0.14.10",
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0",
+        "webpack-node-externals": "^1.7.2"
     },
     "jest": {
         "moduleFileExtensions": [
