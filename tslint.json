@@ -56,7 +56,6 @@
     "no-empty-interface": true,
     "no-eval": true,
     "no-implicit-dependencies": true,
-    "no-import-side-effect": true,
     "no-invalid-this": true,
     "no-inferrable-types": [
       true,

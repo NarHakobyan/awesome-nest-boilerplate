@@ -1,3 +1,5 @@
+import './boilerplate.polyfill';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 

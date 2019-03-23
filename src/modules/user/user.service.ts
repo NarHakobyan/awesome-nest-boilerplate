@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindConditions } from 'typeorm';
-
-import { UserDto } from './dto/UserDto';
+import { FindConditions, QueryRunner, SelectQueryBuilder } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { UtilsService } from '../../providers/utils.service';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
@@ -16,27 +14,19 @@ export class UserService {
     /**
      * Find single user
      */
-    async findUser(findData: FindConditions<UserEntity>): Promise<UserDto>;
-    async findUser(findData: FindConditions<UserEntity>, returnEntity: true): Promise<UserEntity>;
-    async findUser(findData: FindConditions<UserEntity>, returnEntity: boolean = false): Promise<UserEntity | UserDto> {
-        const user = await this.userRepository.findOne(findData);
-
-        if (!user) {
-            return null;
-        }
-
-        return returnEntity ? user : UtilsService.toDto(UserDto, user);
+    findUser(findData: FindConditions<UserEntity>): Promise<UserEntity> {
+        return this.userRepository.findOne(findData);
     }
 
     /**
      * Find all users
      */
-    async findUsers(findData: FindConditions<UserEntity>): Promise<UserDto[]>;
-    async findUsers(findData: FindConditions<UserEntity>, returnEntity: true): Promise<UserEntity[]>;
-    async findUsers(findData: FindConditions<UserEntity>, returnEntity = false): Promise<Array<UserEntity | UserDto>> {
-        const users = await this.userRepository.find(findData);
+    findUsers(findData: FindConditions<UserEntity>): Promise<UserEntity[]> {
+        return this.userRepository.find(findData);
+    }
 
-        return returnEntity ? users : UtilsService.toDto(UserDto, users);
+    createQueryBuilder(alias: string = 'user', queryRunner?: QueryRunner): SelectQueryBuilder<UserEntity> {
+        return this.userRepository.createQueryBuilder(alias, queryRunner);
     }
 
     async createUser(userRegisterDto: UserRegisterDto): Promise<UserEntity> {
