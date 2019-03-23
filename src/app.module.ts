@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { contextMiddleware } from './middlewares';
 import { MathModule } from './modules/math/math.module';
+import { SharedModule } from './shared.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { MathModule } from './modules/math/math.module';
         UserModule,
         MathModule,
         TypeOrmModule.forRootAsync({
+            imports: [SharedModule],
             useFactory: (configService: ConfigService) => configService.typeOrmConfig,
             inject: [ConfigService],
         }),
