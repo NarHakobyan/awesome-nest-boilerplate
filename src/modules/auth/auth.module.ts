@@ -17,7 +17,7 @@ import { SharedModule } from '../../shared.module';
             imports: [
                 SharedModule,
             ],
-            useFactory: async (configService: ConfigService) => {
+            useFactory: (configService: ConfigService) => {
                 return {
                     secretOrPrivateKey: configService.get('JWT_SECRET_KEY'),
                     signOptions: {
