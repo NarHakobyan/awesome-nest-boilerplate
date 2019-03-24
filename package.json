@@ -16,7 +16,6 @@
         "webpack": "webpack --config webpack.config.js --progress",
         "migration:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig -d src/migrations -n",
         "schema:drop": "ts-node node_modules/typeorm/cli.js schema:drop -f ormconfig",
-        "prestart:prod": "rimraf dist && npm run build",
         "start:prod": "node dist/main.js",
         "lint": "tslint -p tsconfig.json -c tslint.json",
         "lint:fix": "tslint --fix",

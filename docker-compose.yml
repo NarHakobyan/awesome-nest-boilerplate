@@ -2,18 +2,25 @@ version: "3"
 services:
   app:
     env_file:
-      - .env
-    container_name: pop_migrate
+      - .development.env
+    container_name: awesome_nest_boilerplate
     restart: always
     build: .
     ports:
       - "$PORT:$PORT"
     links:
-      - mongo
-  mongo:
-    container_name: mongo
-    image: mongo
-    volumes:
-      - ./mongo/data:/data/db
+      - postgres
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "27017:27017"
+      - "5433:5432"
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

@@ -2,7 +2,8 @@
     "cSpell.words": [
         "Injectable",
         "microservices",
-        "nestjs"
+        "nestjs",
+        "postgres"
     ],
     "editor.detectIndentation": false
 }

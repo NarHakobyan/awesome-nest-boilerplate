@@ -16,6 +16,8 @@ export class ConfigService {
         for (const envName of Object.keys(process.env)) {
             process.env[envName] = process.env[envName].replace(/\\n/g, '\n');
         }
+
+        console.info(process.env);
     }
 
     public get(key: string): string {
