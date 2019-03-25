@@ -48,11 +48,14 @@ export class UserService {
     }
 
     async createUser(userRegisterDto: UserRegisterDto, file: IFile): Promise<UserEntity> {
+        let avatar: string;
         if (file && !this.validatorService.isImage(file.mimetype)) {
             throw new FileNotImageException();
         }
 
-        const avatar = await this.awsS3Service.uploadImage(file);
+        if (file) {
+            avatar = await this.awsS3Service.uploadImage(file);
+        }
 
         const user = this.userRepository.create({ ...userRegisterDto, avatar });
 
