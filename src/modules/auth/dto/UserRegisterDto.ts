@@ -1,8 +1,8 @@
 'use strict';
 
-import { IsString, IsEmail, IsInt, MinLength, IsNotEmpty, Min, IsEnum } from 'class-validator';
-import { RoleType } from '../../../constants/role-type';
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsEmail, MinLength, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { ApiModelProperty } from '@nestjs/swagger';
+import { Column } from 'typeorm';
 
 export class UserRegisterDto {
     @IsString()
@@ -15,26 +15,74 @@ export class UserRegisterDto {
     @ApiModelProperty()
     readonly lastName: string;
 
-    @IsInt()
-    @IsNotEmpty()
-    @Min(18)
-    @ApiModelProperty()
-    readonly age: number;
-
     @IsString()
     @IsEmail()
     @IsNotEmpty()
     @ApiModelProperty()
     readonly email: string;
 
-    @IsEnum(RoleType)
-    @ApiModelPropertyOptional({ enum: Object.values(RoleType)})
-    readonly role: RoleType = RoleType.User;
-
     @IsString()
     @MinLength(6)
-    @ApiModelProperty()
+    @ApiModelProperty({ minLength: 6 })
     readonly password: string;
 
-    // todo Itegrate avatar
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    username: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    companyEmail: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    companyName: string;
+
+    @Column()
+    @IsPhoneNumber('ZZ')
+    @IsNotEmpty()
+    @ApiModelProperty()
+    phone: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    industry: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    address: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    country: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    state: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    city: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    @ApiModelProperty()
+    zipCode: string;
 }

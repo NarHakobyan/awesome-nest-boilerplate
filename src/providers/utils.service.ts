@@ -22,10 +22,10 @@ export class UtilsService {
     /**
      * generate hash from password or string
      * @param {string} password
-     * @returns {Promise<string>}
+     * @returns {string}
      */
-    static generateHash(password: string): Promise<string> {
-        return bcrypt.hash(password, 10);
+    static generateHash(password: string): string {
+        return bcrypt.hashSync(password, 10);
     }
 
     /**

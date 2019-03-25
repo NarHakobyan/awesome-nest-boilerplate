@@ -17,7 +17,7 @@ export class CreateUserTable1553261740267 implements MigrationInterface {
                 "username"     character varying,
                 "role"         "users_role_enum" NOT NULL DEFAULT 'USER',
                 "email"        character varying,
-                "passwordHash" character varying,
+                "password"     character varying,
                 "avatar"       character varying,
                 "thumbnail"    character varying,
                 "companyEmail" character varying,

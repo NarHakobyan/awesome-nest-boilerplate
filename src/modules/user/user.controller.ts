@@ -19,7 +19,7 @@ import { UserEntity } from './user.entity';
 export class UserController {
 
     @Get('admin')
-    @Roles(RoleType.Admin)
+    @Roles(RoleType.User)
     @HttpCode(HttpStatus.OK)
     async admin(@AuthUser() user: UserEntity) {
         return 'only for you admin: ' + user.firstName;

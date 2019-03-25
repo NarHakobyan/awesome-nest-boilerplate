@@ -4,7 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export class ConfigService {
     constructor() {
-        if (!(<any> module).hot) {
+        if (!(<any>module).hot) {
             process.env.NODE_ENV = process.env.NODE_ENV || 'development';
         }
 

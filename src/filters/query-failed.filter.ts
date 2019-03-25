@@ -17,7 +17,7 @@ export class QueryFailedFilter implements ExceptionFilter {
 
         const errorMessage = ConstraintErrors[exception.constraint] || exception.detail;
 
-        const status = exception.constraint.startsWith('UQ') ? HttpStatus.CONFLICT : HttpStatus.BAD_REQUEST;
+        const status = exception.constraint && exception.constraint.startsWith('UQ') ? HttpStatus.CONFLICT : HttpStatus.BAD_REQUEST;
 
         response.status(status).json({
             statusCode: status,

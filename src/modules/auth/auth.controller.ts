@@ -1,5 +1,6 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, BadRequestException, UseInterceptors, UseGuards } from '@nestjs/common';
-import { ApiOkResponse, ApiUseTags, ApiBadRequestResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseInterceptors, UseGuards, UploadedFile } from '@nestjs/common';
+import { ApiOkResponse, ApiUseTags, ApiBearerAuth, ApiImplicitFile } from '@nestjs/swagger';
 
 import { UserLoginDto } from './dto/UserLoginDto';
 import { UserRegisterDto } from './dto/UserRegisterDto';
@@ -11,6 +12,7 @@ import { AuthUser } from '../../decorators/auth-user.decorator';
 import { UserEntity } from '../user/user.entity';
 import { AuthGuard } from '../../guards/auth.guard';
 import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.service';
+import { IFile } from '../../interfaces/IFile';
 
 @Controller('auth')
 @ApiUseTags('auth')
@@ -33,15 +35,14 @@ export class AuthController {
 
     @Post('register')
     @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({ type: UserDto, description: 'successfully loggedIn' })
-    @ApiBadRequestResponse({ description: 'unique email exeption' })
-    async userRegister(@Body() userRegisterDto: UserRegisterDto): Promise<UserDto> {
-        const user = await this.userService.findUser({ email: userRegisterDto.email });
-        if (user) {
-            throw new BadRequestException('error.email_already_exists');
-        }
-
-        const createdUser = await this.userService.createUser(userRegisterDto);
+    @ApiOkResponse({ type: UserDto, description: 'Successfully Registered' })
+    @ApiImplicitFile({ name: 'avatar', required: true })
+    @UseInterceptors(FileInterceptor('avatar'))
+    async userRegister(
+        @Body() userRegisterDto: UserRegisterDto,
+        @UploadedFile() file: IFile,
+    ): Promise<UserDto> {
+        const createdUser = await this.userService.createUser(userRegisterDto, file);
 
         return createdUser.toDto();
     }
