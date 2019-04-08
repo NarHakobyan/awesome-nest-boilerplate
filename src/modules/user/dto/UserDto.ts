@@ -3,7 +3,7 @@
 import { ApiModelPropertyOptional } from '@nestjs/swagger';
 
 import { UserEntity } from '../user.entity';
-import { AbstractDto } from '../../../abstract/AbstractDto';
+import { AbstractDto } from '../../../common/dto/AbstractDto';
 import { RoleType } from '../../../constants/role-type';
 
 export class UserDto extends AbstractDto {

@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
 
-import { AbstractEntity } from '../../abstract/abstract.entity';
+import { AbstractEntity } from '../../common/abstract.entity';
 import { UserDto } from './dto/UserDto';
 import { RoleType } from '../../constants/role-type';
 import { PasswordTransformer } from './password.transformer';

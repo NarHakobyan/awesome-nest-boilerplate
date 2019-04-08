@@ -13,8 +13,11 @@ import { ConfigService } from './shared/services/config.service';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { SharedModule } from './shared.module';
 import { QueryFailedFilter } from './filters/query-failed.filter';
+import { initializeTransactionalContext, patchTypeORMRepositoryWithBaseRepository } from 'typeorm-transactional-cls-hooked';
 
 async function bootstrap() {
+    initializeTransactionalContext();
+    patchTypeORMRepositoryWithBaseRepository();
     const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(), { cors: true });
     app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
     app.use(helmet());
