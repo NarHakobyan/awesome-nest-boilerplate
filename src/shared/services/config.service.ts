@@ -6,12 +6,9 @@ import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 
 export class ConfigService {
     constructor() {
-        if (!(<any>module).hot) {
-            process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-        }
-
+        const nodeEnv = this.nodeEnv;
         dotenv.config({
-            path: `.${process.env.NODE_ENV}.env`,
+            path: `.${nodeEnv}.env`,
         });
 
         // Replace \\n with \n to support multiline strings in AWS
@@ -28,6 +25,10 @@ export class ConfigService {
 
     public getNumber(key: string): number {
         return Number(this.get(key));
+    }
+
+    get nodeEnv(): string {
+        return this.get('NODE_ENV') || 'development';
     }
 
     get typeOrmConfig(): TypeOrmModuleOptions {
@@ -60,7 +61,7 @@ export class ConfigService {
             password: this.get('POSTGRES_PASSWORD'),
             database: this.get('POSTGRES_DATABASE'),
             migrationsRun: true,
-            logging: this.get('NODE_ENV') === 'development',
+            logging: this.nodeEnv === 'development',
             namingStrategy: new SnakeNamingStrategy(),
         };
     }
