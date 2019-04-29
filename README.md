@@ -24,13 +24,4 @@ start:dev
 
 This project includes a `docs` folder with more details on:
 
-1.  [Setup and development](/docs/development.html)
-1.  [Architecture](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/architecture.html)
-1.  [Languages and technologies](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/tech.html)
-1.  [Routing, layouts, and views](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/routing.html)
-1.  [State management](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/state.html)
-1.  [Tests and mocking the API](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/tests.html)
-1.  [Linting and formatting](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/linting.html)
-1.  [Editor integration](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/editors.html)
-1.  [Building and deploying to production](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/production.html)
-1.  [Troubleshooting](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/troubleshooting.html)
+1.  [Setup and development](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/development.html#first-time-setup)
