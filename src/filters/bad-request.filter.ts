@@ -12,17 +12,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     catch(exception: BadRequestException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        let status = exception.getStatus();
+        let statusCode = exception.getStatus();
         const r = <any>exception.getResponse();
 
         if (_.isArray(r.message) && r.message[0] instanceof ValidationError) {
-            status = HttpStatus.UNPROCESSABLE_ENTITY;
+            statusCode = HttpStatus.UNPROCESSABLE_ENTITY;
             const validationErrors = <ValidationError[]> r.message;
             this._validationFilter(validationErrors);
         }
 
+        r.statusCode = statusCode;
+
         response
-            .status(status)
+            .status(statusCode)
             .json(r);
     }
 
