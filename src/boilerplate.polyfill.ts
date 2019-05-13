@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-Array.prototype.toDtos = function() {
+Array.prototype.toDtos = function<B extends AbstractDto>(): B[] {
     // tslint:disable-next-line:no-invalid-this
-    return _(this).map((item) => item.toDto()).compact().value();
+    return <B[]>_(this).map((item) => item.toDto()).compact().value();
 };
