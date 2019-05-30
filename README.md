@@ -15,7 +15,7 @@ cd my-new-project
 yarn
 
 # 4. Run development server and open http://localhost:3000
-start:dev
+yarn start:dev
 
 # 5. Read the documentation linked below for "Setup and development".
 ```
