@@ -1,6 +1,6 @@
 'use strict';
 
-import { IsString, IsEmail, MinLength, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsNotEmpty, IsPhoneNumber, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Column } from 'typeorm';
 
@@ -27,62 +27,8 @@ export class UserRegisterDto {
     readonly password: string;
 
     @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    username: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    companyEmail: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    companyName: string;
-
-    @Column()
     @IsPhoneNumber('ZZ')
-    @IsNotEmpty()
+    @IsOptional()
     @ApiModelProperty()
     phone: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    industry: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    address: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    country: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    state: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    city: string;
-
-    @Column()
-    @IsString()
-    @IsNotEmpty()
-    @ApiModelProperty()
-    zipCode: string;
 }
