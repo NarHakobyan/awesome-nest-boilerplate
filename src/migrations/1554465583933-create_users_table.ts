@@ -12,6 +12,7 @@ export class CreateUsersTable1554465583933 implements MigrationInterface {
                 "updated_at"    TIMESTAMP         NOT NULL DEFAULT now(),
                 "first_name"    character varying,
                 "last_name"     character varying,
+                "avatar"        character varying,
                 "role"          "users_role_enum" NOT NULL DEFAULT 'USER',
                 "email"         character varying,
                 "password"      character varying,
