@@ -7,6 +7,9 @@ import { IFile } from '../../interfaces/IFile';
 import { ValidatorService } from '../../shared/services/validator.service';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
+import { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import { PageMetaDto } from '../../common/dto/PageMetaDto';
+import { UsersPageDto } from './dto/users-page.dto';
 
 @Injectable()
 export class UserService {
@@ -61,5 +64,18 @@ export class UserService {
 
         return this.userRepository.save(user);
 
+    }
+
+    async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
+        const queryBuilder = this.userRepository.createQueryBuilder('user');
+        const [users, usersCount] = await queryBuilder
+            .skip(pageOptionsDto.skip)
+            .take(pageOptionsDto.take)
+            .getManyAndCount();
+
+        const pageMetaDto = new PageMetaDto(
+            { pageOptionsDto, itemCount: usersCount },
+        );
+        return new UsersPageDto(users.toDtos(), pageMetaDto);
     }
 }

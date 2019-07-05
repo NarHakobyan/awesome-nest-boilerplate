@@ -33,14 +33,10 @@ export class PageOptionsDto {
     @Min(10)
     @Max(50)
     @IsOptional()
-    readonly itemCount: number = 10;
+    readonly take: number = 10;
 
     get skip(): number {
-        return (this.page - 1) * this.itemCount;
-    }
-
-    get take(): number {
-        return this.itemCount;
+        return (this.page - 1) * this.take;
     }
 
     @ApiModelPropertyOptional()
