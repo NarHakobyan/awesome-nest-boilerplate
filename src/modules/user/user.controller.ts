@@ -12,16 +12,16 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 
-import { Roles } from '../../decorators/roles.decorator';
 import { RoleType } from '../../constants/role-type';
 import { AuthUser } from '../../decorators/auth-user.decorator';
+import { Roles } from '../../decorators/roles.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.service';
-import { UserEntity } from './user.entity';
 import { UsersPageOptionsDto } from './dto/users-page-options.dto';
-import { UserService } from './user.service';
 import { UsersPageDto } from './dto/users-page.dto';
+import { UserEntity } from './user.entity';
+import { UserService } from './user.service';
 
 @Controller('users')
 @ApiUseTags('users')

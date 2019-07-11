@@ -1,18 +1,18 @@
-import { FileInterceptor } from '@nestjs/platform-express';
 import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseInterceptors, UseGuards, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiUseTags, ApiBearerAuth, ApiImplicitFile } from '@nestjs/swagger';
 
-import { UserLoginDto } from './dto/UserLoginDto';
-import { UserRegisterDto } from './dto/UserRegisterDto';
-import { UserService } from '../user/user.service';
-import { AuthService } from './auth.service';
-import { UserDto } from '../user/dto/UserDto';
-import { LoginPayloadDto } from './dto/LoginPayloadDto';
 import { AuthUser } from '../../decorators/auth-user.decorator';
-import { UserEntity } from '../user/user.entity';
 import { AuthGuard } from '../../guards/auth.guard';
 import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.service';
 import { IFile } from '../../interfaces/IFile';
+import { UserDto } from '../user/dto/UserDto';
+import { UserEntity } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { AuthService } from './auth.service';
+import { LoginPayloadDto } from './dto/LoginPayloadDto';
+import { UserLoginDto } from './dto/UserLoginDto';
+import { UserRegisterDto } from './dto/UserRegisterDto';
 
 @Controller('auth')
 @ApiUseTags('auth')
