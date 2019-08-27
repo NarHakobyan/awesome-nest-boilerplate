@@ -1,22 +1,23 @@
-import * as _ from 'lodash';
 import * as bcrypt from 'bcrypt';
+import * as _ from 'lodash';
 
 export class UtilsService {
 
     /**
      * convert entity to dto class instance
-     * @param {{new(entity: E): T}} model
-     * @param {E[] | E} user
+     * @param {{new(entity: E, options: any): T}} model
+     * @param {E[] | E} entity
+     * @param options
      * @returns {T[] | T}
      */
-    public static toDto<T, E>(model: new (entity: E) => T, user: E): T;
-    public static toDto<T, E>(model: new (entity: E) => T, user: E[]): T[];
-    public static toDto<T, E>(model: new (entity: E) => T, user: E | E[]): T | T[] {
-        if (_.isArray(user)) {
-            return user.map((u) => new model(u));
+    public static toDto<T, E>(model: new (entity: E, options?: any) => T, entity: E, options?: any): T;
+    public static toDto<T, E>(model: new (entity: E, options?: any) => T, entity: E[], options?: any): T[];
+    public static toDto<T, E>(model: new (entity: E, options?: any) => T, entity: E | E[], options?: any): T | T[] {
+        if (_.isArray(entity)) {
+            return entity.map((u) => new model(u, options));
         }
 
-        return new model(user);
+        return new model(entity, options);
     }
 
     /**
@@ -29,6 +30,13 @@ export class UtilsService {
     }
 
     /**
+     * generate random string
+     * @param length
+     */
+    static generateRandomString(length: number) {
+        return Math.random().toString(36).replace(/[^a-zA-Z0-9]+/g, '').substr(0, length);
+    }
+    /**
      * validate text with hash
      * @param {string} password
      * @param {string} hash
@@ -36,5 +44,18 @@ export class UtilsService {
      */
     static validateHash(password: string, hash: string): Promise<boolean> {
         return bcrypt.compare(password, hash || '');
+    }
+
+    static get<B, C = undefined>(func: () => B, defaultValue?: C): B | C | undefined {
+        try {
+            const value = func();
+
+            if (_.isUndefined(value)) {
+                return defaultValue;
+            }
+            return value;
+        } catch {
+            return defaultValue;
+        }
     }
 }

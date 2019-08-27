@@ -1,8 +1,9 @@
 'use strict';
 
 import * as _ from 'lodash';
-import { AbstractDto } from './common/dto/AbstractDto';
+
 import { AbstractEntity } from './common/abstract.entity';
+import { AbstractDto } from './common/dto/AbstractDto';
 
 declare global {
 // tslint:disable-next-line:naming-convention no-unused
@@ -11,7 +12,7 @@ declare global {
     }
 }
 
-Array.prototype.toDtos = function<B extends AbstractDto>(): B[] {
+Array.prototype.toDtos = function<B extends AbstractDto>(options?: any): B[] {
     // tslint:disable-next-line:no-invalid-this
-    return <B[]>_(this).map((item) => item.toDto()).compact().value();
+    return <B[]>_(this).map((item) => item.toDto(options)).compact().value();
 };

@@ -15,9 +15,9 @@ export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
     @UpdateDateColumn({ type: 'timestamp without time zone', name: 'updated_at' })
     updatedAt: Date;
 
-    abstract dtoClass: new (entity: AbstractEntity) => T;
+    abstract dtoClass: new (entity: AbstractEntity, options?: any) => T;
 
-    toDto() {
-        return UtilsService.toDto(this.dtoClass, this);
+    toDto(options?: any) {
+        return UtilsService.toDto(this.dtoClass, this, options);
     }
 }
