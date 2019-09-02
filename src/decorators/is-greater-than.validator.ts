@@ -1,6 +1,5 @@
 /* tslint:disable:naming-convention */
-import {registerDecorator, ValidationOptions, ValidationArguments} from 'class-validator';
-import * as _ from 'lodash';
+import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 
 /**
  * @example
@@ -17,21 +16,19 @@ import * as _ from 'lodash';
  * @returns {PropertyDecorator}
  * @constructor
  */
-export function IsGreaterThan(property: string, validationOptions?: ValidationOptions): PropertyDecorator {
+export function RequiredIfNotSet(property: string, validationOptions?: ValidationOptions): PropertyDecorator {
     return (object: any, propertyName: string) => {
         registerDecorator({
             propertyName,
-            name: 'isGreaterThan',
+            name: 'requiredIfNotSet',
             target: object.constructor,
             constraints: [property],
             options: validationOptions,
             validator: {
                 validate(value: number, args: ValidationArguments) {
                     const [relatedPropertyName] = args.constraints;
-                    const relatedValue: number = (<any>args.object)[relatedPropertyName];
-                    return _.isNumber(value) &&
-                        _.isNumber(relatedValue) &&
-                        value > relatedValue;
+                    const relatedValue = (<any>args.object)[relatedPropertyName];
+                    return !relatedValue && !value;
                 },
             },
         });
