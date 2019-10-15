@@ -7,13 +7,13 @@
 ## Getting started
 
 ```bash
-# 1. Clone the repository.
+# 1. Clone the repository or click on "Use this template" button.
 git clone https://github.com/NarHakobyan/awesome-nest-boilerplate.git my-new-project
 
 # 2. Enter your newly-cloned folder.
 cd my-new-project
 
-# 3. Install dependencies. Make sure yarn is installed: https://yarnpkg.com/lang/en/docs/install
+# 3. Install dependencies. (Make sure yarn is installed: https://yarnpkg.com/lang/en/docs/install)
 yarn
 
 # 4. Run development server and open http://localhost:3000

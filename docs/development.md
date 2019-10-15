@@ -36,7 +36,7 @@ yarn install
 
 ### Configuration
 
-Before start please install PostgreSQL and fill correct configurations in `.development.env` file
+Before start install PostgreSQL and fill correct configurations in `.development.env` file
 
 ```env
 POSTGRES_HOST=localhost
@@ -46,11 +46,13 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_DATABASE=nest_boilerplate
 ```
 
+Some helper script to work with database
+
 ```bash
 # To create new migration file
 yarn typeorm:migration:create migration_name
 
-# Truncate full database (note: it's not deleting the database)
+# Truncate full database (note: it isn't deleting the database)
 yarn typeorm:schema:drop
 
 # Generate migration from update of entities
@@ -65,7 +67,10 @@ yarn migration:generate migration_name
 # Launch the dev server
 yarn start:dev
 
-# Launch the dev server and enable remote debugger
+# Launch the dev server with file watcher
+yarn watch:dev
+
+# Launch the dev server and enable remote debugger with file watcher
 yarn debug:dev
 ```
 
@@ -102,7 +107,7 @@ Download docker from Official website
 
 ### Docker-compose installation
 
-Download docker from [Official website][docker official site](https://docs.docker.com/compose/install)
+Download docker from [Official website](https://docs.docker.com/compose/install)
 
 ### Run
 
