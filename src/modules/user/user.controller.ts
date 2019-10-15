@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 
-import { RoleType } from '../../constants/role-type';
+import { RoleType } from '../../common/constants/role-type';
 import { AuthUser } from '../../decorators/auth-user.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { AuthGuard } from '../../guards/auth.guard';

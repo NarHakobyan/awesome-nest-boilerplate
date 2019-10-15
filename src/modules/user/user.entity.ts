@@ -1,8 +1,8 @@
 import { Entity, Column } from 'typeorm';
 
-import { UserDto } from './dto/UserDto';
-import { RoleType } from '../../constants/role-type';
 import { AbstractEntity } from '../../common/abstract.entity';
+import { RoleType } from '../../common/constants/role-type';
+import { UserDto } from './dto/UserDto';
 import { PasswordTransformer } from './password.transformer';
 
 @Entity({ name: 'users' })

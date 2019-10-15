@@ -11,8 +11,8 @@ import { initializeTransactionalContext, patchTypeORMRepositoryWithBaseRepositor
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { QueryFailedFilter } from './filters/query-failed.filter';
-import { SharedModule } from './shared.module';
 import { ConfigService } from './shared/services/config.service';
+import { SharedModule } from './shared/shared.module';
 import { setupSwagger } from './viveo-swagger';
 
 async function bootstrap() {

@@ -1,17 +1,17 @@
-import * as morgan from 'morgan';
-import * as helmet from 'helmet';
+import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { Transport } from '@nestjs/microservices';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
-import { Transport } from '@nestjs/microservices';
-import { NestFactory, Reflector } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
+import * as helmet from 'helmet';
+import * as morgan from 'morgan';
 
 import { AppModule } from './app.module';
-import { setupSwagger } from './viveo-swagger';
-import { ConfigService } from './shared/services/config.service';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
-import { SharedModule } from './shared.module';
+import { ConfigService } from './shared/services/config.service';
+import { SharedModule } from './shared/shared.module';
+import { setupSwagger } from './viveo-swagger';
 
 declare const module: any;
 

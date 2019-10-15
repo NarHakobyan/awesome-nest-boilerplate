@@ -1,8 +1,8 @@
-import { Type } from 'class-transformer';
 import { ApiModelPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsEnum, IsInt, Min, IsOptional, Max, IsString, IsNotEmpty } from 'class-validator';
 
-import { Order } from '../enum/order';
+import { Order } from '../constants/order';
 
 export class PageOptionsDto {
     @ApiModelPropertyOptional({
