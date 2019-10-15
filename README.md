@@ -22,6 +22,28 @@ yarn start:dev
 # 5. Read the documentation linked below for "Setup and development".
 ```
 
+## Features
+
+<dl>
+  <dt>Quick scaffolding</dt>
+  <dd>Create modules, services, controller - right from the CLI!</dd>
+
+  <dt>Instant feedback</dt>
+  <dd>Enjoy the best DX (Developer eXperience) and code your app at the speed of thought! Your saved changes are reflected instantaneously.</dd>
+
+  <dt>JWT Authentication</dt>
+  <dd>Installed and configured JWT authentication.</dd>
+
+  <dt>Next generation Typescript</dt>
+  <dd>Always up to date typescript version.</dd>
+
+  <dt>Industry-standard routing</dt>
+  <dd>It's natural to want to add pages (e.g. `/about`) to your application, and routing makes this possible.</dd>
+
+  <dt>Linter</dt>
+  <dd>tslint + eslint + prettier = ❤️</dd>
+</dl>
+
 ## Documentation
 
 This project includes a `docs` folder with more details on:
