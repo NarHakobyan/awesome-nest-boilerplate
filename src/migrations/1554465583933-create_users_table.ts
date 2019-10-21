@@ -1,9 +1,10 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateUsersTable1554465583933 implements MigrationInterface {
-
     public async up(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`CREATE TYPE "users_role_enum" AS ENUM('USER')`);
+        await queryRunner.query(
+            'CREATE TYPE "users_role_enum" AS ENUM(\'USER\')',
+        );
         await queryRunner.query(`
             CREATE TABLE "users"
             (
@@ -23,8 +24,7 @@ export class CreateUsersTable1554465583933 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`DROP TABLE "users"`);
-        await queryRunner.query(`DROP TYPE "users_role_enum"`);
+        await queryRunner.query('DROP TABLE "users"');
+        await queryRunner.query('DROP TYPE "users_role_enum"');
     }
-
 }

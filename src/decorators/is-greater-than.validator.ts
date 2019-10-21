@@ -1,5 +1,9 @@
 /* tslint:disable:naming-convention */
-import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
+import {
+    registerDecorator,
+    ValidationArguments,
+    ValidationOptions,
+} from 'class-validator';
 
 /**
  * @example
@@ -16,7 +20,10 @@ import { registerDecorator, ValidationArguments, ValidationOptions } from 'class
  * @returns {PropertyDecorator}
  * @constructor
  */
-export function RequiredIfNotSet(property: string, validationOptions?: ValidationOptions): PropertyDecorator {
+export function RequiredIfNotSet(
+    property: string,
+    validationOptions?: ValidationOptions,
+): PropertyDecorator {
     return (object: any, propertyName: string) => {
         registerDecorator({
             propertyName,
@@ -27,7 +34,9 @@ export function RequiredIfNotSet(property: string, validationOptions?: Validatio
             validator: {
                 validate(value: number, args: ValidationArguments) {
                     const [relatedPropertyName] = args.constraints;
-                    const relatedValue = (<any>args.object)[relatedPropertyName];
+                    const relatedValue = (<any>args.object)[
+                        relatedPropertyName
+                    ];
                     return !relatedValue && !value;
                 },
             },

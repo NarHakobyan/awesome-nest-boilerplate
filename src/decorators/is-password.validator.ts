@@ -1,7 +1,13 @@
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+import {
+    registerDecorator,
+    ValidationOptions,
+    ValidationArguments,
+} from 'class-validator';
 
 // tslint:disable-next-line:naming-convention
-export function IsPassword(validationOptions?: ValidationOptions): PropertyDecorator {
+export function IsPassword(
+    validationOptions?: ValidationOptions,
+): PropertyDecorator {
     return (object: any, propertyName: string) => {
         registerDecorator({
             propertyName,

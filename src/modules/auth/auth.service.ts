@@ -19,7 +19,7 @@ export class AuthService {
         public readonly jwtService: JwtService,
         public readonly configService: ConfigService,
         public readonly userService: UserService,
-    ) { }
+    ) {}
 
     async createToken(user: UserEntity | UserDto): Promise<TokenPayloadDto> {
         return new TokenPayloadDto({
@@ -29,8 +29,13 @@ export class AuthService {
     }
 
     async validateUser(userLoginDto: UserLoginDto): Promise<UserEntity> {
-        const user = await this.userService.findUser({ email: userLoginDto.email });
-        const isPasswordValid = await UtilsService.validateHash(userLoginDto.password, user && user.password);
+        const user = await this.userService.findUser({
+            email: userLoginDto.email,
+        });
+        const isPasswordValid = await UtilsService.validateHash(
+            userLoginDto.password,
+            user && user.password,
+        );
         if (!user || !isPasswordValid) {
             throw new UserNotFoundException();
         }

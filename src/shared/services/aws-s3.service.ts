@@ -19,26 +19,26 @@ export class AwsS3Service {
         };
 
         const awsS3Config = configService.awsS3Config;
-        if (
-            awsS3Config.accessKeyId &&
-            awsS3Config.secretAccessKey
-        ) {
+        if (awsS3Config.accessKeyId && awsS3Config.secretAccessKey) {
             options.credentials = awsS3Config;
         }
 
         this._s3 = new AWS.S3(options);
-
     }
 
     async uploadImage(file: IFile) {
-        const fileName = this.generatorService.fileName(<string>mime.extension(file.mimetype));
+        const fileName = this.generatorService.fileName(<string>(
+            mime.extension(file.mimetype)
+        ));
         const key = 'images/' + fileName;
-        await this._s3.putObject({
-            Bucket: this.configService.awsS3Config.bucketName,
-            Body: file.buffer,
-            ACL: 'public-read',
-            Key: key,
-        }).promise();
+        await this._s3
+            .putObject({
+                Bucket: this.configService.awsS3Config.bucketName,
+                Body: file.buffer,
+                ACL: 'public-read',
+                Key: key,
+            })
+            .promise();
 
         return key;
     }

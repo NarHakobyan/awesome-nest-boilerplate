@@ -11,16 +11,8 @@ import { JwtStrategy } from './jwt.strategy';
         forwardRef(() => UserModule),
         PassportModule.register({ defaultStrategy: 'jwt' }),
     ],
-    controllers: [
-        AuthController,
-    ],
-    providers: [
-        AuthService,
-        JwtStrategy,
-    ],
-    exports: [
-        PassportModule.register({ defaultStrategy: 'jwt' }),
-        AuthService,
-    ],
+    controllers: [AuthController],
+    providers: [AuthService, JwtStrategy],
+    exports: [PassportModule.register({ defaultStrategy: 'jwt' }), AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

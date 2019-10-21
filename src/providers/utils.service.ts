@@ -2,7 +2,6 @@ import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 
 export class UtilsService {
-
     /**
      * convert entity to dto class instance
      * @param {{new(entity: E, options: any): T}} model
@@ -10,11 +9,23 @@ export class UtilsService {
      * @param options
      * @returns {T[] | T}
      */
-    public static toDto<T, E>(model: new (entity: E, options?: any) => T, entity: E, options?: any): T;
-    public static toDto<T, E>(model: new (entity: E, options?: any) => T, entity: E[], options?: any): T[];
-    public static toDto<T, E>(model: new (entity: E, options?: any) => T, entity: E | E[], options?: any): T | T[] {
+    public static toDto<T, E>(
+        model: new (entity: E, options?: any) => T,
+        entity: E,
+        options?: any,
+    ): T;
+    public static toDto<T, E>(
+        model: new (entity: E, options?: any) => T,
+        entity: E[],
+        options?: any,
+    ): T[];
+    public static toDto<T, E>(
+        model: new (entity: E, options?: any) => T,
+        entity: E | E[],
+        options?: any,
+    ): T | T[] {
         if (_.isArray(entity)) {
-            return entity.map((u) => new model(u, options));
+            return entity.map(u => new model(u, options));
         }
 
         return new model(entity, options);
@@ -34,7 +45,10 @@ export class UtilsService {
      * @param length
      */
     static generateRandomString(length: number) {
-        return Math.random().toString(36).replace(/[^a-zA-Z0-9]+/g, '').substr(0, length);
+        return Math.random()
+            .toString(36)
+            .replace(/[^a-zA-Z0-9]+/g, '')
+            .substr(0, length);
     }
     /**
      * validate text with hash
@@ -46,7 +60,10 @@ export class UtilsService {
         return bcrypt.compare(password, hash || '');
     }
 
-    static get<B, C = undefined>(func: () => B, defaultValue?: C): B | C | undefined {
+    static get<B, C = undefined>(
+        func: () => B,
+        defaultValue?: C,
+    ): B | C | undefined {
         try {
             const value = func();
 

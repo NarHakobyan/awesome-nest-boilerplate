@@ -17,7 +17,8 @@ import { SharedModule } from './shared/shared.module';
         MathModule,
         TypeOrmModule.forRootAsync({
             imports: [SharedModule],
-            useFactory: (configService: ConfigService) => configService.typeOrmConfig,
+            useFactory: (configService: ConfigService) =>
+                configService.typeOrmConfig,
             inject: [ConfigService],
         }),
     ],

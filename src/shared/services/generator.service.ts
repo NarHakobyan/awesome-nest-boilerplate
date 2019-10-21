@@ -9,5 +9,4 @@ export class GeneratorService {
     public fileName(ext: string) {
         return this.uuid() + '.' + ext;
     }
-
 }

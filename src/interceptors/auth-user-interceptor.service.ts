@@ -1,5 +1,10 @@
 import { Observable } from 'rxjs';
-import { ExecutionContext, Injectable, NestInterceptor, CallHandler } from '@nestjs/common';
+import {
+    ExecutionContext,
+    Injectable,
+    NestInterceptor,
+    CallHandler,
+} from '@nestjs/common';
 
 import { UserEntity } from '../modules/user/user.entity';
 import { AuthService } from '../modules/auth/auth.service';
@@ -14,5 +19,4 @@ export class AuthUserInterceptor implements NestInterceptor {
 
         return next.handle();
     }
-
 }

@@ -16,13 +16,18 @@ import { setupSwagger } from './viveo-swagger';
 declare const module: any;
 
 async function bootstrap() {
-    const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true, bodyParser: true });
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+        cors: true,
+        bodyParser: true,
+    });
     app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
     app.use(helmet());
-    app.use(new RateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100, // limit each IP to 100 requests per windowMs
-    }));
+    app.use(
+        new RateLimit({
+            windowMs: 15 * 60 * 1000, // 15 minutes
+            max: 100, // limit each IP to 100 requests per windowMs
+        }),
+    );
     app.use(compression());
     app.use(morgan('combined'));
 
@@ -32,14 +37,16 @@ async function bootstrap() {
 
     app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
-    app.useGlobalPipes(new ValidationPipe({
-        whitelist: true,
-        transform: true,
-        dismissDefaultMessages: true,
-        validationError: {
-            target: false,
-        },
-    }));
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            transform: true,
+            dismissDefaultMessages: true,
+            validationError: {
+                target: false,
+            },
+        }),
+    );
 
     const configService = app.select(SharedModule).get(ConfigService);
 

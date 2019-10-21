@@ -12,5 +12,4 @@ export class AbstractDto {
         this.createdAt = entity.createdAt;
         this.updatedAt = entity.updatedAt;
     }
-
 }

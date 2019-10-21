@@ -1,6 +1,21 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseInterceptors, UseGuards, UploadedFile } from '@nestjs/common';
+import {
+    Controller,
+    Post,
+    Body,
+    HttpCode,
+    HttpStatus,
+    Get,
+    UseInterceptors,
+    UseGuards,
+    UploadedFile,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOkResponse, ApiUseTags, ApiBearerAuth, ApiImplicitFile } from '@nestjs/swagger';
+import {
+    ApiOkResponse,
+    ApiUseTags,
+    ApiBearerAuth,
+    ApiImplicitFile,
+} from '@nestjs/swagger';
 
 import { AuthUser } from '../../decorators/auth-user.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -17,7 +32,6 @@ import { UserRegisterDto } from './dto/UserRegisterDto';
 @Controller('auth')
 @ApiUseTags('auth')
 export class AuthController {
-
     constructor(
         public readonly userService: UserService,
         public readonly authService: AuthService,
@@ -25,11 +39,19 @@ export class AuthController {
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({ type: LoginPayloadDto, description: 'User info with access token' })
-    async userLogin(@Body() userLoginDto: UserLoginDto): Promise<LoginPayloadDto> {
+    @ApiOkResponse({
+        type: LoginPayloadDto,
+        description: 'User info with access token',
+    })
+    async userLogin(
+        @Body() userLoginDto: UserLoginDto,
+    ): Promise<LoginPayloadDto> {
         const userEntity = await this.authService.validateUser(userLoginDto);
 
-        const [user, token] = await Promise.all([userEntity.toDto(), this.authService.createToken(userEntity)]);
+        const [user, token] = await Promise.all([
+            userEntity.toDto(),
+            this.authService.createToken(userEntity),
+        ]);
         return new LoginPayloadDto(user, token);
     }
 
@@ -42,7 +64,10 @@ export class AuthController {
         @Body() userRegisterDto: UserRegisterDto,
         @UploadedFile() file: IFile,
     ): Promise<UserDto> {
-        const createdUser = await this.userService.createUser(userRegisterDto, file);
+        const createdUser = await this.userService.createUser(
+            userRegisterDto,
+            file,
+        );
 
         return createdUser.toDto();
     }

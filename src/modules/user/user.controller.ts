@@ -29,7 +29,6 @@ import { UserService } from './user.service';
 @UseInterceptors(AuthUserInterceptor)
 @ApiBearerAuth()
 export class UserController {
-
     constructor(private _userService: UserService) {}
 
     @Get('admin')
@@ -42,7 +41,11 @@ export class UserController {
     @Get('users')
     @Roles(RoleType.Admin)
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({ status: HttpStatus.OK, description: 'Get users list', type: UsersPageDto })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Get users list',
+        type: UsersPageDto,
+    })
     getUsers(
         @Query(new ValidationPipe({ transform: true }))
             pageOptionsDto: UsersPageOptionsDto,
