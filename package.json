@@ -132,8 +132,8 @@
         }
     },
     "lint-staged": {
-        "*.@(ts)": [
-            "tslint --fix -p .",
+        "*.ts": [
+            "eslint --fix",
             "git add"
         ]
     }
