@@ -1,4 +1,3 @@
-/* tslint:disable */
 module.exports = {
     title: 'Awesome nest boilerplate 🎉',
     description: `An ultimate and awesome nodejs boilerplate wrote in typescript`,

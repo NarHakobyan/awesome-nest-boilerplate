@@ -1,10 +1,11 @@
+/* tslint:disable:naming-convention */
+
 import {
     registerDecorator,
     ValidationOptions,
     ValidationArguments,
 } from 'class-validator';
 
-// tslint:disable-next-line:naming-convention
 export function IsPassword(
     validationOptions?: ValidationOptions,
 ): PropertyDecorator {
