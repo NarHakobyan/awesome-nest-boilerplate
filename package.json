@@ -90,7 +90,6 @@
         "eslint-config-prettier": "^6.4.0",
         "eslint-plugin-import": "^2.18.2",
         "eslint-plugin-import-helpers": "^1.0.2",
-        "eslint-plugin-prefer-arrow": "^1.1.6",
         "eslint-plugin-prettier": "^3.1.1",
         "gh-pages": "^2.1.1",
         "husky": "^3.0.9",

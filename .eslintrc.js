@@ -22,7 +22,6 @@ module.exports = {
     'plugins': [
         '@typescript-eslint',
         '@typescript-eslint/tslint',
-        'prefer-arrow',
         'prettier',
     ],
     'rules': {
@@ -192,7 +191,6 @@ module.exports = {
         'no-unused-labels': 'error',
         'no-var': 'error',
         'object-shorthand': 'error',
-        'prefer-arrow/prefer-arrow-functions': 'error',
         'prefer-const': 'error',
         'prefer-object-spread': 'error',
         'quote-props': [
