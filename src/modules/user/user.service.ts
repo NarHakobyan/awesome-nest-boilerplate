@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindConditions, QueryRunner, SelectQueryBuilder } from 'typeorm';
+import { FindConditions } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
 import { UserRepository } from './user.repository';
@@ -22,36 +22,21 @@ export class UserService {
     /**
      * Find single user
      */
-    findUser(findData: FindConditions<UserEntity>): Promise<UserEntity> {
+    findOne(findData: FindConditions<UserEntity>): Promise<UserEntity> {
         return this.userRepository.findOne(findData);
     }
-
-    /**
-     * Find all users
-     */
-    findUsers(findData: FindConditions<UserEntity>): Promise<UserEntity[]> {
-        return this.userRepository.find(findData);
-    }
-
-    createQueryBuilder(
-        alias = 'user',
-        queryRunner?: QueryRunner,
-    ): SelectQueryBuilder<UserEntity> {
-        return this.userRepository.createQueryBuilder(alias, queryRunner);
-    }
-
     async findByUsernameOrEmail(
         options: Partial<{ username: string; email: string }>,
     ): Promise<UserEntity | undefined> {
-        let queryBuilder = this.userRepository.createQueryBuilder('user');
+        const queryBuilder = this.userRepository.createQueryBuilder('user');
 
         if (options.email) {
-            queryBuilder = queryBuilder.orWhere('user.email = :email', {
+            queryBuilder.orWhere('user.email = :email', {
                 email: options.email,
             });
         }
         if (options.username) {
-            queryBuilder = queryBuilder.orWhere('user.username = :username', {
+            queryBuilder.orWhere('user.username = :username', {
                 username: options.username,
             });
         }

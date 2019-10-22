@@ -60,6 +60,7 @@ export class UtilsService {
         return bcrypt.compare(password, hash || '');
     }
 
+    // FIXME: remove after typescript 3.7 update
     static get<B, C = undefined>(
         func: () => B,
         defaultValue?: C,

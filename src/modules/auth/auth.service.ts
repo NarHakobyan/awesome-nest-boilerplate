@@ -29,7 +29,7 @@ export class AuthService {
     }
 
     async validateUser(userLoginDto: UserLoginDto): Promise<UserEntity> {
-        const user = await this.userService.findUser({
+        const user = await this.userService.findOne({
             email: userLoginDto.email,
         });
         const isPasswordValid = await UtilsService.validateHash(
@@ -40,14 +40,6 @@ export class AuthService {
             throw new UserNotFoundException();
         }
         return user;
-    }
-
-    setAuthUser(user: UserEntity) {
-        return AuthService.setAuthUser(user);
-    }
-
-    getAuthUser() {
-        return AuthService.getAuthUser();
     }
 
     static setAuthUser(user: UserEntity) {

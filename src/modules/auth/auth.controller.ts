@@ -48,11 +48,8 @@ export class AuthController {
     ): Promise<LoginPayloadDto> {
         const userEntity = await this.authService.validateUser(userLoginDto);
 
-        const [user, token] = await Promise.all([
-            userEntity.toDto(),
-            this.authService.createToken(userEntity),
-        ]);
-        return new LoginPayloadDto(user, token);
+        const token = await this.authService.createToken(userEntity);
+        return new LoginPayloadDto(userEntity.toDto(), token);
     }
 
     @Post('register')
