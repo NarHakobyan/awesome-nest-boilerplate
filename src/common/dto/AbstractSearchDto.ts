@@ -1,8 +1,8 @@
 'use strict';
 
-import { Transform } from 'class-transformer';
-import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { ToInt } from '../../decorators/transforms.decorator';
 
 export class AbstractSearchDto {
     @ApiModelProperty()
@@ -13,14 +13,16 @@ export class AbstractSearchDto {
     @ApiModelProperty()
     @IsNumber()
     @IsNotEmpty()
-    @Transform(Number)
+    @ToInt()
     page: number;
+
+    @ApiModelPropertyOptional()
+    @IsNumber()
+    @IsOptional()
+    @ToInt()
+    take = 10;
 
     get skip() {
         return (this.page - 1) * this.take;
-    }
-
-    get take() {
-        return 10;
     }
 }

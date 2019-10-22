@@ -14,11 +14,22 @@ import { Transform } from 'class-transformer';
  * @returns {(target: any, key: string) => void}
  * @constructor
  */
-export function Trim() {
-    return Transform((value: string | string[]) => {
+export const Trim = () =>
+    Transform((value: string | string[]) => {
         if (_.isArray(value)) {
             return value.map(v => _.trim(v).replace(/\s\s+/g, ' '));
         }
         return _.trim(value).replace(/\s\s+/g, ' ');
     });
-}
+
+/**
+ * @description convert string or number to integer
+ * @example
+ * @IsNumber()
+ * @ToInt()
+ * name: number;
+ * @returns {(target: any, key: string) => void}
+ * @constructor
+ */
+export const ToInt = () =>
+    Transform(value => parseInt(value, 10), { toClassOnly: true });
