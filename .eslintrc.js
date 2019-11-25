@@ -24,6 +24,7 @@ module.exports = {
         'prettier',
     ],
     'rules': {
+        '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
         '@typescript-eslint/adjacent-overload-signatures': 'error',
         '@typescript-eslint/array-type': 'error',
         '@typescript-eslint/ban-types': 'error',
@@ -36,8 +37,8 @@ module.exports = {
                 },
             },
         ],
-        '@typescript-eslint/indent': 'error',
-        '@typescript-eslint/interface-name-prefix': 'off',
+        '@typescript-eslint/indent': 'off',
+        '@typescript-eslint/interface-name-prefix': 'error',
         '@typescript-eslint/member-delimiter-style': [
             'error',
             {
@@ -95,18 +96,6 @@ module.exports = {
             'smart',
         ],
         'guard-for-in': 'error',
-        'id-blacklist': [
-            'error',
-            'any',
-            'Number',
-            'number',
-            'String',
-            'string',
-            'Boolean',
-            'boolean',
-            'Undefined',
-            'undefined',
-        ],
         'id-match': 'error',
         'import/no-default-export': 'error',
         'import/no-internal-modules': 'off',
@@ -211,9 +200,9 @@ module.exports = {
             'error',
             {
                 'rulesDirectory': [
-                    '/Users/narek/Desktop/pupper-back-end/node_modules/tslint-eslint-rules/dist/rules',
-                    '/Users/narek/Desktop/pupper-back-end/node_modules/tslint-config-prettier/lib',
-                    '/Users/narek/Desktop/pupper-back-end/node_modules/tslint-consistent-codestyle/rules',
+                    './node_modules/tslint-eslint-rules/dist/rules',
+                    './node_modules/tslint-config-prettier/lib',
+                    './node_modules/tslint-consistent-codestyle/rules',
                 ],
                 'rules': {
                     'align': [
@@ -305,12 +294,6 @@ module.exports = {
                     'no-unnecessary-callback-wrapper': true,
                     'no-unnecessary-else': true,
                     'no-unnecessary-type-annotation': true,
-                    'no-unused': [
-                        true,
-                        'unused-class-expression-name',
-                        'unused-function-expression-name',
-                        'unused-catch-binding',
-                    ],
                     'no-var-before-return': true,
                     'number-literal-format': true,
                     'object-shorthand-properties-first': true,
