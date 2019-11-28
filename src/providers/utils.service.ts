@@ -59,21 +59,4 @@ export class UtilsService {
     static validateHash(password: string, hash: string): Promise<boolean> {
         return bcrypt.compare(password, hash || '');
     }
-
-    // FIXME: remove after typescript 3.7 update
-    static get<B, C = undefined>(
-        func: () => B,
-        defaultValue?: C,
-    ): B | C | undefined {
-        try {
-            const value = func();
-
-            if (_.isUndefined(value)) {
-                return defaultValue;
-            }
-            return value;
-        } catch {
-            return defaultValue;
-        }
-    }
 }
