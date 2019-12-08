@@ -1,6 +1,6 @@
 'use strict';
 
-export interface IAwsConfigInterface {
+export interface IAwsConfig {
     accessKeyId: string;
     secretAccessKey: string;
     bucketName: string;

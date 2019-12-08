@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-import { IAwsConfigInterface } from '../../interfaces/aws-config.interface';
+import { IAwsConfig } from '../../interfaces/IAwsConfig';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 
 export class ConfigService {
@@ -73,7 +73,7 @@ export class ConfigService {
         };
     }
 
-    get awsS3Config(): IAwsConfigInterface {
+    get awsS3Config(): IAwsConfig {
         return {
             accessKeyId: this.get('AWS_S3_ACCESS_KEY_ID'),
             secretAccessKey: this.get('AWS_S3_SECRET_ACCESS_KEY'),

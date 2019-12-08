@@ -7,9 +7,9 @@ import { IFile } from '../../interfaces/IFile';
 import { ValidatorService } from '../../shared/services/validator.service';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
-import { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import { UsersPageOptionsDto } from './dto/UsersPageOptionsDto';
 import { PageMetaDto } from '../../common/dto/PageMetaDto';
-import { UsersPageDto } from './dto/users-page.dto';
+import { UsersPageDto } from './dto/UsersPageDto';
 
 @Injectable()
 export class UserService {

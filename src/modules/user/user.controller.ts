@@ -18,8 +18,8 @@ import { Roles } from '../../decorators/roles.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.service';
-import { UsersPageOptionsDto } from './dto/users-page-options.dto';
-import { UsersPageDto } from './dto/users-page.dto';
+import { UsersPageOptionsDto } from './dto/UsersPageOptionsDto';
+import { UsersPageDto } from './dto/UsersPageDto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
