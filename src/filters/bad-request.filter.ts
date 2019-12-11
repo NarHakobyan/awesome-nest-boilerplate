@@ -5,6 +5,7 @@ import {
     BadRequestException,
     HttpStatus,
 } from '@nestjs/common';
+import { STATUS_CODES } from 'http';
 import { Reflector } from '@nestjs/core';
 import { ValidationError } from 'class-validator';
 import { Response } from 'express';
@@ -27,6 +28,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         }
 
         r.statusCode = statusCode;
+        r.error = STATUS_CODES[statusCode];
 
         response.status(statusCode).json(r);
     }
@@ -36,7 +38,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
             for (const [constraintKey, constraint] of Object.entries(
                 validationError.constraints,
             )) {
-                // convert default messages
                 if (!constraint) {
                     // convert error message to error.fields.{key} syntax for i18n translation
                     validationError.constraints[constraintKey] =
