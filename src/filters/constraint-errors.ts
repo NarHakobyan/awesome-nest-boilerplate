@@ -1,4 +1,4 @@
-'use strict';
+/* eslint-disable camelcase */
 
 interface IConstraintErrors {
     [constraintKey: string]: string;

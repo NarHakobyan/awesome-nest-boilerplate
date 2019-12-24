@@ -38,7 +38,6 @@ module.exports = {
             },
         ],
         '@typescript-eslint/indent': 'off',
-        '@typescript-eslint/interface-name-prefix': 'error',
         '@typescript-eslint/member-delimiter-style': [
             'error',
             {

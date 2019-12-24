@@ -1,6 +1,6 @@
 'use strict';
 
 export enum RoleType {
-    User = 'USER',
-    Admin = 'ADMIN',
+    USER = 'USER',
+    ADMIN = 'ADMIN',
 }
