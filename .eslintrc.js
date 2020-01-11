@@ -22,6 +22,7 @@ module.exports = {
         '@typescript-eslint',
         '@typescript-eslint/tslint',
         'prettier',
+        'simple-import-sort',
     ],
     'rules': {
         '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
