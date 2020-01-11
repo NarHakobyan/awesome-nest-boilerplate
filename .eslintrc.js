@@ -51,6 +51,7 @@ module.exports = {
                 },
             },
         ],
+        'simple-import-sort/sort': 'error',
         '@typescript-eslint/member-ordering': 'off',
         '@typescript-eslint/no-angle-bracket-type-assertion': 'off',
         '@typescript-eslint/no-empty-function': 'error',
