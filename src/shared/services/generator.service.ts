@@ -1,5 +1,5 @@
-import * as uuid from 'uuid/v1';
 import { Injectable } from '@nestjs/common';
+import * as uuid from 'uuid/v1';
 
 @Injectable()
 export class GeneratorService {

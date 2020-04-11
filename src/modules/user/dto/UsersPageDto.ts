@@ -1,6 +1,7 @@
-import { UserDto } from './UserDto';
 import { ApiModelProperty } from '@nestjs/swagger';
+
 import { PageMetaDto } from '../../../common/dto/PageMetaDto';
+import { UserDto } from './UserDto';
 
 export class UsersPageDto {
     @ApiModelProperty({

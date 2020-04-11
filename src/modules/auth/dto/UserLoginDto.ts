@@ -1,7 +1,7 @@
 'use strict';
 
-import { IsString, IsEmail } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsEmail, IsString } from 'class-validator';
 
 export class UserLoginDto {
     @IsString()

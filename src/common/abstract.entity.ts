@@ -1,8 +1,8 @@
 'use strict';
 
 import {
-    PrimaryGeneratedColumn,
     CreateDateColumn,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 

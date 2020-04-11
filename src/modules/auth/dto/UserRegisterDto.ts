@@ -1,14 +1,14 @@
 'use strict';
 
-import {
-    IsString,
-    IsEmail,
-    MinLength,
-    IsNotEmpty,
-    IsPhoneNumber,
-    IsOptional,
-} from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
+import {
+    IsEmail,
+    IsNotEmpty,
+    IsOptional,
+    IsPhoneNumber,
+    IsString,
+    MinLength,
+} from 'class-validator';
 import { Column } from 'typeorm';
 
 export class UserRegisterDto {

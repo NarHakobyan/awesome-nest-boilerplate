@@ -1,4 +1,5 @@
 import 'source-map-support/register';
+
 import * as _ from 'lodash';
 
 import { AbstractEntity } from './common/abstract.entity';

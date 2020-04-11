@@ -1,20 +1,20 @@
 import {
-    Controller,
-    Post,
     Body,
+    Controller,
+    Get,
     HttpCode,
     HttpStatus,
-    Get,
-    UseInterceptors,
-    UseGuards,
+    Post,
     UploadedFile,
+    UseGuards,
+    UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
-    ApiOkResponse,
-    ApiUseTags,
     ApiBearerAuth,
     ApiImplicitFile,
+    ApiOkResponse,
+    ApiUseTags,
 } from '@nestjs/swagger';
 
 import { AuthUser } from '../../decorators/auth-user.decorator';

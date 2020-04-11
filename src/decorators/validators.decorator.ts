@@ -2,8 +2,8 @@
 
 import {
     registerDecorator,
-    ValidationOptions,
     ValidationArguments,
+    ValidationOptions,
 } from 'class-validator';
 
 export function IsPassword(

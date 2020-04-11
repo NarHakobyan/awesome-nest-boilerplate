@@ -3,11 +3,11 @@ import { Type } from 'class-transformer';
 import {
     IsEnum,
     IsInt,
-    Min,
-    IsOptional,
-    Max,
-    IsString,
     IsNotEmpty,
+    IsOptional,
+    IsString,
+    Max,
+    Min,
 } from 'class-validator';
 
 import { Order } from '../constants/order';
