@@ -42,6 +42,7 @@
         "class-transformer": "^0.2.3",
         "class-validator": "^0.10.2",
         "compression": "~1.7.4",
+        "cross-env": "^7.0.2",
         "dotenv": "~8.1.0",
         "express": "~4.17.1",
         "express-rate-limit": "~5.0.0",
