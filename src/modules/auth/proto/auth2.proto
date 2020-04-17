@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package app;
+
+service AuthController {
+    rpc FindMany (HeroById2) returns (Hero2) {}
+}
+
+message HeroById2 {
+    int32 id = 1;
+}
+
+message Hero2 {
+    int32 id = 1;
+    string name = 2;
+}

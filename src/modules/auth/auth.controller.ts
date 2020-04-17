@@ -9,6 +9,7 @@ import {
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
+import { GrpcMethod } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
     ApiBearerAuth,
@@ -50,6 +51,30 @@ export class AuthController {
 
         const token = await this.authService.createToken(userEntity);
         return new LoginPayloadDto(userEntity.toDto(), token);
+    }
+
+    @GrpcMethod('AuthController', 'FindOne')
+    findOne(data: any, metadata: any): any {
+        console.log(data.id);
+        const items = [
+            { id: 1, name: 'John' },
+            { id: 2, name: 'Doe' },
+        ];
+        const a = items.find(({ id }) => id === data.id);
+
+        return a;
+    }
+
+    @GrpcMethod('AuthController', 'FindMany')
+    findMany(data: any, metadata: any): any {
+        console.log(data.id);
+        const items = [
+            { id: 1, name: 'John' },
+            { id: 2, name: 'Doe' },
+        ];
+        const a = items.find(({ id }) => id === data.id);
+
+        return a;
     }
 
     @Post('register')

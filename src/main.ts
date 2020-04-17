@@ -9,6 +9,7 @@ import * as compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
+import { join } from 'path';
 import {
     initializeTransactionalContext,
     patchTypeORMRepositoryWithBaseRepository,
@@ -68,6 +69,18 @@ async function bootstrap() {
             port: configService.getNumber('TRANSPORT_PORT'),
             retryAttempts: 5,
             retryDelay: 3000,
+        },
+    });
+
+    app.connectMicroservice({
+        transport: Transport.GRPC,
+        options: {
+            url: '0.0.0.0:50051',
+            package: 'app',
+            protoPath: [
+                join(__dirname, './modules/auth/proto/auth.proto'),
+                join(__dirname, './modules/auth/proto/auth2.proto'),
+            ],
         },
     });
 
