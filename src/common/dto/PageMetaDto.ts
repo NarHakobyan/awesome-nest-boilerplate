@@ -1,4 +1,4 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { PageOptionsDto } from './PageOptionsDto';
 
@@ -8,16 +8,16 @@ interface IPageMetaDtoParameters {
 }
 
 export class PageMetaDto {
-    @ApiModelProperty()
+    @ApiProperty()
     readonly page: number;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly take: number;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly itemCount: number;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly pageCount: number;
 
     constructor({ pageOptionsDto, itemCount }: IPageMetaDtoParameters) {

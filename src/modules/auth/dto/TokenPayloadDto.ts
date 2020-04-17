@@ -1,12 +1,12 @@
 'use strict';
 
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class TokenPayloadDto {
-    @ApiModelProperty()
+    @ApiProperty()
     expiresIn: number;
 
-    @ApiModelProperty()
+    @ApiProperty()
     accessToken: string;
 
     constructor(data: { expiresIn: number; accessToken: string }) {

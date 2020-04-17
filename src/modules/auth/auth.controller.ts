@@ -12,10 +12,29 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
     ApiBearerAuth,
-    ApiImplicitFile,
+    ApiBody,
     ApiOkResponse,
-    ApiUseTags,
+    ApiTags,
 } from '@nestjs/swagger';
+
+// https://github.com/nestjs/swagger/issues/417#issuecomment-562869578
+export const ApiFile = (fileName = 'file'): MethodDecorator => (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+) => {
+    ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                [fileName]: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })(target, propertyKey, descriptor);
+};
 
 import { AuthUser } from '../../decorators/auth-user.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -30,7 +49,7 @@ import { UserLoginDto } from './dto/UserLoginDto';
 import { UserRegisterDto } from './dto/UserRegisterDto';
 
 @Controller('auth')
-@ApiUseTags('auth')
+@ApiTags('auth')
 export class AuthController {
     constructor(
         public readonly userService: UserService,
@@ -55,7 +74,7 @@ export class AuthController {
     @Post('register')
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({ type: UserDto, description: 'Successfully Registered' })
-    @ApiImplicitFile({ name: 'avatar', required: true })
+    @ApiFile()
     @UseInterceptors(FileInterceptor('avatar'))
     async userRegister(
         @Body() userRegisterDto: UserRegisterDto,

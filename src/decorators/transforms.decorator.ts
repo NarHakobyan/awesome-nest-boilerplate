@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 /**
  * @description trim spaces from start and end, replace multiple spaces with one.
  * @example
- * @ApiModelProperty()
+ * @ApiProperty()
  * @IsString()
  * @Trim()
  * name: string;
@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 export function Trim() {
     return Transform((value: string | string[]) => {
         if (_.isArray(value)) {
-            return value.map(v => _.trim(v).replace(/\s\s+/g, ' '));
+            return value.map((v: any) => _.trim(v).replace(/\s\s+/g, ' '));
         }
         return _.trim(value).replace(/\s\s+/g, ' ');
     });
@@ -32,6 +32,7 @@ export function Trim() {
  * @constructor
  */
 export function ToInt() {
+    // eslint-disable-next-line prettier/prettier
     return Transform(value => parseInt(value, 10), { toClassOnly: true });
 }
 
@@ -45,6 +46,7 @@ export function ToInt() {
  */
 export function ToArray(): (target: any, key: string) => void {
     return Transform(
+        // eslint-disable-next-line prettier/prettier
         value => {
             if (_.isNil(value)) {
                 return [];
