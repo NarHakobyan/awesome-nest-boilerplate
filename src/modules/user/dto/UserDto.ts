@@ -1,31 +1,31 @@
 'use strict';
 
-import { ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 import { RoleType } from '../../../common/constants/role-type';
 import { AbstractDto } from '../../../common/dto/AbstractDto';
 import { UserEntity } from '../user.entity';
 
 export class UserDto extends AbstractDto {
-    @ApiModelPropertyOptional()
+    @ApiPropertyOptional()
     firstName: string;
 
-    @ApiModelPropertyOptional()
+    @ApiPropertyOptional()
     lastName: string;
 
-    @ApiModelPropertyOptional()
+    @ApiPropertyOptional()
     username: string;
 
-    @ApiModelPropertyOptional({ enum: RoleType })
+    @ApiPropertyOptional({ enum: RoleType })
     role: RoleType;
 
-    @ApiModelPropertyOptional()
+    @ApiPropertyOptional()
     email: string;
 
-    @ApiModelPropertyOptional()
+    @ApiPropertyOptional()
     avatar: string;
 
-    @ApiModelPropertyOptional()
+    @ApiPropertyOptional()
     phone: string;
 
     constructor(user: UserEntity) {

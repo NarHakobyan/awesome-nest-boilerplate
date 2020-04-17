@@ -10,7 +10,7 @@ import {
     UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../common/constants/role-type';
 import { AuthUser } from '../../decorators/auth-user.decorator';
@@ -24,7 +24,7 @@ import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
 @Controller('users')
-@ApiUseTags('users')
+@ApiTags('users')
 @UseGuards(AuthGuard, RolesGuard)
 @UseInterceptors(AuthUserInterceptor)
 @ApiBearerAuth()
