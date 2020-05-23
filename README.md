@@ -1,4 +1,4 @@
-# Awesome NestJS v6 Boilerplate
+# Awesome NestJS v7 Boilerplate
 
 [![Awesome NestJS](https://img.shields.io/badge/Awesome-NestJS-blue.svg?longCache=true&style=flat-square)](https://github.com/juliandavidmr/awesome-nestjs)
 
