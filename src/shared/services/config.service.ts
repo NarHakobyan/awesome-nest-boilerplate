@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment */
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 
 import { IAwsConfig } from '../../interfaces/IAwsConfig';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
+import { UserSubscriber } from '../entity-subscribers/user-subscriber';
 
 export class ConfigService {
     constructor() {
@@ -41,7 +43,7 @@ export class ConfigService {
                 true,
                 /\.entity\.ts$/,
             );
-            entities = entityContext.keys().map(id => {
+            entities = entityContext.keys().map((id) => {
                 const entityModule = entityContext(id);
                 const [entity] = Object.values(entityModule);
                 return entity;
@@ -51,7 +53,7 @@ export class ConfigService {
                 false,
                 /\.ts$/,
             );
-            migrations = migrationContext.keys().map(id => {
+            migrations = migrationContext.keys().map((id) => {
                 const migrationModule = migrationContext(id);
                 const [migration] = Object.values(migrationModule);
                 return migration;
@@ -67,6 +69,7 @@ export class ConfigService {
             username: this.get('POSTGRES_USERNAME'),
             password: this.get('POSTGRES_PASSWORD'),
             database: this.get('POSTGRES_DATABASE'),
+            subscribers: [UserSubscriber],
             migrationsRun: true,
             logging: this.nodeEnv === 'development',
             namingStrategy: new SnakeNamingStrategy(),
