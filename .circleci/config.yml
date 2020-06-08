@@ -1,0 +1,50 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+# Orchestrate or schedule a set of jobs
+
+jobs:
+  build:
+    docker:
+    working_directory: ~/laravel
+
+    steps:
+      - checkout
+      - run:
+          name: install cross-env
+          command: npm install cross-env
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "package-lock.json" }}
+            - node-v1-
+
+      - run: npm run production
+
+      - save_cache:
+          key: node-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+  deploy:
+    steps:
+      - checkout
+      - run:
+          name: Deploy to Heroku
+          command: |
+            curl https://cli-assets.heroku.com/install.sh | sh
+            if [ "${CIRCLE_BRANCH}" == "dev" ]; then
+              git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_DEV.git master
+            fi
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_PROD.git master
+            fi
+workflows:
+  # Name the workflow "welcome"
+  CICD:
+    # Run the welcome/run job in its own container
+    jobs:
+      - build
+      - deploy
