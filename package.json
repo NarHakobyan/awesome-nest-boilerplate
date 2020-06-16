@@ -8,7 +8,6 @@
         "build": "tsc -p tsconfig.build.json",
         "format": "prettier --write \"src/**/*.ts\"",
         "start:hmr": "node dist/main",
-        "start": "node src/main.js",
         "start:dev": "ts-node src/main.ts",
         "migration:generate": "ts-node node_modules/typeorm/cli.js migration:generate -f ormconfig -d src/migrations -n",
         "migration:revert": "ts-node node_modules/typeorm/cli.js migration:revert -f ormconfig",
