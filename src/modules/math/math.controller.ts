@@ -15,8 +15,12 @@ export class MathController {
     @Get('sum')
     call(): Observable<number> {
         const pattern = { cmd: 'sum' };
-        const data = [1, 2, 3, 3333, 5];
+        const data = [1, 2, 3, 11111, 5];
         return this.client.send<number>(pattern, data);
+    }
+
+    test(): number {
+        return 15;
     }
 
     @MessagePattern({ cmd: 'sum' })
