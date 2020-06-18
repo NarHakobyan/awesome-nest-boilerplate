@@ -47,7 +47,7 @@ yarn start:dev
   <dd>Already integrated API documentation. To see all available endpoints visit http://localhost:3000/documentation</dd>
 
   <dt><b>Linter</b></dt>  
-  <dd>tslint + eslint + prettier = ❤️</dd>
+  <dd>eslint + prettier = ❤️</dd>
 </dl>
 
 ## Documentation
