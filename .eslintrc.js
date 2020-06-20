@@ -40,7 +40,6 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
         '@typescript-eslint/adjacent-overload-signatures': 'error',
         '@typescript-eslint/array-type': 'error',
-        '@typescript-eslint/ban-types': 'error',
         '@typescript-eslint/explicit-member-accessibility': [
             'off',
             {
@@ -133,7 +132,22 @@ module.exports = {
                 ],
             },
         ],
-
+        '@typescript-eslint/ban-types': ['error', {
+            'types': {
+                'String': {
+                    'message': 'Use string instead',
+                    'fixWith': 'string',
+                },
+                '{}': {
+                    'message': 'Use Record<K, V> instead',
+                    'fixWith': 'Record<K, V>',
+                },
+                'object': {
+                    'message': 'Use Record<K, V> instead',
+                    'fixWith': 'Record<K, V>',
+                },
+            },
+        }],
         // ORIGINAL tslint.json -> 'interface-name': false,
         '@typescript-eslint/interface-name-prefix': 'off',
 
