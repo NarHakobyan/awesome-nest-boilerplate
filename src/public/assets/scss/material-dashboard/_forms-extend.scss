@@ -1,0 +1,95 @@
+.card{
+  .card-body{
+    .col-form-label,
+    .label-on-right{
+      padding: 17px 5px 0 0;
+      text-align: right;
+
+      &.label-checkbox {
+        padding-top: 13px;
+      }
+    }
+    .label-on-right{
+      text-align: left;
+    }
+  }
+  .label-on-right{
+
+
+    code{
+      padding: 2px 4px;
+      font-size: 90%;
+      color: #c7254e;
+      background-color: #f9f2f4;
+      border-radius: 4px;
+    }
+  }
+}
+
+.card-wizard {
+  .input-group .form-group {
+    width: 80%
+  }
+}
+
+form {
+  .form-group {
+    margin: 8px 0 0;
+
+    label[for="inputState"]{
+      position: absolute;
+      top: -12px;
+    }
+
+    select.form-control {
+      position: absolute;
+      top: -5px;
+    }
+
+    .error {
+      font-size: 0.8rem;
+      color: $danger;
+    }
+  }
+
+
+  .card {
+    .card-footer {
+      .form-check {
+        margin-left: 7px;
+      }
+    }
+  }
+
+  .checkbox-radios {
+    margin-top: 8px;
+  }
+}
+
+.bmd-label-static {
+  top: -7px !important;
+}
+
+.form-check .form-check-label {
+  padding-right: 15px;
+}
+
+@media all and (max-width: 991px) {
+  .card{
+    .card-body{
+      .col-form-label,
+      .label-on-right{
+        text-align: left;
+        padding-left: 15px;
+        padding-top: 8px;
+      }
+    }
+  }
+}
+
+
+.bmd-form-group.is-focused {
+  .bmd-label-floating {
+    top: -0.7rem !important;
+  }
+}

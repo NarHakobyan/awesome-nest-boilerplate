@@ -1,0 +1,48 @@
+.progress {
+    height: 4px;
+    border-radius: 0;
+    box-shadow: none;
+    background: #DDDDDD;
+    margin-bottom: 20px;
+    .progress-bar {
+        box-shadow: none;
+        @include variations(unquote(".progress-bar"), unquote(""), background-color, $primary);
+        &.progress-bar-primary{
+            background: $primary !important;
+        }
+        &.progress-bar-info{
+            background: $info;
+        }
+        &.progress-bar-success{
+            background: $success;
+        }
+        &.progress-bar-warning{
+            background: $warning;
+        }
+        &.progress-bar-danger{
+            background: $danger;
+        }
+
+        &.progress-bar-striped {
+          background-image: linear-gradient(45deg,hsla(0,0%,100%,.15) 25%,transparent 0,transparent 50%,hsla(0,0%,100%,.15) 0,hsla(0,0%,100%,.15) 75%,transparent 0,transparent) !important;
+          background-size: 1rem 1rem !important;
+
+        }
+    }
+
+    &.progress-line-primary{
+        background: rgba($primary,.2);
+    }
+    &.progress-line-info{
+        background: rgba($info,.2);
+    }
+    &.progress-line-success{
+        background: rgba($success,.2);
+    }
+    &.progress-line-warning{
+        background: rgba($warning,.2);
+    }
+    &.progress-line-danger{
+        background: rgba($danger,.2);
+    }
+}

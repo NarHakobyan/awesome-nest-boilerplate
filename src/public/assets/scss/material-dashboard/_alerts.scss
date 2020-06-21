@@ -1,0 +1,108 @@
+.alert {
+    border: 0;
+    border-radius: 3px;
+    position: relative;
+    padding: 20px 15px;
+    line-height: 20px;
+
+    b{
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+        font-size: $font-size-small;
+    }
+    // SASS conversion note: please mirror any content change in _mixins-shared.scss alert-variations-content
+    @include alert-variations(unquote(".alert"), unquote(""), $mdb-text-color-light);
+
+    &-info, &-danger, &-warning, &-success, &-rose {
+        color: $mdb-text-color-light;
+    }
+
+    &-default {
+        a, .alert-link {
+            color: $mdb-text-color-primary;
+        }
+    }
+
+    span{
+        display: block;
+        max-width: 89%;
+    }
+
+    &.alert-danger{
+        @include shadow-alert-color($danger);
+        @include alert-icon-color($danger);
+    }
+    &.alert-warning{
+        @include shadow-alert-color($warning);
+        @include alert-icon-color($warning);
+    }
+    &.alert-success{
+        @include shadow-alert-color($success);
+        @include alert-icon-color($success);
+    }
+    &.alert-info{
+        @include shadow-alert-color($info);
+        @include alert-icon-color($info);
+    }
+    &.alert-primary{
+        @include shadow-alert-color($primary);
+        @include alert-icon-color($primary);
+    }
+    &.alert-rose{
+        @include shadow-alert-color($rose);
+        @include alert-icon-color($rose);
+    }
+
+    &.alert-with-icon{
+      margin-top: 43px;
+      padding-left: 66px;
+
+      i[data-notify="icon"] {
+          display: block;
+          left: 15px;
+          position: absolute;
+          margin-top: -39px;
+          font-size: 20px;
+          background-color: $white;
+          padding: 9px;
+          border-radius: 50%;
+          max-width: 38px;
+          @include shadow-big();
+      }
+    }
+
+    .close{
+      line-height: .5;
+        i{
+          color: $white;
+          font-size: 11px;
+        }
+      &:focus {
+        outline: none;
+      }
+    }
+
+    i[data-notify="icon"]{
+        display: none;
+    }
+
+    .alert-icon{
+        display: block;
+        float: left;
+        margin-right: $margin-base;
+
+        i{
+            margin-top: -7px;
+            top: 5px;
+            position: relative;
+        }
+    }
+
+    [data-notify="dismiss"]{
+        margin-right: 5px;
+    }
+}
+
+.places-buttons .btn {
+    margin-bottom: 30px;
+}

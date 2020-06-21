@@ -1,0 +1,71 @@
+.footer-big{
+    padding: $padding-general-x * 2 0;
+
+    .content{
+        text-align: left;
+    }
+
+    .social-feed{
+
+        i{
+            font-size: 20px;
+            display: table-cell;
+            padding-right: 10px;
+        }
+        p{
+            display: table-cell;
+            vertical-align: top;
+            overflow: hidden;
+            padding-bottom: 10px;
+            max-width: 300px;
+        }
+    }
+
+    .gallery-feed{
+        img{
+            width: 20%;
+            margin-right: 5%;
+            margin-bottom: 5%;
+            float: left;
+        }
+    }
+}
+.footer-white{
+    background-color: $white;
+}
+.footer-gray{
+    background-color: $gray-lighter;
+}
+.footer-black{
+    @include radial-gradient(#232323,#585858);
+
+    a{
+        color: $white;
+        opacity: .86;
+
+        &:hover,
+        &:focus{
+            opacity: 1;
+        }
+    }
+
+    .footer-brand{
+        color: $white;
+
+        &:hover,
+        &:focus{
+            color: $white;
+        }
+    }
+
+    h5,
+    h4,
+    i,
+    .copyright{
+        color: $white;
+    }
+
+    hr{
+        border-color: rgba($white, .2);
+    }
+}

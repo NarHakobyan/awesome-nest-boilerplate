@@ -1,0 +1,108 @@
+.pagination{
+    > .page-item > .page-link,
+    > .page-item > span{
+        border: 0;
+        border-radius: 30px !important;
+        transition: all .3s;
+        padding: 0px 11px;
+        margin: 0 3px;
+        min-width: 30px;
+        height: 30px;
+        line-height: 30px;
+        color: $gray-color;
+        font-weight: $font-weight-default;
+        font-size: $mdb-btn-font-size-base;
+        text-transform: uppercase;
+        background: transparent;
+        text-align: center;
+
+        &:hover,
+        &:focus{
+            color: $gray-color;
+        }
+    }
+
+    > .page-item.active > a,
+    > .page-item.active > span{
+        color: $gray-color;
+
+        &,
+        &:focus,
+        &:hover{
+            background-color: $primary;
+            border-color: $primary;
+            color: $white;
+            @include shadow-4dp-color($primary);
+        }
+
+    }
+
+    // Colors
+    &.pagination-info{
+        > .page-item.active > a,
+        > .page-item.active > span{
+            &,
+            &:focus,
+            &:hover{
+                background-color: $info;
+                border-color: $info;
+                @include shadow-4dp-color($info);
+            }
+        }
+    }
+
+    &.pagination-success{
+        > .page-item.active > a,
+        > .page-item.active > span{
+            &,
+            &:focus,
+            &:hover{
+                background-color: $success;
+                border-color: $success;
+                @include shadow-4dp-color($success);
+            }
+        }
+    }
+
+    &.pagination-warning{
+        > .page-item.active > a,
+        > .page-item.active > span{
+            &,
+            &:focus,
+            &:hover{
+                background-color: $warning;
+                border-color: $warning;
+                @include shadow-4dp-color($warning);
+            }
+        }
+    }
+
+    &.pagination-danger{
+        > .page-item.active > a,
+        > .page-item.active > span{
+            &,
+            &:focus,
+            &:hover{
+                background-color: $danger;
+                border-color: $danger;
+                @include shadow-4dp-color($danger);
+            }
+        }
+    }
+}
+
+.material-datatables {
+  .table {
+    .disabled-sorting:before,
+    .disabled-sorting:after {
+      display: none;
+    }
+  }
+
+  .dataTables_paginate .pagination {
+    .paginate_button .page-link {
+      padding: 0px 5px;
+      margin: 0;
+    }
+  }
+}

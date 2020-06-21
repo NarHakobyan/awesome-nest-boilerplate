@@ -1,0 +1,44 @@
+.badge {
+    padding: 5px 12px;
+    text-transform: uppercase;
+    font-size: 10px;
+    color: $white;
+    display: inline-block;
+    white-space: normal;
+    @include badge-color();
+}
+
+.badge-default[href]:hover,
+.badge-default[href]:focus {
+  background-color: darken($gray-color, 5%);
+}
+
+.badge-primary[href]:hover,
+.badge-primary[href]:focus {
+  background-color: darken($primary, 5%);
+}
+
+.badge-info[href]:hover,
+.badge-info[href]:focus {
+  background-color: darken($info, 5%);
+}
+
+.badge-success[href]:hover,
+.badge-success[href]:focus {
+  background-color: darken($success, 5%);
+}
+
+.badge-warning[href]:hover,
+.badge-warning[href]:focus {
+  background-color: darken($warning, 5%);
+  color: $white;
+}
+
+.badge-danger[href]:hover,
+.badge-danger[href]:focus {
+  background-color: darken($danger, 5%);
+}
+.badge-rose[href]:hover,
+.badge-rose[href]:focus {
+  background-color: darken($rose, 5%);
+}

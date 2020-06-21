@@ -1,0 +1,335 @@
+.rtl{
+    .sidebar,
+    .bootstrap-navbar{
+        right: 0;
+        left: auto;
+
+        .nav-mobile-menu .notification{
+            float: right;
+            margin-right: 0;
+            margin-left: 8px;
+        }
+
+        .nav{
+            i{
+                float: right !important;
+                margin-left: 15px;
+                margin-right: 0;
+            }
+
+            p{
+                margin: 0;
+                text-align: right;
+            }
+
+            .caret{
+                left: 11px;
+                right: auto;
+            }
+        }
+
+        .logo{
+            a.logo-mini{
+               float: right;
+               margin-right: 30px;
+               margin-left: 10px;
+            }
+
+            .simple-text{
+                text-align: right;
+            }
+        }
+
+        .user{
+            .user-info > a > span{
+                text-align: right;
+                display: block;
+            }
+
+            .photo{
+                float: right;
+                margin-left: 12px;
+                margin-right: 23px;
+            }
+        }
+
+        .user .user-info .caret{
+            left: 22px;
+            right: auto;
+        }
+
+        .sidebar-wrapper .nav [data-toggle="collapse"] ~ div > ul > li > .sidebar-mini,
+        .sidebar-wrapper .user .user-info [data-toggle="collapse"] ~ div > ul > li > .sidebar-mini{
+            float: right;
+            margin-left: 15px;
+            margin-right: 0;
+        }
+    }
+
+    .navbar-minimize {
+      margin-right: 15px;
+    }
+
+    .navbar-header .navbar-toggle{
+      margin: 10px 0 10px 15px;
+    }
+
+    .btn:not(.btn-just-icon):not(.btn-fab) .fa,
+    .navbar .navbar-nav > li > a.btn:not(.btn-just-icon):not(.btn-fab) .fa{
+      left: 5px;
+    }
+
+    .card .card-header.card-header-icon{
+      float: right;
+    }
+
+    .main-panel{
+      float: left;
+    }
+
+    .navbar > .container-fluid .navbar-brand{
+      margin-right: 10px;;
+    }
+
+    .dropdown-menu{
+      right: auto;
+      left: 0;
+    }
+
+    .card .card-header.card-header-tabs .nav-tabs-title{
+      float: right;
+      padding: 10px 0 10px 10px;
+    }
+
+    .card.card-product .card-footer{
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+    }
+
+    .navbar-nav.navbar-right > li > .dropdown-menu:before,
+    .navbar-nav.navbar-right > li > .dropdown-menu:after{
+      right: auto;
+      left: 12px;
+    }
+
+    .card .form-horizontal .label-on-left{
+        padding-top: 16px;
+        text-align: left;
+    }
+
+    .form-horizontal .radio label span{
+        right: 2px;
+    }
+
+    .form-check .form-check-label {
+      .form-check-sign {
+        .check:before {
+          margin-right: 11px;
+        }
+      }
+    }
+
+    .card .checkbox .checkbox-material:before{
+        left: 0;
+    }
+
+    .nav-pills > li + li{
+        margin-right: 0;
+    }
+
+    .radio-inline, .checkbox-inline{
+        padding-right: 0;
+        margin-top: 5px;
+    }
+
+    .form-horizontal .checkbox-radios .checkbox:first-child, .form-horizontal .checkbox-radios .radio:first-child{
+        margin-top: 5px;
+    }
+
+    .checkbox label,
+    .radio label{
+        padding: 0;
+    }
+
+    .radio label{
+        padding-right: 28px;
+    }
+
+    .card .form-horizontal .label-on-right{
+        text-align: right;
+        padding-top: 17px;
+    }
+
+    .alert{
+        button.close{
+            left: 10px !important;
+            right: auto !important;
+        }
+
+        span[data-notify="icon"]{
+            right: 15px;
+            left: auto;
+        }
+
+        &.alert-with-icon{
+            padding-right: 65px;
+            padding-left: 15px;
+        }
+
+        &.alert-with-icon i[data-notify="icon"]{
+            right: 15px;
+            left: auto;
+        }
+    }
+
+    @media (max-width: 991px){
+        .sidebar .sidebar-wrapper > .nav [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        .sidebar .sidebar-wrapper .user .user-info [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal{
+            text-align: right;
+        }
+    }
+
+    @media (max-width: 768px){
+        .navbar > .container-fluid .navbar-brand{
+            margin-right: 15px;
+        }
+
+        .navbar-header .navbar-toggle{
+            margin-left: 30px;
+        }
+    }
+
+    @media (min-width: 991px){
+        &.sidebar-mini .sidebar  .nav i,
+        &.sidebar-mini .bootstrap-navbar .nav i{
+            margin: 0;
+        }
+
+        &.sidebar-mini .sidebar .sidebar-wrapper > .nav [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar .sidebar-wrapper .user .user-info [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar .sidebar-wrapper .user .user-info > a > span,
+        &.sidebar-mini .sidebar .sidebar-wrapper > .nav li > a p{
+            position: relative;
+        }
+
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper > .nav li > a p,
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper > .nav [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper .user .user-info [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper .user .user-info > a > span,
+        &.sidebar-mini .sidebar .sidebar-wrapper > .nav [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar .sidebar-wrapper .user .user-info [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar .sidebar-wrapper .user .user-info > a > span,
+        &.sidebar-mini .sidebar .sidebar-wrapper > .nav li > a p,
+        &.sidebar-mini .sidebar .logo a.logo-normal{
+            -webkit-transform:  translatX(25px);
+               -moz-transform: translateX(25px);
+               -o-transform: translateX(25px);
+               -ms-transform: translateX(25px);
+               transform: translateX(25px);
+        }
+
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper > .nav li > a p,
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper > .nav [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper .user .user-info [data-toggle="collapse"] ~ div > ul > li > .sidebar-normal,
+        &.sidebar-mini .sidebar:hover .sidebar-wrapper .user .user-info > a > span,
+        &.sidebar-mini .sidebar:hover .logo a.logo-normal{
+            -webkit-transform:  translat3d(0,0,0);
+               -moz-transform: translate3d(0,0,0);
+               -o-transform: translate3d(0,0,0);
+               -ms-transform: translate3d(0,0,0);
+               transform: translate3d(0,0,0);
+        }
+    }
+
+  &.sidebar-mini {
+    .nav {
+      .nav-item {
+        .nav-link i {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  .navbar {
+    .collapse {
+      .nav-item .nav-link {
+        .notification {
+          top: -10px;
+        }
+      }
+    }
+  }
+
+  .sidebar-wrapper {
+    .nav .nav-item,
+    .user .user-info {
+      .collapse,
+      .collapsing {
+        .nav {
+          .nav-item .nav-link {
+            .sidebar-mini {
+              float: right;
+            }
+
+            .sidebar-normal {
+              text-align: right;
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+  &.sidebar-mini {
+    .collapse,
+    .collapsing {
+      .nav {
+        .nav-item .nav-link {
+          .sidebar-mini {
+            margin-right: 0 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar {
+    .nav .nav-item .nav-link i{
+      margin-right: 0;
+    }
+    .nav .nav-item .nav,
+    .user .user-info [data-toggle="collapse"] ~ div .nav {
+        .nav-item .nav-link {
+          .sidebar-mini {
+            margin-right: 0 !important;
+            float: right !important;
+            margin-left: 15px !important;
+          }
+        }
+      }
+      .user .user-info [data-toggle="collapse"] ~ div .nav {
+          .nav-item .nav-link {
+            .sidebar-normal {
+              display: block !important;
+            }
+          }
+        }
+  }
+
+  .main-panel {
+    .card-header-text {
+      .card-text {
+        float: right;
+
+        .card-title,
+        .card-category {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+}

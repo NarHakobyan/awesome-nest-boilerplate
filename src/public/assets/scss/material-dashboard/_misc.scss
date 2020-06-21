@@ -1,0 +1,203 @@
+body{
+    background-color: #eee;
+    color: $black-color;
+    font-weight: 300;
+}
+
+legend {
+  border-bottom: 0;
+}
+
+.serif-font{
+    font-family: $font-family-serif;
+}
+
+// Prevent highlight on mobile
+* {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: transparent;
+  &:focus {
+    outline: 0;
+  }
+}
+
+a{
+  color: $link-color;
+  &:hover,
+  &:focus{
+      color: darken($link-color, 5%);
+      text-decoration: none;
+  }
+
+  &.text-info{
+      &:hover, &:focus{
+          color: darken($info, 5%);
+      }
+  }
+
+  & .material-icons {
+    vertical-align: middle;
+  }
+}
+
+.form-check,
+label{
+    font-size: 14px;
+    line-height: 1.42857;
+    color: $checkboxes-text-color;
+    font-weight: 400;
+}
+
+/*           Animations              */
+.animation-transition-general{
+    @include transition-all($general-transition-time, $transition-linear);
+}
+
+.animation-transition-slow{
+    @include transition-all($slow-transition-time, $transition-linear);
+}
+
+.animation-transition-fast{
+    @include transition-all($fast-transition-time, $transition-ease);
+}
+
+.caret,
+.sidebar a{
+    @include transition-all($fast-transition-time, $transition-ease-in);
+}
+
+
+// Offline documentation
+
+.offline-doc {
+  .navbar.navbar-transparent{
+    padding-top: 25px;
+    border-bottom: none;
+
+    .navbar-minimize {
+      display: none;
+    }
+    .navbar-brand,
+    .collapse .navbar-nav .nav-link {
+      color: $white !important;
+    }
+  }
+
+  .footer {
+    z-index: 3 !important;
+    position: absolute;
+    width: 100%;
+    background: transparent;
+    bottom: 0;
+    color: $white;
+  }
+  .page-header{
+    display: flex;
+    align-items: center;
+
+    .content-center {
+      z-index: 3;
+
+      .brand .title {
+        color: $white;
+      }
+    }
+
+    &:after {
+      background-color: rgba(0, 0, 0, 0.5);
+      content: "";
+      display: block;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 2;
+    }
+  }
+}
+
+// docs
+
+ .bd-docs {
+   .bd-toc-item {
+     .bd-sidenav a span {
+       float: right;
+       margin-top: 5px;
+       padding: 3px 7px;
+       font-size: 8px;
+       line-height: 9px;
+       background-color: $primary;
+     }
+   }
+ }
+
+
+// timepicker increase/decrease buttons
+
+.bootstrap-datetimepicker-widget .timepicker {
+  .table-condesed .btn{
+    .ripple-container {
+      width: 40px;
+      height: 40px;
+      margin: -11px 3px;
+    }
+  }
+}
+
+
+.off-canvas-sidebar {
+  .wrapper-full-page {
+    .page-header {
+      padding: 15vh 0 !important;
+    }
+  }
+}
+
+// RTL Page
+
+html[dir="rtl"] {
+  .main-panel {
+    float: left;
+  }
+
+  .sidebar,
+  .off-canvas-sidebar nav .navbar-collapse {
+    text-align: right;
+  }
+
+  .sidebar {
+    left: unset;
+    right: 0;
+
+    .nav {
+      padding-right: 0;
+
+      i {
+        float: right;
+        margin-left: 15px;
+        margin-right: unset;
+      }
+    }
+  }
+
+  .card {
+    &.card-chart {
+      direction: ltr;
+
+      .card-title,
+      .card-category {
+        text-align: right;
+      }
+    }
+
+    .card-body,
+    .card-footer {
+      direction: rtl;
+    }
+  }
+
+  .form-check .form-check-sign .check:before {
+    margin-right: 10px;
+  }
+}

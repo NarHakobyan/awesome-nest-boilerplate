@@ -1,0 +1,38 @@
+@mixin bmd-social-buttons(){
+    &.btn-facebook {
+      @include bmd-raised-button-variant($white, $social-facebook, $social-facebook);
+    }
+    &.btn-twitter {
+        @include bmd-raised-button-variant($white, $social-twitter, $social-twitter);
+    }
+    &.btn-pinterest {
+        @include bmd-raised-button-variant($white, $social-pinterest, $social-pinterest);
+    }
+    &.btn-google {
+        @include bmd-raised-button-variant($white, $social-google, $social-google);
+    }
+    &.btn-linkedin {
+        @include bmd-raised-button-variant($white, $social-linkedin, $social-linkedin);
+    }
+    &.btn-dribbble {
+        @include bmd-raised-button-variant($white, $social-dribbble, $social-dribbble);
+    }
+    &.btn-github {
+        @include bmd-raised-button-variant($white, $social-github, $social-github);
+    }
+    &.btn-youtube {
+        @include bmd-raised-button-variant($white, $social-youtube, $social-youtube);
+    }
+    &.btn-instagram {
+        @include bmd-raised-button-variant($white, $social-instagram, $social-instagram);
+    }
+    &.btn-reddit {
+        @include bmd-raised-button-variant($white, $social-reddit, $social-reddit);
+    }
+    &.btn-tumblr {
+        @include bmd-raised-button-variant($white, $social-tumblr, $social-tumblr);
+    }
+    &.btn-behance {
+        @include bmd-raised-button-variant($white, $social-behance, $social-behance);
+    }
+}

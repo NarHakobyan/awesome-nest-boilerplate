@@ -1,0 +1,9 @@
+.card-plain{
+  .card-header:not(.card-avatar) {
+      .card-category,
+      .card-description{
+        color: $gray-color;
+      }
+  }
+
+}

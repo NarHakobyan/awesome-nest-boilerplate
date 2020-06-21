@@ -1,0 +1,95 @@
+/*!
+
+ =========================================================
+ * Material Dashboard Pro - v2.1.2
+ =========================================================
+
+ * Product Page: https://www.creative-tim.com/product/material-dashboard-pro
+ * Copyright 2020 Creative Tim (http://www.creative-tim.com)
+
+ =========================================================
+
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+ */
+
+ @import "material-dashboard/variables";
+ @import "material-dashboard/mixins";
+ @import "material-dashboard/mixins/social-buttons";
+ @import "material-dashboard/core-bootstrap";
+
+ // Core Components
+ @import "material-dashboard/buttons";
+ @import "material-dashboard/checkboxes";
+ @import "material-dashboard/radios";
+ @import "material-dashboard/badges";
+ @import "material-dashboard/forms";
+ @import "material-dashboard/input-group";
+ @import "material-dashboard/images";
+ @import "material-dashboard/navbar";
+ @import "material-dashboard/pagination";
+ @import "material-dashboard/pills";
+ @import "material-dashboard/type";
+ @import "material-dashboard/tabs";
+ @import "material-dashboard/tooltip";
+ @import "material-dashboard/popover";
+ @import "material-dashboard/modal";
+ @import "material-dashboard/misc";
+ @import "material-dashboard/headers";
+ @import "material-dashboard/alerts";
+ @import "material-dashboard/footers";
+ @import "material-dashboard/dropdown";
+ @import "material-dashboard/progress";
+ @import "material-dashboard/togglebutton";
+ @import "material-dashboard/ripples";
+@import "material-dashboard/tables";
+@import "material-dashboard/info-areas";
+
+// Cards
+ @import "material-dashboard/cards";
+ @import "material-dashboard/cards/card-signup";
+ @import "material-dashboard/cards/card-plain";
+ @import "material-dashboard/cards/card-plain-extend";
+ @import "material-dashboard/cards/card-stats";
+ @import "material-dashboard/cards/card-testimonials";
+ @import "material-dashboard/cards/card-profile";
+ @import "material-dashboard/cards/card-blog";
+ @import "material-dashboard/cards/card-product";
+ @import "material-dashboard/cards/card-pricing";
+ @import "material-dashboard/cards/card-collapse";
+ @import "material-dashboard/cards/card-form-horizontal";
+ @import "material-dashboard/cards/card-background";
+ @import "material-dashboard/cards/card-rotate";
+
+ // Components for PRO
+ @import "material-dashboard/forms-extend";
+ @import "material-dashboard/misc-extend";
+ @import "material-dashboard/footers-extend";
+ @import "material-dashboard/rtl";
+ @import "material-dashboard/sidebar-and-main-panel";
+ @import "material-dashboard/fixed-plugin";
+ @import "material-dashboard/pages";
+ @import "material-dashboard/timeline";
+ @import "material-dashboard/social-buttons";
+
+ //plugin css
+ @import "material-dashboard/plugins/plugin-nouislider";
+ @import "material-dashboard/plugins/animate";
+ @import "material-dashboard/plugins/sweetalert2";
+ @import "material-dashboard/plugins/datatables.net";
+ @import "material-dashboard/plugins/jquery.jvectormap";
+ @import "material-dashboard/plugins/plugin-datetime-picker";
+ @import "material-dashboard/plugins/plugin-fileupload";
+ @import "material-dashboard/plugins/fullcalendar";
+ @import "material-dashboard/plugins/wizard-card";
+ @import "material-dashboard/plugins/chartist";
+ @import "material-dashboard/plugins/plugin-bootstrap-select";
+ @import "material-dashboard/plugins/perfect-scrollbar";
+ @import "material-dashboard/plugins/plugin-tagsinput";
+
+
+ // example pages and sections
+ @import "material-dashboard/example-pages";
+
+
+ @import "material-dashboard/responsive";

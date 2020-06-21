@@ -1,0 +1,553 @@
+a{
+  color: $link-color;
+  &:hover,
+  &:focus{
+      color: darken($link-color, 5%);
+      text-decoration: none;
+  }
+
+  &.text-info{
+      &:hover, &:focus{
+          color: darken($info, 5%);
+      }
+  }
+
+  & .material-icons {
+    vertical-align: middle;
+  }
+}
+
+
+.animation-transition-fast,
+.navbar,
+.bootstrap-tagsinput .tag,
+.bootstrap-tagsinput [data-role="remove"],
+.card-collapse .card-header a i{
+    @include transitions($fast-transition-time, $transition-ease);
+}
+
+.signup-page{
+  .card-signup{
+    form{
+      .form-check{
+        padding-left: 20px;
+
+        .form-check-label{
+          padding-left: 35px;
+        }
+      }
+    }
+  }
+}
+
+// style for index.html (free version)
+
+.section-signup{
+  .card-signup{
+    .card-header{
+      width: auto;
+    }
+    .card-body{
+      .input-group{
+        padding-bottom: 7px;
+        margin: 27px 0 0 0;
+      }
+    }
+  }
+}
+
+// Fix placement for selectpicker in a Wizzard
+
+.card-wizard {
+  .select-wizard {
+    label {
+      position: absolute;
+      margin-top: 7px;
+    }
+    .bootstrap-select {
+      .btn.select-with-transition {
+        margin-top: 16px;
+      }
+    }
+  }
+}
+
+// offline-doc
+.offline-doc,
+.offline-free-doc {
+  .page-header {
+    height: 100vh !important;
+
+    &:after {
+      background: rgba(0, 0, 0, 0.5) !important;
+    }
+  }
+  .footer {
+    position: absolute;
+    width: 100%;
+    background: transparent;
+    bottom: 0;
+    color: $white;
+    z-index: 1;
+
+    .copyright a{
+      color: $white;
+    }
+  }
+
+  .navbar {
+    .navbar-brand,
+    .navbar-collapse .nav-link {
+      color: $white;
+    }
+
+    .navbar-toggler .navbar-toggler-icon {
+      background-color: $white !important;
+    }
+  }
+
+  .pro-badge {
+    position: absolute;
+    font-size: 22px;
+    text-transform: uppercase;
+    font-weight: bold;
+    right: -30px;
+    padding: 10px 18px;
+    top: -30px;
+    background: $white;
+    border-radius: 3px;
+    color: #444444;
+    line-height: 22px;
+    box-shadow: 0 5px 5px -2px rgba(31, 31, 31, 0.4);
+  }
+}
+
+
+// hinge card
+
+
+
+@-webkit-keyframes hinge {
+  0% {
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+  }
+
+  20%, 60% {
+    -webkit-transform: rotate3d(0, 0, 1, 80deg);
+    transform: rotate3d(0, 0, 1, 80deg);
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+  }
+
+  40%, 80% {
+    -webkit-transform: rotate3d(0, 0, 1, 60deg);
+    transform: rotate3d(0, 0, 1, 60deg);
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    opacity: 1;
+  }
+
+  to {
+    -webkit-transform: translate3d(0, 700px, 0);
+    transform: translate3d(0, 700px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes hinge {
+  0% {
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+  }
+
+  20%, 60% {
+    -webkit-transform: rotate3d(0, 0, 1, 80deg);
+    transform: rotate3d(0, 0, 1, 80deg);
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+  }
+
+  40%, 80% {
+    -webkit-transform: rotate3d(0, 0, 1, 60deg);
+    transform: rotate3d(0, 0, 1, 60deg);
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    opacity: 1;
+  }
+
+  to {
+    -webkit-transform: translate3d(0, 700px, 0);
+    transform: translate3d(0, 700px, 0);
+    opacity: 0;
+  }
+}
+
+.hinge {
+  -webkit-animation-name: hinge;
+  animation-name: hinge;
+}
+
+.animated.hinge {
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.tim-row{
+    margin-bottom: 20px;
+}
+
+.tim-white-buttons {
+    background-color: #777777;
+}
+.title{
+    margin-top: 30px;
+    margin-bottom: 25px;
+    min-height: 32px;
+}
+
+#map {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: calc(100vh - 70px);
+    margin-top: 70px;
+}
+
+.tim-typo{
+    padding-left: 25%;
+    margin-bottom: 40px;
+    position: relative;
+    width: 100%;
+}
+.tim-typo .tim-note{
+    bottom: 5px;
+    color: #c0c1c2;
+    display: block;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15px;
+    left: 0;
+    margin-left: 20px;
+    position: absolute;
+    width: 260px;
+}
+.tim-row{
+    padding-top: 50px;
+}
+.tim-row h3{
+    margin-top: 0;
+}
+#typography h1, #typography h2, #typography h3,
+#typography h4, #typography h5, #typography h6{
+    margin-bottom: 0;
+}
+
+.switch{
+    margin-right: 20px;
+}
+#navbar-full .navbar{
+    border-radius: 0 !important;
+    margin-bottom: 15px;
+    z-index: 2;
+}
+.space{
+    height: 130px;
+    display: block;
+}
+.space-110{
+    height: 110px;
+    display: block;
+}
+.space-50{
+    height: 50px;
+    display: block;
+}
+.space-70{
+    height: 70px;
+    display: block;
+}
+.navigation-example .img-src{
+    background-attachment: scroll;
+}
+
+.navigation-example{
+    background-position: center center;
+    background-size: cover;
+    margin-top:0;
+    min-height: 740px;
+}
+#notifications{
+    background-color: $white;
+    display: block;
+    width: 100%;
+    position: relative;
+}
+#notifications .alert-danger{
+    margin-bottom: 0px;
+}
+.tim-note{
+    text-transform: capitalize;
+}
+
+#buttons .btn{
+    margin: 0 0px 15px;
+}
+.space-100{
+    height: 100px;
+    display: block;
+    width: 100%;
+}
+
+  // PARALLAX
+
+.parallax{
+  width:100%;
+  height:570px;
+
+  display: block;
+  background-attachment: fixed;
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-position: center center;
+
+}
+.parallax .parallax-image{
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+}
+.parallax .parallax-image img{
+    width: 100%;
+}
+
+@media (max-width: 768px){
+    .parallax .parallax-image{
+         width: 100%;
+         height: 640px;
+         overflow: hidden;
+     }
+    .parallax .parallax-image img{
+       height: 100%;
+       width: auto;
+   }
+}
+
+.separator{
+    content: "Separator";
+    color: #FFFFFF;
+    display: block;
+    width: 100%;
+    padding: 20px;
+}
+.separator-line{
+    background-color: #EEE;
+    height: 1px;
+    width: 100%;
+    display: block;
+}
+.separator.separator-gray{
+    background-color: #EEEEEE;
+}
+.social-buttons-demo .btn{
+  margin: 10px 5px 7px 1px;
+}
+
+.img-container{
+    width: 100%;
+    overflow: hidden;
+}
+.img-container img{
+    width: 100%;
+}
+
+.section-black {
+  background-color: #333;
+}
+
+.animate {
+  transition: 1.5s ease-in-out;
+  -moz-transition: 1.5s ease-in-out;
+  -webkit-transition: 1.5s ease-in-out;
+}
+
+.sharing-area{
+    margin-top: 80px;
+}
+.sharing-area .btn{
+    margin: 15px 4px 0;
+    color: #FFFFFF;
+}
+.sharing-area .btn i{
+    font-size: 18px;
+    position: relative;
+    top: 2px;
+    margin-right: 5px;
+}
+#navbar{
+    margin-bottom: -20px;
+}
+.sharing-area .btn-twitter{
+    background-color: #55acee;
+}
+.sharing-area .btn-facebook{
+    background-color: #3b5998;
+}
+.sharing-area .btn-google-plus{
+    background-color: #dd4b39;
+}
+.sharing-area .btn-github{
+    background-color: #333333;
+}
+#navbar .navbar{
+    border-radius: 0;
+}
+
+@media (max-width: 830px){
+    .main-raised{
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}
+
+
+// for data-live-search inside the selectpicker
+
+.bootstrap-select .hidden{
+  display: none;
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+// documentation
+
+.bd-docs {
+  .alert-dismissible {
+    .close {
+      top: 10px;
+    }
+  }
+  .bd-example {
+    .btn.btn-social {
+      margin-bottom: 10px;
+    }
+  }
+
+  .bd-content {
+    .bd-title {
+      .btn {
+        padding: 7px 20px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+
+
+// multilevel dropdown
+
+.dropdown {
+  .dropdown-menu {
+    .dropdown-item.dropdown-toggle + .dropdown-menu {
+      transform: scale(0);
+      transform-origin: 0 0;
+      display: block;
+    }
+  }
+  .dropdown-menu.show {
+    .dropdown-item.dropdown-toggle + .dropdown-menu.show {
+      left: 101% !important;
+      transform: scale(1);
+    }
+
+    .dropdown-toggle.open:after {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// menu-on-left
+
+@media all and (max-width: 991px) {
+  .menu-on-left .navbar{
+    .container,
+    .container-fluid {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+  }
+
+  .timepicker {
+    .btn .ripple-container {
+      top: -11px;
+      left: 3px;
+      z-index: 1;
+      width: 40px;
+      border-radius: 50% !important;
+      height: 40px;
+    }
+  }
+}
+
+
+.card-calendar {
+  .fc-button:focus {
+    outline: none;
+  }
+}
+
+
+.error-page .title {
+  font-size: 12em;
+  color: $white;
+  letter-spacing: $mdb-input-font-size-base;
+  font-weight: $font-weight-extra-bold;
+}
+
+
+@media (max-width: 768px){
+  .offline-doc {
+    .pro-badge {
+      right: -10px !important;
+    }
+  }
+
+  .footer {
+    .float-left {
+      ul li a {
+        padding: .87rem;
+      }
+    }
+  }
+}
+
+
+// fix the PerfectScrollbar issue on Windows
+.perfect-scrollbar-on {
+  .ps__rail-y {
+    display: none;
+  }
+}
