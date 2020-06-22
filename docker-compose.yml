@@ -14,7 +14,7 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: postgres
+      DB_PASSWORD: postgres
     ports:
       - "5433:5432"
     volumes:

@@ -9,7 +9,7 @@ import { Response } from 'express';
 import { STATUS_CODES } from 'http';
 import { QueryFailedError } from 'typeorm';
 
-import { ConstraintErrors } from './constraint-errors';
+import { constraintErrors } from './constraint-errors';
 
 @Catch(QueryFailedError)
 export class QueryFailedFilter implements ExceptionFilter {
@@ -19,7 +19,7 @@ export class QueryFailedFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        const errorMessage = ConstraintErrors[exception.constraint];
+        const errorMessage = constraintErrors[exception.constraint];
 
         const status =
             exception.constraint && exception.constraint.startsWith('UQ')

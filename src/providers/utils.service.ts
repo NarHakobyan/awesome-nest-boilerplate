@@ -25,7 +25,7 @@ export class UtilsService {
         options?: any,
     ): T | T[] {
         if (_.isArray(entity)) {
-            return entity.map(u => new model(u, options));
+            return entity.map((u) => new model(u, options));
         }
 
         return new model(entity, options);
@@ -44,7 +44,7 @@ export class UtilsService {
      * generate random string
      * @param length
      */
-    static generateRandomString(length: number) {
+    static generateRandomString(length: number): string {
         return Math.random()
             .toString(36)
             .replace(/[^a-zA-Z0-9]+/g, '')

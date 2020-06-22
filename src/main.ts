@@ -83,4 +83,4 @@ async function bootstrap() {
     console.info(`server running on port ${port}`);
 }
 
-bootstrap();
+void bootstrap();

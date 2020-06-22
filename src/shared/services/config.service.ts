@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment */
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 
@@ -17,8 +16,6 @@ export class ConfigService {
         for (const envName of Object.keys(process.env)) {
             process.env[envName] = process.env[envName].replace(/\\n/g, '\n');
         }
-
-        console.info(process.env);
     }
 
     public get(key: string): string {
@@ -64,11 +61,11 @@ export class ConfigService {
             migrations,
             keepConnectionAlive: true,
             type: 'postgres',
-            host: this.get('POSTGRES_HOST'),
-            port: this.getNumber('POSTGRES_PORT'),
-            username: this.get('POSTGRES_USERNAME'),
-            password: this.get('POSTGRES_PASSWORD'),
-            database: this.get('POSTGRES_DATABASE'),
+            host: this.get('DB_HOST'),
+            port: this.getNumber('DB_PORT'),
+            username: this.get('DB_USERNAME'),
+            password: this.get('DB_PASSWORD'),
+            database: this.get('DB_DATABASE'),
             subscribers: [UserSubscriber],
             migrationsRun: true,
             logging: this.nodeEnv === 'development',

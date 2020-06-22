@@ -1,9 +1,5 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 
-interface IConstraintErrors {
-    [constraintKey: string]: string;
-}
-
-export const ConstraintErrors: IConstraintErrors = {
+export const constraintErrors: Record<string, string> = {
     UQ_97672ac88f789774dd47f7c8be3: 'error.unique.email',
 };

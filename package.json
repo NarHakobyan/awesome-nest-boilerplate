@@ -65,7 +65,7 @@
         "uuid": "^8.1.0"
     },
     "devDependencies": {
-        "@nestjs/testing": "^7.0.8",
+        "@nestjs/testing": "^7.2.0",
         "@types/bcrypt": "^3.0.0",
         "@types/compression": "^1.7.0",
         "@types/dotenv": "^6.1.1",

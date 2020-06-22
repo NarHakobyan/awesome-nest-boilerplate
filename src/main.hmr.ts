@@ -15,7 +15,7 @@ import { setupSwagger } from './viveo-swagger';
 
 declare const module: any;
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
         cors: true,
         bodyParser: true,
@@ -76,4 +76,4 @@ async function bootstrap() {
     }
 }
 
-bootstrap();
+void bootstrap();

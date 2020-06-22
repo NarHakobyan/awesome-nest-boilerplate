@@ -27,7 +27,7 @@ export class AwsS3Service {
         this._s3 = new AWS.S3(options);
     }
 
-    async uploadImage(file: IFile) {
+    async uploadImage(file: IFile): Promise<string> {
         const fileName = this.generatorService.fileName(
             <string>mime.extension(file.mimetype),
         );
