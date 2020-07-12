@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { ApiBody } from '@nestjs/swagger';
 import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ApiFile = (
     fileName = 'file',
     options: Partial<{ isRequired: boolean; isArray: boolean }> = {},
@@ -22,9 +22,8 @@ export const ApiFile = (
             items: fileSchema,
         };
     }
-    ApiBody({
+    return ApiBody({
         required: isRequired,
-        type: 'multipart/form-data',
         schema: {
             type: 'object',
             properties: {
