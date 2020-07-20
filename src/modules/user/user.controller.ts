@@ -11,6 +11,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { I18nService } from 'nestjs-i18n';
 
 import { RoleType } from '../../common/constants/role-type';
 import { AuthUser } from '../../decorators/auth-user.decorator';
@@ -29,13 +30,22 @@ import { UserService } from './user.service';
 @UseInterceptors(AuthUserInterceptor)
 @ApiBearerAuth()
 export class UserController {
-    constructor(private _userService: UserService) {}
+    constructor(
+        private _userService: UserService,
+        private readonly _i18n: I18nService,
+    ) {}
 
     @Get('admin')
     @Roles(RoleType.USER)
     @HttpCode(HttpStatus.OK)
-    admin(@AuthUser() user: UserEntity): string {
-        return 'only for you admin: ' + user.firstName;
+    async admin(@AuthUser() user: UserEntity): Promise<string> {
+        const translation = await this._i18n.translate(
+            'translations.keywords.admin',
+            {
+                lang: 'en',
+            },
+        );
+        return `${translation} ${user.firstName}`;
     }
 
     @Get('users')

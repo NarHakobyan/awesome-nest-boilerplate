@@ -18,6 +18,14 @@ export class ConfigService {
         }
     }
 
+    get isDevelopment(): boolean {
+        return this.nodeEnv === 'development';
+    }
+
+    get isProduction(): boolean {
+        return this.nodeEnv === 'production';
+    }
+
     public get(key: string): string {
         return process.env[key];
     }
@@ -28,6 +36,10 @@ export class ConfigService {
 
     get nodeEnv(): string {
         return this.get('NODE_ENV') || 'development';
+    }
+
+    get fallbackLanguage(): string {
+        return this.get('FALLBACK_LANGUAGE').toLowerCase();
     }
 
     get typeOrmConfig(): TypeOrmModuleOptions {

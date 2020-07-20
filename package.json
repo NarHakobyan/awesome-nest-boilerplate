@@ -51,6 +51,7 @@
         "lodash": "^4.17.15",
         "mime-types": "~2.1.27",
         "morgan": "^1.10.0",
+        "nestjs-i18n": "^8.0.6",
         "passport": "~0.4.1",
         "passport-jwt": "^4.0.0",
         "pg": "^8.2.1",

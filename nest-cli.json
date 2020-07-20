@@ -3,6 +3,7 @@
     "collection": "@nestjs/schematics",
     "sourceRoot": "src",
     "compilerOptions": {
-        "plugins": ["@nestjs/swagger/plugin"]
+        "plugins": ["@nestjs/swagger/plugin"],
+        "assets": ["i18n/**/*"]
     }
 }
