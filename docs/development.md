@@ -48,10 +48,10 @@ Some helper script to work with database
 
 ```bash
 # To create new migration file
-yarn typeorm:migration:create migration_name
+yarn migration:create migration_name
 
 # Truncate full database (note: it isn't deleting the database)
-yarn typeorm:schema:drop
+yarn schema:drop
 
 # Generate migration from update of entities
 yarn migration:generate migration_name
