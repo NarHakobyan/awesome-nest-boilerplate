@@ -53,7 +53,6 @@ async function bootstrap() {
         new ValidationPipe({
             whitelist: true,
             transform: true,
-            dismissDefaultMessages: true,
             validationError: {
                 target: false,
             },
