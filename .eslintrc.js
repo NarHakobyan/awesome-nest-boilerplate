@@ -249,14 +249,6 @@ module.exports = {
             'consistent-as-needed',
         ],
         'radix': 'error',
-        'space-before-function-paren': [
-            'error',
-            {
-                'anonymous': 'never',
-                'named': 'never',
-                'asyncArrow': 'always',
-            },
-        ],
         'use-isnan': 'error',
         'valid-typeof': 'off',
         '@typescript-eslint/tslint/config': [

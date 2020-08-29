@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FindConditions } from 'typeorm';
 
-import { PageMetaDto } from '../../common/dto/PageMetaDto';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception';
 import { IFile } from '../../interfaces/IFile';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
@@ -65,15 +64,10 @@ export class UserService {
 
     async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
         const queryBuilder = this.userRepository.createQueryBuilder('user');
-        const [users, usersCount] = await queryBuilder
-            .skip(pageOptionsDto.skip)
-            .take(pageOptionsDto.take)
-            .getManyAndCount();
-
-        const pageMetaDto = new PageMetaDto({
+        const [users, pageMetaDto] = await queryBuilder.paginate(
             pageOptionsDto,
-            itemCount: usersCount,
-        });
+        );
+
         return new UsersPageDto(users.toDtos(), pageMetaDto);
     }
 }
