@@ -9,9 +9,9 @@ import * as morgan from 'morgan';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
+import { setupSwagger } from './setup-swagger';
 import { ConfigService } from './shared/services/config.service';
 import { SharedModule } from './shared/shared.module';
-import { setupSwagger } from './viveo-swagger';
 
 declare const module: any;
 
