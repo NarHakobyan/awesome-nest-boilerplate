@@ -1,5 +1,3 @@
-'use strict';
-
 export interface IPaginationOptions {
     /**
      * the amount of items to be requested per page

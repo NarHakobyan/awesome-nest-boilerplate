@@ -72,4 +72,14 @@ export class UserService {
 
         return items.toPageDto(pageMetaDto);
     }
+
+    async getUser(userId: string) {
+        const queryBuilder = this.userRepository.createQueryBuilder('user');
+
+        queryBuilder.where('user.id = :userId', { userId });
+
+        const userEntity = await queryBuilder.getOne();
+
+        return userEntity.toDto();
+    }
 }
