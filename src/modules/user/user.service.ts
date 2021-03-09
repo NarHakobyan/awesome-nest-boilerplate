@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { FindConditions } from 'typeorm';
 
+import { PageDto } from '../../common/dto/PageDto';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception';
 import { IFile } from '../../interfaces/IFile';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
-import { UsersPageDto } from './dto/UsersPageDto';
+import { UserDto } from './dto/UserDto';
 import { UsersPageOptionsDto } from './dto/UsersPageOptionsDto';
 import { UserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
@@ -48,26 +49,27 @@ export class UserService {
         userRegisterDto: UserRegisterDto,
         file: IFile,
     ): Promise<UserEntity> {
-        let avatar: string;
+        const user = this.userRepository.create(userRegisterDto);
+
         if (file && !this.validatorService.isImage(file.mimetype)) {
             throw new FileNotImageException();
         }
 
         if (file) {
-            avatar = await this.awsS3Service.uploadImage(file);
+            user.avatar = await this.awsS3Service.uploadImage(file);
         }
-
-        const user = this.userRepository.create({ ...userRegisterDto, avatar });
 
         return this.userRepository.save(user);
     }
 
-    async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<UsersPageDto> {
+    async getUsers(
+        pageOptionsDto: UsersPageOptionsDto,
+    ): Promise<PageDto<UserDto>> {
         const queryBuilder = this.userRepository.createQueryBuilder('user');
-        const [users, pageMetaDto] = await queryBuilder.paginate(
+        const { items, pageMetaDto } = await queryBuilder.paginate(
             pageOptionsDto,
         );
 
-        return new UsersPageDto(users.toDtos(), pageMetaDto);
+        return items.toPageDto(pageMetaDto);
     }
 }

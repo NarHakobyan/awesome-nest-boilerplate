@@ -11,15 +11,16 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { I18nService } from 'nestjs-i18n';
 
 import { RoleType } from '../../common/constants/role-type';
+import { PageDto } from '../../common/dto/PageDto';
 import { AuthUser } from '../../decorators/auth-user.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.service';
-import { UsersPageDto } from './dto/UsersPageDto';
+import { TranslationService } from '../../shared/services/translation.service';
+import { UserDto } from './dto/UserDto';
 import { UsersPageOptionsDto } from './dto/UsersPageOptionsDto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
@@ -31,16 +32,16 @@ import { UserService } from './user.service';
 @ApiBearerAuth()
 export class UserController {
     constructor(
-        private _userService: UserService,
-        private readonly _i18n: I18nService,
+        private userService: UserService,
+        private readonly translationService: TranslationService,
     ) {}
 
     @Get('admin')
     @Roles(RoleType.USER)
     @HttpCode(HttpStatus.OK)
     async admin(@AuthUser() user: UserEntity): Promise<string> {
-        const translation = await this._i18n.translate(
-            'translations.keywords.admin',
+        const translation = await this.translationService.translate(
+            'keywords.admin',
             {
                 lang: 'en',
             },
@@ -54,12 +55,12 @@ export class UserController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Get users list',
-        type: UsersPageDto,
+        type: PageDto,
     })
     getUsers(
         @Query(new ValidationPipe({ transform: true }))
         pageOptionsDto: UsersPageOptionsDto,
-    ): Promise<UsersPageDto> {
-        return this._userService.getUsers(pageOptionsDto);
+    ): Promise<PageDto<UserDto>> {
+        return this.userService.getUsers(pageOptionsDto);
     }
 }

@@ -2,6 +2,7 @@ import { Column, Entity } from 'typeorm';
 
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../common/constants/role-type';
+import { VirtualColumn } from '../../decorators/virtual-column.decorator';
 import { UserDto } from './dto/UserDto';
 
 @Entity({ name: 'users' })
@@ -26,6 +27,9 @@ export class UserEntity extends AbstractEntity<UserDto> {
 
     @Column({ nullable: true })
     avatar: string;
+
+    @VirtualColumn()
+    fullName: string;
 
     dtoClass = UserDto;
 }

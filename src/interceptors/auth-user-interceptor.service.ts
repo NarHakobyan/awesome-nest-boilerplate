@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
-import { AuthService } from '../modules/auth/auth.service';
 import { UserEntity } from '../modules/user/user.entity';
+import { ContextService } from '../providers/context.service';
 
 @Injectable()
 export class AuthUserInterceptor implements NestInterceptor {
@@ -15,7 +15,7 @@ export class AuthUserInterceptor implements NestInterceptor {
         const request = context.switchToHttp().getRequest();
 
         const user = <UserEntity>request.user;
-        AuthService.setAuthUser(user);
+        ContextService.setAuthUser(user);
 
         return next.handle();
     }

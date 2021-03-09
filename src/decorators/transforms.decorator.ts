@@ -1,7 +1,7 @@
 /* tslint:disable:naming-convention */
 
 import { Transform } from 'class-transformer';
-import * as _ from 'lodash';
+import { castArray, isNil, trim } from 'lodash';
 
 /**
  * @description trim spaces from start and end, replace multiple spaces with one.
@@ -14,11 +14,12 @@ import * as _ from 'lodash';
  * @constructor
  */
 export function Trim() {
-    return Transform((value: string | string[]) => {
-        if (_.isArray(value)) {
-            return value.map((v) => _.trim(v).replace(/\s\s+/g, ' '));
+    return Transform((params) => {
+        const value = params.value;
+        if (Array.isArray(value)) {
+            return value.map((v) => trim(v).replace(/\s\s+/g, ' '));
         }
-        return _.trim(value).replace(/\s\s+/g, ' ');
+        return trim(value).replace(/\s\s+/g, ' ');
     });
 }
 
@@ -32,7 +33,13 @@ export function Trim() {
  * @constructor
  */
 export function ToInt() {
-    return Transform((value) => parseInt(value, 10), { toClassOnly: true });
+    return Transform(
+        (params) => {
+            const value = params.value;
+            return parseInt(value, 10);
+        },
+        { toClassOnly: true },
+    );
 }
 
 /**
@@ -45,11 +52,12 @@ export function ToInt() {
  */
 export function ToArray(): (target: any, key: string) => void {
     return Transform(
-        (value) => {
-            if (_.isNil(value)) {
+        (params) => {
+            const value = params.value;
+            if (isNil(value)) {
                 return [];
             }
-            return _.castArray(value);
+            return castArray(value);
         },
         { toClassOnly: true },
     );

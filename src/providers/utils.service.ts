@@ -1,5 +1,4 @@
-import * as bcrypt from 'bcrypt';
-import * as _ from 'lodash';
+import bcrypt from 'bcrypt';
 
 export class UtilsService {
     /**
@@ -12,19 +11,19 @@ export class UtilsService {
     public static toDto<T, E>(
         model: new (entity: E, options?: any) => T,
         entity: E,
-        options?: any,
+        options?: Record<string, any>,
     ): T;
     public static toDto<T, E>(
         model: new (entity: E, options?: any) => T,
         entity: E[],
-        options?: any,
+        options?: Record<string, any>,
     ): T[];
     public static toDto<T, E>(
         model: new (entity: E, options?: any) => T,
         entity: E | E[],
-        options?: any,
+        options?: Record<string, any>,
     ): T | T[] {
-        if (_.isArray(entity)) {
+        if (Array.isArray(entity)) {
             return entity.map((u) => new model(u, options));
         }
 
@@ -57,6 +56,9 @@ export class UtilsService {
      * @returns {Promise<boolean>}
      */
     static validateHash(password: string, hash: string): Promise<boolean> {
-        return bcrypt.compare(password, hash || '');
+        if (!password || !hash) {
+            return Promise.resolve(false);
+        }
+        return bcrypt.compare(password, hash);
     }
 }

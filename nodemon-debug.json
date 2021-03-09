@@ -6,5 +6,5 @@
     "ignore": [
         "src/**/*.spec.ts"
     ],
-    "exec": "cross-env TS_NODE_CACHE=false node --inspect -r ts-node/register src/main.ts"
+    "exec": "cross-env TS_NODE_CACHE=false node --inspect -r ts-node/register src/main"
 }

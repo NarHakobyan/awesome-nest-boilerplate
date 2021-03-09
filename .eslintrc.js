@@ -37,7 +37,10 @@ module.exports = {
     rules: {
         'simple-import-sort/sort': 'error',
         '@typescript-eslint/camelcase': 'off',
-        '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
+        '@typescript-eslint/no-unused-vars-experimental': [
+            'error',
+            { ignoredNamesRegex: '^_' }
+        ],
         '@typescript-eslint/adjacent-overload-signatures': 'error',
         '@typescript-eslint/array-type': 'error',
         '@typescript-eslint/explicit-member-accessibility': [
@@ -97,12 +100,11 @@ module.exports = {
         '@typescript-eslint/naming-convention': [
             'error',
             {
-                selector: 'default', format: ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE'], 'filter': {
-                    'regex': '^_.*$',
-                    'match': false,
-                },
+                "leadingUnderscore": "allow",
+                selector: 'default', format: ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE'],
             },
             {
+                "leadingUnderscore": "allow",
                 selector: 'variable',
                 format: ['camelCase', 'UPPER_CASE'],
             },
@@ -119,7 +121,6 @@ module.exports = {
                 selector: 'memberLike',
                 modifiers: ['private'],
                 format: ['camelCase'],
-                leadingUnderscore: 'require',
             },
             {
                 selector: 'variable',
@@ -177,7 +178,6 @@ module.exports = {
             'error',
         ],
         'arrow-body-style': 'error',
-        'complexity': ['warn', 3],
         'constructor-super': 'error',
         'curly': 'error',
         'dot-notation': 'error',
@@ -278,10 +278,9 @@ module.exports = {
                     'naming-convention': [
                         true,
                         {
+                            'leadingUnderscore': 'optional',
                             'type': 'default',
                             'format': 'camelCase',
-                            'leadingUnderscore': 'forbid',
-                            'trailingUnderscore': 'forbid',
                         },
                         {
                             'type': 'variable',
@@ -298,17 +297,14 @@ module.exports = {
                         {
                             'type': 'parameter',
                             'modifiers': 'unused',
-                            'leadingUnderscore': 'allow',
                         },
                         {
                             'type': 'member',
                             'modifiers': 'private',
-                            'leadingUnderscore': 'require',
                         },
                         {
                             'type': 'member',
                             'modifiers': 'protected',
-                            'leadingUnderscore': 'require',
                         },
                         {
                             'type': 'property',

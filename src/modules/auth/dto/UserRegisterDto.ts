@@ -1,5 +1,3 @@
-'use strict';
-
 import { ApiProperty } from '@nestjs/swagger';
 import {
     IsEmail,
@@ -11,31 +9,36 @@ import {
 } from 'class-validator';
 import { Column } from 'typeorm';
 
+import { Trim } from '../../../decorators/transforms.decorator';
+
 export class UserRegisterDto {
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    @ApiProperty()
+    @Trim()
     readonly firstName: string;
 
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    @ApiProperty()
+    @Trim()
     readonly lastName: string;
 
+    @ApiProperty()
     @IsString()
     @IsEmail()
     @IsNotEmpty()
-    @ApiProperty()
+    @Trim()
     readonly email: string;
 
+    @ApiProperty({ minLength: 6 })
     @IsString()
     @MinLength(6)
-    @ApiProperty({ minLength: 6 })
     readonly password: string;
 
+    @ApiProperty()
     @Column()
     @IsPhoneNumber('ZZ')
     @IsOptional()
-    @ApiProperty()
     phone: string;
 }

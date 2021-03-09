@@ -1,6 +1,6 @@
 import './src/boilerplate.polyfill';
 
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 import { SnakeNamingStrategy } from './src/snake-naming.strategy';
 

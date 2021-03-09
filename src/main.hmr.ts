@@ -2,10 +2,10 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import * as compression from 'compression';
-import * as RateLimit from 'express-rate-limit';
-import * as helmet from 'helmet';
-import * as morgan from 'morgan';
+import compression from 'compression';
+import RateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';

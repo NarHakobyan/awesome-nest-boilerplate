@@ -1,14 +1,19 @@
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+    ClassSerializerInterceptor,
+    HttpStatus,
+    UnprocessableEntityException,
+    ValidationPipe,
+} from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import {
     ExpressAdapter,
     NestExpressApplication,
 } from '@nestjs/platform-express';
-import * as compression from 'compression';
-import * as RateLimit from 'express-rate-limit';
-import * as helmet from 'helmet';
-import * as morgan from 'morgan';
+import compression from 'compression';
+import RateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import {
     initializeTransactionalContext,
     patchTypeORMRepositoryWithBaseRepository,
@@ -52,11 +57,11 @@ async function bootstrap() {
     app.useGlobalPipes(
         new ValidationPipe({
             whitelist: true,
+            errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
             transform: true,
             dismissDefaultMessages: true,
-            validationError: {
-                target: false,
-            },
+            exceptionFactory: (errors) =>
+                new UnprocessableEntityException(errors),
         }),
     );
 
