@@ -5,7 +5,7 @@ RUN yarn install
 
 COPY . ./
 
-RUN yarn build
+RUN yarn build:prod
 
 FROM node:dubnium AS node_modules
 COPY package.json yarn.lock ./
