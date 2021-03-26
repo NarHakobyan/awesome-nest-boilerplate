@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AwsS3Service } from './services/aws-s3.service';
 import { ConfigService } from './services/config.service';
 import { GeneratorService } from './services/generator.service';
+import { TranslationService } from './services/translation.service';
 import { ValidatorService } from './services/validator.service';
 
 const providers = [
@@ -11,6 +12,7 @@ const providers = [
     ValidatorService,
     AwsS3Service,
     GeneratorService,
+    TranslationService,
 ];
 
 @Global()
