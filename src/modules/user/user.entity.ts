@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity } from 'typeorm';
 
 import { AbstractEntity } from '../../common/abstract.entity';
@@ -31,5 +32,6 @@ export class UserEntity extends AbstractEntity<UserDto> {
     @VirtualColumn()
     fullName: string;
 
+    @Exclude()
     dtoClass = UserDto;
 }

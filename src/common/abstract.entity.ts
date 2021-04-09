@@ -1,5 +1,6 @@
 'use strict';
 
+import { Exclude } from 'class-transformer';
 import {
     CreateDateColumn,
     PrimaryGeneratedColumn,
@@ -25,6 +26,7 @@ export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
     })
     updatedAt: Date;
 
+    @Exclude()
     abstract dtoClass: new (entity: AbstractEntity, options?: any) => T;
 
     toDto(options?: any) {
