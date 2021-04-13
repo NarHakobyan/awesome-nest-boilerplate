@@ -26,7 +26,7 @@ import { setupSwagger } from './setup-swagger';
 import { ConfigService } from './shared/services/config.service';
 import { SharedModule } from './shared/shared.module';
 
-async function bootstrap() {
+export async function bootstrap(): Promise<NestExpressApplication> {
     initializeTransactionalContext();
     patchTypeORMRepositoryWithBaseRepository();
     const app = await NestFactory.create<NestExpressApplication>(
@@ -86,6 +86,8 @@ async function bootstrap() {
     await app.listen(port);
 
     console.info(`server running on port ${port}`);
+
+    return app;
 }
 
 void bootstrap();
