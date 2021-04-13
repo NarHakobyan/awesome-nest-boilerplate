@@ -35,6 +35,7 @@ module.exports = {
     ],
     rules: {
         'simple-import-sort/imports': 'error',
+        'simple-import-sort/exports': 'error',
         '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/no-unused-vars-experimental': [
             'error',
