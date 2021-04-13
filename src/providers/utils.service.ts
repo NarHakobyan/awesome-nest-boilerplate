@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import bcrypt from 'bcrypt';
 
 export class UtilsService {

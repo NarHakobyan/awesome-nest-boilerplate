@@ -1,28 +1,27 @@
 const path = require('path');
 
 module.exports = {
-    'env': {
-        'browser': true,
-        'es6': true,
-        'node': true,
+    env: {
+        browser: true,
+        es6: true,
+        node: true,
     },
-    'parser': '@typescript-eslint/parser',
-    'parserOptions': {
-        'project': path.resolve(__dirname, './tsconfig.eslint.json'),
-        'sourceType': 'module',
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+        project: path.resolve(__dirname, './tsconfig.eslint.json'),
+        sourceType: 'module',
     },
     extends: [
         'plugin:import/errors',
         'plugin:import/warnings',
         'plugin:import/typescript',
-        'prettier/@typescript-eslint',
+        'prettier',
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
-        'plugin:prettier/recommended',
     ],
-    'settings': {
+    settings: {
         'import/parsers': { '@typescript-eslint/parser': ['.ts'] },
     },
     plugins: [
@@ -35,19 +34,19 @@ module.exports = {
         'import',
     ],
     rules: {
-        'simple-import-sort/sort': 'error',
+        'simple-import-sort/imports': 'error',
         '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/no-unused-vars-experimental': [
             'error',
-            { ignoredNamesRegex: '^_' }
+            { ignoredNamesRegex: '^_' },
         ],
         '@typescript-eslint/adjacent-overload-signatures': 'error',
         '@typescript-eslint/array-type': 'error',
         '@typescript-eslint/explicit-member-accessibility': [
             'off',
             {
-                'overrides': {
-                    'constructors': 'off',
+                overrides: {
+                    constructors: 'off',
                 },
             },
         ],
@@ -56,13 +55,13 @@ module.exports = {
         '@typescript-eslint/member-delimiter-style': [
             'error',
             {
-                'multiline': {
-                    'delimiter': 'semi',
-                    'requireLast': true,
+                multiline: {
+                    delimiter: 'semi',
+                    requireLast: true,
                 },
-                'singleline': {
-                    'delimiter': 'semi',
-                    'requireLast': false,
+                singleline: {
+                    delimiter: 'semi',
+                    requireLast: false,
                 },
             },
         ],
@@ -86,13 +85,10 @@ module.exports = {
             'error',
             'single',
             {
-                'avoidEscape': true,
+                avoidEscape: true,
             },
         ],
-        '@typescript-eslint/semi': [
-            'error',
-            'always',
-        ],
+        '@typescript-eslint/semi': ['error', 'always'],
         '@typescript-eslint/no-unsafe-return': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
@@ -100,11 +96,12 @@ module.exports = {
         '@typescript-eslint/naming-convention': [
             'error',
             {
-                "leadingUnderscore": "allow",
-                selector: 'default', format: ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE'],
+                leadingUnderscore: 'allow',
+                selector: 'default',
+                format: ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE'],
             },
             {
-                "leadingUnderscore": "allow",
+                leadingUnderscore: 'allow',
                 selector: 'variable',
                 format: ['camelCase', 'UPPER_CASE'],
             },
@@ -137,69 +134,61 @@ module.exports = {
                 paths: [
                     {
                         name: 'rxjs/Rx',
-                        message: 'Please import directly from \'rxjs\' instead',
+                        message: "Please import directly from 'rxjs' instead",
                     },
                 ],
             },
         ],
-        '@typescript-eslint/ban-types': ['error', {
-            'types': {
-                'String': {
-                    'message': 'Use string instead',
-                    'fixWith': 'string',
-                },
-                '{}': {
-                    'message': 'Use Record<K, V> instead',
-                    'fixWith': 'Record<K, V>',
-                },
-                'object': {
-                    'message': 'Use Record<K, V> instead',
-                    'fixWith': 'Record<K, V>',
+        '@typescript-eslint/ban-types': [
+            'error',
+            {
+                types: {
+                    String: {
+                        message: 'Use string instead',
+                        fixWith: 'string',
+                    },
+                    '{}': {
+                        message: 'Use Record<K, V> instead',
+                        fixWith: 'Record<K, V>',
+                    },
+                    object: {
+                        message: 'Use Record<K, V> instead',
+                        fixWith: 'Record<K, V>',
+                    },
                 },
             },
-        }],
+        ],
         '@typescript-eslint/interface-name-prefix': 'off',
 
         'no-restricted-syntax': [
             'error',
             {
                 selector:
-                    'CallExpression[callee.object.name=\'console\'][callee.property.name=/^(debug|log|time|timeEnd|trace)$/]',
+                    "CallExpression[callee.object.name='console'][callee.property.name=/^(debug|log|time|timeEnd|trace)$/]",
                 message: 'Unexpected property on console object was called',
             },
         ],
 
         '@typescript-eslint/no-non-null-assertion': 'error',
-        'object-curly-spacing': [
-            'error',
-            'always',
-        ],
-        'no-multi-spaces': [
-            'error',
-        ],
+        'object-curly-spacing': ['error', 'always'],
+        'no-multi-spaces': ['error'],
         'arrow-body-style': 'error',
         'constructor-super': 'error',
-        'curly': 'error',
+        curly: 'error',
         'dot-notation': 'error',
         'eol-last': 'error',
-        'eqeqeq': [
-            'error',
-            'smart',
-        ],
+        eqeqeq: ['error', 'smart'],
         'guard-for-in': 'error',
         'id-match': 'error',
         'import/no-default-export': 'error',
         'import/no-deprecated': 'warn',
         'import/no-internal-modules': 'off',
         'import/order': 'off',
-        'max-classes-per-file': [
-            'error',
-            1,
-        ],
+        'max-classes-per-file': ['error', 1],
         'max-len': [
             'error',
             {
-                'code': 150,
+                code: 150,
             },
         ],
         'new-parens': 'error',
@@ -218,7 +207,7 @@ module.exports = {
         'no-multiple-empty-lines': [
             'error',
             {
-                'max': 1,
+                max: 1,
             },
         ],
         'no-new-func': 'error',
@@ -231,7 +220,7 @@ module.exports = {
         'no-shadow': [
             'error',
             {
-                'hoist': 'all',
+                hoist: 'all',
             },
         ],
         'no-throw-literal': 'error',
@@ -244,92 +233,67 @@ module.exports = {
         'object-shorthand': 'error',
         'prefer-const': 'error',
         'prefer-object-spread': 'error',
-        'quote-props': [
-            'error',
-            'consistent-as-needed',
-        ],
-        'radix': 'error',
+        'quote-props': ['error', 'consistent-as-needed'],
+        radix: 'error',
         'use-isnan': 'error',
         'valid-typeof': 'off',
         '@typescript-eslint/tslint/config': [
             'error',
             {
-                'rulesDirectory': [
+                rulesDirectory: [
                     './node_modules/tslint-eslint-rules/dist/rules',
                     './node_modules/tslint-config-prettier/lib',
                     './node_modules/tslint-consistent-codestyle/rules',
                 ],
-                'rules': {
-                    'align': [
-                        true,
-                        'parameters',
-                        'statements',
-                        'members',
-                    ],
-                    'comment-format': [
-                        true,
-                        'check-space',
-                    ],
+                rules: {
+                    align: [true, 'parameters', 'statements', 'members'],
+                    'comment-format': [true, 'check-space'],
                     'import-spacing': true,
-                    'jsdoc-format': [
-                        true,
-                        'check-multiline-start',
-                    ],
+                    'jsdoc-format': [true, 'check-multiline-start'],
                     'naming-convention': [
                         true,
                         {
-                            'leadingUnderscore': 'optional',
-                            'type': 'default',
-                            'format': 'camelCase',
+                            leadingUnderscore: 'optional',
+                            type: 'default',
+                            format: 'camelCase',
                         },
                         {
-                            'type': 'variable',
-                            'modifiers': [
-                                'global',
-                                'const',
-                            ],
-                            'format': [
-                                'camelCase',
-                                'PascalCase',
-                                'UPPER_CASE',
-                            ],
+                            type: 'variable',
+                            modifiers: ['global', 'const'],
+                            format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
                         },
                         {
-                            'type': 'parameter',
-                            'modifiers': 'unused',
+                            type: 'parameter',
+                            modifiers: 'unused',
                         },
                         {
-                            'type': 'member',
-                            'modifiers': 'private',
+                            type: 'member',
+                            modifiers: 'private',
                         },
                         {
-                            'type': 'member',
-                            'modifiers': 'protected',
+                            type: 'member',
+                            modifiers: 'protected',
                         },
                         {
-                            'type': 'property',
-                            'modifiers': [
-                                'public',
-                                'static',
-                                'const',
-                            ],
-                            'format': 'UPPER_CASE',
+                            type: 'property',
+                            modifiers: ['public', 'static', 'const'],
+                            format: 'UPPER_CASE',
                         },
                         {
-                            'type': 'type',
-                            'format': 'PascalCase',
+                            type: 'type',
+                            format: 'PascalCase',
                         },
                         {
-                            'type': 'interface',
-                            'prefix': 'I',
+                            type: 'interface',
+                            prefix: 'I',
                         },
                         {
-                            'type': 'genericTypeParameter',
-                            'regex': '^[A-Z]$',
+                            type: 'genericTypeParameter',
+                            regex: '^[A-Z]$',
                         },
                         {
-                            'type': 'enumMember',
-                            'format': 'UPPER_CASE',
+                            type: 'enumMember',
+                            format: 'UPPER_CASE',
                         },
                     ],
                     'no-accessor-recursion': true,
@@ -337,10 +301,7 @@ module.exports = {
                     'no-implicit-dependencies': [true, 'dev'],
                     'no-multi-spaces': true,
                     'no-reference-import': true,
-                    'no-return-undefined': [
-                        true,
-                        'allow-void-expression',
-                    ],
+                    'no-return-undefined': [true, 'allow-void-expression'],
                     'no-unnecessary-callback-wrapper': true,
                     'no-unnecessary-else': true,
                     'no-unnecessary-type-annotation': true,
@@ -355,11 +316,7 @@ module.exports = {
                         'check-finally',
                         'check-whitespace',
                     ],
-                    'parameter-properties': [
-                        true,
-                        'leading',
-                        'member-access',
-                    ],
+                    'parameter-properties': [true, 'leading', 'member-access'],
                     'prefer-conditional-expression': true,
                     'prefer-const-enum': true,
                     'prefer-switch': [
@@ -373,11 +330,11 @@ module.exports = {
                     'trailing-comma': [
                         true,
                         {
-                            'singleline': 'never',
-                            'multiline': 'always',
+                            singleline: 'never',
+                            multiline: 'always',
                         },
                     ],
-                    'whitespace': [
+                    whitespace: [
                         true,
                         'check-branch',
                         'check-decl',

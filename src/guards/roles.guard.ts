@@ -5,6 +5,7 @@ import { UserEntity } from '../modules/user/user.entity';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     constructor(private readonly _reflector: Reflector) {}
 
     canActivate(context: ExecutionContext): boolean {

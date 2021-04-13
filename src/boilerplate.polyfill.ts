@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/tslint/config */
 import 'source-map-support/register';
 
