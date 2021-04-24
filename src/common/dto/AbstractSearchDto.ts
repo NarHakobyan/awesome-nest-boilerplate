@@ -21,7 +21,7 @@ export class AbstractSearchDto {
     @ToInt()
     take = 10;
 
-    get skip() {
+    get skip(): number {
         return (this.page - 1) * this.take;
     }
 }
