@@ -1,5 +1,3 @@
-'use strict';
-
 import {
     CreateDateColumn,
     PrimaryGeneratedColumn,
@@ -7,7 +5,7 @@ import {
 } from 'typeorm';
 
 import { UtilsService } from '../providers/utils.service';
-import { AbstractDto } from './dto/AbstractDto';
+import type { AbstractDto } from './dto/AbstractDto';
 
 export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
     @PrimaryGeneratedColumn('uuid')
@@ -27,7 +25,7 @@ export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
 
     abstract dtoClass: new (entity: AbstractEntity, options?: any) => T;
 
-    toDto(options?: any) {
+    toDto(options?: any): T {
         return UtilsService.toDto(this.dtoClass, this, options);
     }
 }

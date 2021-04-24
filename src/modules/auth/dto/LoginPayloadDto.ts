@@ -1,5 +1,3 @@
-'use strict';
-
 import { ApiProperty } from '@nestjs/swagger';
 
 import { UserDto } from '../../user/dto/UserDto';
