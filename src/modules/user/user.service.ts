@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { FindConditions } from 'typeorm';
+import type { FindConditions } from 'typeorm';
 
-import { PageDto } from '../../common/dto/PageDto';
+import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception';
-import { IFile } from '../../interfaces/IFile';
+import type { IFile } from '../../interfaces/IFile';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
-import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
-import { UserDto } from './dto/UserDto';
-import { UsersPageOptionsDto } from './dto/UsersPageOptionsDto';
-import { UserEntity } from './user.entity';
+import type { UserRegisterDto } from '../auth/dto/UserRegisterDto';
+import type { UserDto } from './dto/user-dto';
+import type { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import type { UserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -73,7 +73,7 @@ export class UserService {
         return items.toPageDto(pageMetaDto);
     }
 
-    async getUser(userId: string) {
+    async getUser(userId: string): Promise<UserDto> {
         const queryBuilder = this.userRepository.createQueryBuilder('user');
 
         queryBuilder.where('user.id = :userId', { userId });

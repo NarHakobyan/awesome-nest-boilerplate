@@ -22,7 +22,7 @@ import { ApiFile } from '../../decorators/swagger.schema';
 import { AuthGuard } from '../../guards/auth.guard';
 import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.service';
 import { IFile } from '../../interfaces/IFile';
-import { UserDto } from '../user/dto/UserDto';
+import { UserDto } from '../user/dto/user-dto';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';

@@ -3,7 +3,7 @@ import { Column, Entity } from 'typeorm';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../common/constants/role-type';
 import { VirtualColumn } from '../../decorators/virtual-column.decorator';
-import { UserDto } from './dto/UserDto';
+import { UserDto } from './dto/user-dto';
 
 @Entity({ name: 'users' })
 export class UserEntity extends AbstractEntity<UserDto> {
