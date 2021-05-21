@@ -339,7 +339,7 @@ module.exports = {
         'unicorn/prefer-modern-dom-apis': 'error',
         'unicorn/prefer-module': 'error',
         'unicorn/prefer-negative-index': 'error',
-        'unicorn/prefer-node-protocol': 'error',
+        'unicorn/prefer-node-protocol': 'off',
         'unicorn/prefer-number-properties': 'error',
         'unicorn/prefer-optional-catch-binding': 'error',
         'unicorn/prefer-reflect-apply': 'error',
