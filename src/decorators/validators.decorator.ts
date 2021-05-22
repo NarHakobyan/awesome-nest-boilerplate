@@ -1,10 +1,5 @@
-/* tslint:disable:naming-convention */
-
-import {
-    registerDecorator,
-    ValidationArguments,
-    ValidationOptions,
-} from 'class-validator';
+import type { ValidationArguments, ValidationOptions } from 'class-validator';
+import { registerDecorator } from 'class-validator';
 
 export function IsPassword(
     validationOptions?: ValidationOptions,

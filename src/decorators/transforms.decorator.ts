@@ -1,5 +1,3 @@
-/* tslint:disable:naming-convention */
-
 import { Transform } from 'class-transformer';
 import { castArray, isNil, trim } from 'lodash';
 
@@ -36,7 +34,7 @@ export function ToInt() {
     return Transform(
         (params) => {
             const value = params.value;
-            return parseInt(value, 10);
+            return Number.parseInt(value, 10);
         },
         { toClassOnly: true },
     );

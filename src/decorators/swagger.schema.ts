@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { applyDecorators, Type } from '@nestjs/common';
+import type { Type } from '@nestjs/common';
+import { applyDecorators } from '@nestjs/common';
 import {
     PARAMTYPES_METADATA,
     ROUTE_ARGS_METADATA,
 } from '@nestjs/common/constants';
 import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
 import { ApiBody, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
-import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+import type { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-keys.util';
 import { mapValues } from 'lodash';
 
-import { IApiFile } from '../interfaces/IApiFile';
+import type { IApiFile } from '../interfaces/IApiFile';
 
 function explore(instance: any, propertyKey: string) {
-    const types: Type<unknown>[] = Reflect.getMetadata(
+    const types: Array<Type<unknown>> = Reflect.getMetadata(
         PARAMTYPES_METADATA,
         instance,
         propertyKey,

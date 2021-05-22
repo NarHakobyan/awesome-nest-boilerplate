@@ -1,11 +1,7 @@
-import {
-    ArgumentsHost,
-    Catch,
-    ExceptionFilter,
-    HttpStatus,
-} from '@nestjs/common';
+import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
+import { Catch, HttpStatus } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Response } from 'express';
+import type { Response } from 'express';
 import { STATUS_CODES } from 'http';
 import { QueryFailedError } from 'typeorm';
 

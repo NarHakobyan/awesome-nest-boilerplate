@@ -46,7 +46,7 @@ export class UtilsService {
     static generateRandomString(length: number): string {
         return Math.random()
             .toString(36)
-            .replace(/[^a-zA-Z0-9]+/g, '')
+            .replace(/[^\dA-Za-z]+/g, '')
             .substr(0, length);
     }
     /**
