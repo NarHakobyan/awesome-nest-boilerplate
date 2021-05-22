@@ -1,9 +1,9 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import dotenv from 'dotenv';
 
-import { IAwsConfig } from '../../interfaces/IAwsConfig';
+import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
+import type { IAwsConfig } from '../../interfaces/IAwsConfig';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
-import { UserSubscriber } from '../entity-subscribers/user-subscriber';
 
 export class ConfigService {
     constructor() {
