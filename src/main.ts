@@ -64,12 +64,13 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   const configService = app.select(SharedModule).get(ConfigService);
 
+  const natsConfig = configService.natsConfig;
+
   app.connectMicroservice({
-    transport: Transport.TCP,
+    transport: Transport.NATS,
     options: {
-      port: configService.getNumber('TRANSPORT_PORT'),
-      retryAttempts: 5,
-      retryDelay: 3000,
+      url: `nats://${natsConfig.host}:${natsConfig.port}`,
+      queue: 'main_service',
     },
   });
 

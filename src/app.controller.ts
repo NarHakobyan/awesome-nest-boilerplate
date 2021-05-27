@@ -26,9 +26,10 @@ export class AppController {
       () => this.typeOrmHealthIndicator.pingCheck('database'),
       () =>
         this.microserviceHealthIndicator.pingCheck('auth-service', {
-          transport: Transport.TCP,
+          transport: Transport.NATS,
           options: {
-            port: this.configService.getNumber('TRANSPORT_PORT'),
+            url: `nats://${this.configService.natsConfig.host}:${this.configService.natsConfig.port}`,
+            queue: 'main_service',
           },
         }),
     ]);

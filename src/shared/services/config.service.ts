@@ -93,4 +93,11 @@ export class ConfigService {
       bucketName: this.get('S3_BUCKET_NAME'),
     };
   }
+
+  get natsConfig() {
+    return {
+      host: this.get('NATS_HOST'),
+      port: this.getNumber('NATS_PORT'),
+    };
+  }
 }

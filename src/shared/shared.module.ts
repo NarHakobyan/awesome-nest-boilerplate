@@ -1,5 +1,6 @@
 import { Global, HttpModule, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 import { AwsS3Service } from './services/aws-s3.service';
 import { ConfigService } from './services/config.service';
@@ -13,6 +14,20 @@ const providers = [
   AwsS3Service,
   GeneratorService,
   TranslationService,
+  {
+    provide: 'RPC_SERVICE',
+    useFactory: (configService: ConfigService) => {
+      const natsConfig = configService.natsConfig;
+      return ClientProxyFactory.create({
+        transport: Transport.NATS,
+        options: {
+          url: `nats://${natsConfig.host}:${natsConfig.port}`,
+          queue: 'main_service',
+        },
+      });
+    },
+    inject: [ConfigService],
+  },
 ];
 
 @Global()
