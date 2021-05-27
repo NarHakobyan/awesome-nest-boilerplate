@@ -1,3 +1,3 @@
 export interface ITranslationDecoratorInterface {
-    translationKey: string;
+  translationKey: string;
 }

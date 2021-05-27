@@ -16,34 +16,33 @@ import { ConfigService } from './shared/services/config.service';
 import { SharedModule } from './shared/shared.module';
 
 @Module({
-    imports: [
-        AuthModule,
-        UserModule,
-        MathModule,
-        TypeOrmModule.forRootAsync({
-            imports: [SharedModule],
-            useFactory: (configService: ConfigService) =>
-                configService.typeOrmConfig,
-            inject: [ConfigService],
-        }),
-        I18nModule.forRootAsync({
-            useFactory: (configService: ConfigService) => ({
-                fallbackLanguage: configService.fallbackLanguage,
-                parserOptions: {
-                    path: path.join(__dirname, '/i18n/'),
-                    watch: configService.isDevelopment,
-                },
-            }),
-            imports: [SharedModule],
-            parser: I18nJsonParser,
-            inject: [ConfigService],
-        }),
-        TerminusModule,
-    ],
-    controllers: [AppController],
+  imports: [
+    AuthModule,
+    UserModule,
+    MathModule,
+    TypeOrmModule.forRootAsync({
+      imports: [SharedModule],
+      useFactory: (configService: ConfigService) => configService.typeOrmConfig,
+      inject: [ConfigService],
+    }),
+    I18nModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        fallbackLanguage: configService.fallbackLanguage,
+        parserOptions: {
+          path: path.join(__dirname, '/i18n/'),
+          watch: configService.isDevelopment,
+        },
+      }),
+      imports: [SharedModule],
+      parser: I18nJsonParser,
+      inject: [ConfigService],
+    }),
+    TerminusModule,
+  ],
+  controllers: [AppController],
 })
 export class AppModule implements NestModule {
-    configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
-        consumer.apply(contextMiddleware).forRoutes('*');
-    }
+  configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
+    consumer.apply(contextMiddleware).forRoutes('*');
+  }
 }

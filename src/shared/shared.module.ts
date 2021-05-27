@@ -8,29 +8,29 @@ import { TranslationService } from './services/translation.service';
 import { ValidatorService } from './services/validator.service';
 
 const providers = [
-    ConfigService,
-    ValidatorService,
-    AwsS3Service,
-    GeneratorService,
-    TranslationService,
+  ConfigService,
+  ValidatorService,
+  AwsS3Service,
+  GeneratorService,
+  TranslationService,
 ];
 
 @Global()
 @Module({
-    providers,
-    imports: [
-        HttpModule,
-        JwtModule.registerAsync({
-            useFactory: (configService: ConfigService) => ({
-                secretOrPrivateKey: configService.get('JWT_SECRET_KEY'),
-                // if you want to use token with expiration date
-                // signOptions: {
-                //     expiresIn: configService.getNumber('JWT_EXPIRATION_TIME'),
-                // },
-            }),
-            inject: [ConfigService],
-        }),
-    ],
-    exports: [...providers, HttpModule, JwtModule],
+  providers,
+  imports: [
+    HttpModule,
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        secretOrPrivateKey: configService.get('JWT_SECRET_KEY'),
+        // if you want to use token with expiration date
+        // signOptions: {
+        //     expiresIn: configService.getNumber('JWT_EXPIRATION_TIME'),
+        // },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+  exports: [...providers, HttpModule, JwtModule],
 })
 export class SharedModule {}

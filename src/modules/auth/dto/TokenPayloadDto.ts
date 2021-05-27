@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class TokenPayloadDto {
-    @ApiProperty()
-    expiresIn: number;
+  @ApiProperty()
+  expiresIn: number;
 
-    @ApiProperty()
-    accessToken: string;
+  @ApiProperty()
+  accessToken: string;
 
-    constructor(data: { expiresIn: number; accessToken: string }) {
-        this.expiresIn = data.expiresIn;
-        this.accessToken = data.accessToken;
-    }
+  constructor(data: { expiresIn: number; accessToken: string }) {
+    this.expiresIn = data.expiresIn;
+    this.accessToken = data.accessToken;
+  }
 }

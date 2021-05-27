@@ -31,7 +31,7 @@ module.exports = {
     ],
     rules: {
         'simple-import-sort/imports': 'error',
-        'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all' }],
+        'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2 }],
         '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/no-unused-vars-experimental': [
             'error',
@@ -267,14 +267,7 @@ module.exports = {
         'radix': 'error',
         'use-isnan': 'error',
         'valid-typeof': 'off',
-        'space-before-function-paren': [
-            'error',
-            {
-                anonymous: 'never',
-                named: 'never',
-                asyncArrow: 'always',
-            },
-        ],
+        'space-before-function-paren': 'off',
         'unicorn/better-regex': 'error',
         'unicorn/catch-error-name': 'error',
         'unicorn/consistent-destructuring': 'error',
