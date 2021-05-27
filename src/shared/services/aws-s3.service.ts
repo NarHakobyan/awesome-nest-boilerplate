@@ -14,12 +14,13 @@ export class AwsS3Service {
         public configService: ConfigService,
         public generatorService: GeneratorService,
     ) {
+        const awsS3Config = configService.awsS3Config;
+
         const options: AWS.S3.Types.ClientConfiguration = {
-            apiVersion: '2010-12-01',
-            region: 'eu-central-1',
+            apiVersion: awsS3Config.bucketApiVersion,
+            region: awsS3Config.bucketRegion,
         };
 
-        const awsS3Config = configService.awsS3Config;
         if (awsS3Config.accessKeyId && awsS3Config.secretAccessKey) {
             options.credentials = awsS3Config;
         }

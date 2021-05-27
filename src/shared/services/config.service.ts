@@ -2,7 +2,6 @@ import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import dotenv from 'dotenv';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
-import type { IAwsConfig } from '../../interfaces/IAwsConfig';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 
 export class ConfigService {
@@ -85,10 +84,12 @@ export class ConfigService {
         };
     }
 
-    get awsS3Config(): IAwsConfig {
+    get awsS3Config() {
         return {
             accessKeyId: this.get('AWS_S3_ACCESS_KEY_ID'),
             secretAccessKey: this.get('AWS_S3_SECRET_ACCESS_KEY'),
+            bucketRegion: this.get('AWS_S3_BUCKET_REGION'),
+            bucketApiVersion: this.get('AWS_S3_API_VERSION'),
             bucketName: this.get('S3_BUCKET_NAME'),
         };
     }

@@ -285,7 +285,15 @@ module.exports = {
         'unicorn/escape-case': 'error',
         'unicorn/expiring-todo-comments': 'error',
         'unicorn/explicit-length-check': 'error',
-        'unicorn/filename-case': 'error',
+        'unicorn/filename-case': [
+            'error',
+            {
+                cases: {
+                    kebabCase: true,
+                    pascalCase: true
+                }
+            }
+        ],
         'unicorn/import-index': 'error',
         'unicorn/import-style': 'error',
         'unicorn/new-for-builtins': 'error',
@@ -308,7 +316,7 @@ module.exports = {
         'unicorn/no-null': 'error',
         'unicorn/no-object-as-default-parameter': 'error',
         'unicorn/no-process-exit': 'error',
-        'unicorn/no-static-only-class': 'error',
+        'unicorn/no-static-only-class': 'off',
         'unicorn/no-this-assignment': 'error',
         'unicorn/no-unreadable-array-destructuring': 'error',
         'unicorn/no-unsafe-regex': 'off',
