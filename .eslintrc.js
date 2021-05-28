@@ -147,7 +147,7 @@ module.exports = {
                 selector: 'memberLike',
                 modifiers: ['private'],
                 format: ['camelCase'],
-                leadingUnderscore: 'require',
+                leadingUnderscore: 'forbid',
             },
             {
                 selector: 'variable',
