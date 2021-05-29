@@ -15,14 +15,14 @@ const providers = [
   GeneratorService,
   TranslationService,
   {
-    provide: 'RPC_SERVICE',
+    provide: 'NATS_SERVICE',
     useFactory: (configService: ConfigService) => {
       const natsConfig = configService.natsConfig;
       return ClientProxyFactory.create({
         transport: Transport.NATS,
         options: {
+          name: 'NATS_SERVICE',
           url: `nats://${natsConfig.host}:${natsConfig.port}`,
-          queue: 'main_service',
         },
       });
     },

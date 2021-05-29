@@ -3,7 +3,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('posts')
 export class PostController {
-  constructor(@Inject('RPC_SERVICE') private client: ClientProxy) {}
+  constructor(@Inject('NATS_SERVICE') private client: ClientProxy) {}
 
   @Get('search')
   call() {
