@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserNotFoundException } from '../../exceptions/user-not-found.exception';
 import { UtilsService } from '../../providers/utils.service';
-import { ConfigService } from '../../shared/services/config.service';
+import { ApiConfigService } from '../../shared/services/api-config.service';
 import type { UserDto } from '../user/dto/user-dto';
 import type { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -14,13 +14,13 @@ import type { UserLoginDto } from './dto/UserLoginDto';
 export class AuthService {
   constructor(
     public readonly jwtService: JwtService,
-    public readonly configService: ConfigService,
+    public readonly configService: ApiConfigService,
     public readonly userService: UserService,
   ) {}
 
   async createToken(user: UserEntity | UserDto): Promise<TokenPayloadDto> {
     return new TokenPayloadDto({
-      expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
+      expiresIn: this.configService.authConfig.jwtExpirationTime,
       accessToken: await this.jwtService.signAsync({ id: user.id }),
     });
   }

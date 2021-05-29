@@ -1,21 +1,13 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import dotenv from 'dotenv';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 
-export class ConfigService {
-  constructor() {
-    const nodeEnv = this.nodeEnv;
-    dotenv.config({
-      path: `.${nodeEnv}.env`,
-    });
-
-    // Replace \\n with \n to support multiline strings in AWS
-    for (const envName of Object.keys(process.env)) {
-      process.env[envName] = process.env[envName].replace(/\\n/g, '\n');
-    }
-  }
+@Injectable()
+export class ApiConfigService {
+  constructor(private configService: ConfigService) {}
 
   get isDevelopment(): boolean {
     return this.nodeEnv === 'development';
@@ -25,20 +17,16 @@ export class ConfigService {
     return this.nodeEnv === 'production';
   }
 
-  public get(key: string): string {
-    return process.env[key];
-  }
-
-  public getNumber(key: string): number {
-    return Number(this.get(key));
+  private getNumber(key: string): number {
+    return Number(this.configService.get(key));
   }
 
   get nodeEnv(): string {
-    return this.get('NODE_ENV') || 'development';
+    return this.configService.get<string>('NODE_ENV', 'development');
   }
 
   get fallbackLanguage(): string {
-    return this.get('FALLBACK_LANGUAGE').toLowerCase();
+    return this.configService.get<string>('FALLBACK_LANGUAGE').toLowerCase();
   }
 
   get typeOrmConfig(): TypeOrmModuleOptions {
@@ -72,11 +60,11 @@ export class ConfigService {
       migrations,
       keepConnectionAlive: true,
       type: 'postgres',
-      host: this.get('DB_HOST'),
+      host: this.configService.get('DB_HOST'),
       port: this.getNumber('DB_PORT'),
-      username: this.get('DB_USERNAME'),
-      password: this.get('DB_PASSWORD'),
-      database: this.get('DB_DATABASE'),
+      username: this.configService.get('DB_USERNAME'),
+      password: this.configService.get('DB_PASSWORD'),
+      database: this.configService.get('DB_DATABASE'),
       subscribers: [UserSubscriber],
       migrationsRun: true,
       logging: this.nodeEnv === 'development',
@@ -86,18 +74,31 @@ export class ConfigService {
 
   get awsS3Config() {
     return {
-      accessKeyId: this.get('AWS_S3_ACCESS_KEY_ID'),
-      secretAccessKey: this.get('AWS_S3_SECRET_ACCESS_KEY'),
-      bucketRegion: this.get('AWS_S3_BUCKET_REGION'),
-      bucketApiVersion: this.get('AWS_S3_API_VERSION'),
-      bucketName: this.get('S3_BUCKET_NAME'),
+      accessKeyId: this.configService.get('AWS_S3_ACCESS_KEY_ID'),
+      secretAccessKey: this.configService.get('AWS_S3_SECRET_ACCESS_KEY'),
+      bucketRegion: this.configService.get('AWS_S3_BUCKET_REGION'),
+      bucketApiVersion: this.configService.get('AWS_S3_API_VERSION'),
+      bucketName: this.configService.get('S3_BUCKET_NAME'),
     };
   }
 
   get natsConfig() {
     return {
-      host: this.get('NATS_HOST'),
+      host: this.configService.get('NATS_HOST'),
       port: this.getNumber('NATS_PORT'),
+    };
+  }
+
+  get authConfig() {
+    return {
+      jwtSecret: this.configService.get('JWT_SECRET_KEY'),
+      jwtExpirationTime: this.configService.get('JWT_EXPIRATION_TIME'),
+    };
+  }
+
+  get appConfig() {
+    return {
+      port: this.configService.get('PORT'),
     };
   }
 }

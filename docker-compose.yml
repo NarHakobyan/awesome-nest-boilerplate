@@ -2,7 +2,7 @@ version: "3"
 services:
   app:
     env_file:
-      - .development.env
+      - .env
     container_name: awesome_nest_boilerplate
     restart: always
     build: .

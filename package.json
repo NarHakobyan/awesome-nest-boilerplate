@@ -32,6 +32,7 @@
     "dependencies": {
         "@godaddy/terminus": "^4.8.0",
         "@nestjs/common": "^7.6.15",
+        "@nestjs/config": "^0.6.3",
         "@nestjs/core": "^7.6.15",
         "@nestjs/jwt": "^7.2.0",
         "@nestjs/microservices": "^7.6.15",
@@ -46,7 +47,6 @@
         "class-transformer": "^0.4.0",
         "class-validator": "^0.13.1",
         "compression": "^1.7.4",
-        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-rate-limit": "^5.2.6",
         "file-type": "^16.3.0",
@@ -55,6 +55,7 @@
         "lodash": "^4.17.21",
         "mime-types": "^2.1.30",
         "morgan": "^1.10.0",
+        "nats": "^1.4.12",
         "nestjs-i18n": "^8.1.0",
         "passport": "^0.4.1",
         "passport-jwt": "^4.0.0",
@@ -66,14 +67,12 @@
         "swagger-ui-express": "^4.1.6",
         "typeorm": "^0.2.32",
         "typeorm-transactional-cls-hooked": "^0.1.20",
-        "uuid": "^8.3.2",
-        "nats": "^1.4.12"
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
         "@nestjs/testing": "^7.6.15",
         "@types/bcrypt": "^3.0.1",
         "@types/compression": "^1.7.0",
-        "@types/dotenv": "^8.2.0",
         "@types/express": "^4.17.11",
         "@types/express-rate-limit": "^5.1.1",
         "@types/file-type": "^10.9.1",

@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 import mime from 'mime-types';
 
 import type { IFile } from '../../interfaces/IFile';
-import { ConfigService } from './config.service';
+import { ApiConfigService } from './api-config.service';
 import { GeneratorService } from './generator.service';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class AwsS3Service {
   private readonly s3: AWS.S3;
 
   constructor(
-    public configService: ConfigService,
+    public configService: ApiConfigService,
     public generatorService: GeneratorService,
   ) {
     const awsS3Config = configService.awsS3Config;

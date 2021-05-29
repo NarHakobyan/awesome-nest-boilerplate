@@ -21,7 +21,7 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { QueryFailedFilter } from './filters/query-failed.filter';
 import { setupSwagger } from './setup-swagger';
-import { ConfigService } from './shared/services/config.service';
+import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
@@ -62,7 +62,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     }),
   );
 
-  const configService = app.select(SharedModule).get(ConfigService);
+  const configService = app.select(SharedModule).get(ApiConfigService);
 
   const natsConfig = configService.natsConfig;
 
@@ -80,7 +80,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     setupSwagger(app);
   }
 
-  const port = configService.getNumber('PORT');
+  const port = configService.appConfig.port;
   await app.listen(port);
 
   console.info(`server running on port ${port}`);
