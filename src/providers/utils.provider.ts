@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-export class UtilsService {
+export class UtilsProvider {
   /**
    * convert entity to dto class instance
    * @param {{new(entity: E, options: any): T}} model
@@ -9,19 +9,19 @@ export class UtilsService {
    * @returns {T[] | T}
    */
   public static toDto<T, E>(
-    model: new (entity: E, options?: any) => T,
+    model: new (entity: E, options?: GetConstructorArgs<T>[1]) => T,
     entity: E,
-    options?: Record<string, any>,
+    options?: GetConstructorArgs<T>[1],
   ): T;
   public static toDto<T, E>(
-    model: new (entity: E, options?: any) => T,
+    model: new (entity: E, options?: GetConstructorArgs<T>[1]) => T,
     entity: E[],
-    options?: Record<string, any>,
+    options?: GetConstructorArgs<T>[1],
   ): T[];
   public static toDto<T, E>(
-    model: new (entity: E, options?: any) => T,
+    model: new (entity: E, options?: GetConstructorArgs<T>[1]) => T,
     entity: E | E[],
-    options?: Record<string, any>,
+    options?: GetConstructorArgs<T>[1],
   ): T | T[] {
     if (Array.isArray(entity)) {
       return entity.map((u) => new model(u, options));

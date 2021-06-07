@@ -3,6 +3,7 @@
     "version": "7.0.1",
     "description": "Awesome NestJS Boilerplate, Typescript, Postgres, TypeORM",
     "author": "Narek Hakobyan <narek.hakobyan.07@gmail.com>",
+    "private": true,
     "license": "MIT",
     "scripts": {
         "build:prod": "tsc -p tsconfig.build.json",

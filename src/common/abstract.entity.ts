@@ -4,10 +4,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { UtilsService } from '../providers/utils.service';
+import { UtilsProvider } from '../providers/utils.provider';
 import type { AbstractDto } from './dto/abstract.dto';
 
-export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
+export abstract class AbstractEntity<DTO extends AbstractDto = AbstractDto> {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -23,9 +23,12 @@ export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
   })
   updatedAt: Date;
 
-  abstract dtoClass: new (entity: AbstractEntity, options?: any) => T;
+  abstract dtoClass: new (
+    entity: AbstractEntity,
+    options?: GetConstructorArgs<DTO>[1],
+  ) => DTO;
 
-  toDto(options?: any): T {
-    return UtilsService.toDto(this.dtoClass, this, options);
+  toDto<D = DTO>(options?: GetConstructorArgs<D>[1]): DTO {
+    return UtilsProvider.toDto(this.dtoClass, this, options);
   }
 }

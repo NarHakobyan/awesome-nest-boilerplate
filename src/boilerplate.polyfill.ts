@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/tslint/config */
+/* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
 import 'source-map-support/register';
 
 import { compact, map } from 'lodash';
@@ -12,8 +12,11 @@ import type { PageOptionsDto } from './common/dto/page-options.dto';
 import { VIRTUAL_COLUMN_KEY } from './decorators/virtual-column.decorator';
 
 declare global {
+  export type GetConstructorArgs<T> = T extends new (...args: infer U) => any
+    ? U
+    : never;
   interface Array<T> {
-    toDtos<T extends AbstractEntity<Dto>, Dto extends AbstractDto>(
+    toDtos<Entity extends AbstractEntity<Dto>, Dto extends AbstractDto>(
       this: T[],
       options?: any,
     ): Dto[];
@@ -40,11 +43,9 @@ declare module 'typeorm' {
 
 Array.prototype.toDtos = function <
   T extends AbstractEntity<Dto>,
-  Dto extends AbstractDto
+  Dto extends AbstractDto,
 >(options?: any): Dto[] {
-  return compact(
-    map<T, Dto>(this, (item) => item.toDto(options)),
-  );
+  return compact(map<T, Dto>(this, (item) => item.toDto(options)));
 };
 
 Array.prototype.toPageDto = function (pageMetaDto: PageMetaDto) {

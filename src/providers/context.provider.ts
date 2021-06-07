@@ -2,36 +2,37 @@ import requestContext from 'request-context';
 
 import type { UserEntity } from '../modules/user/user.entity';
 
-export class ContextService {
+export class ContextProvider {
   private static readonly nameSpace = 'request';
   private static authUserKey = 'user_key';
   private static languageKey = 'language_key';
 
   private static get<T>(key: string): T {
-    return requestContext.get(ContextService.getKeyWithNamespace(key));
+    return requestContext.get(ContextProvider.getKeyWithNamespace(key));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private static set(key: string, value: any): void {
-    requestContext.set(ContextService.getKeyWithNamespace(key), value);
+    requestContext.set(ContextProvider.getKeyWithNamespace(key), value);
   }
 
   private static getKeyWithNamespace(key: string): string {
-    return `${ContextService.nameSpace}.${key}`;
+    return `${ContextProvider.nameSpace}.${key}`;
   }
 
   static setAuthUser(user: UserEntity): void {
-    ContextService.set(ContextService.authUserKey, user);
+    ContextProvider.set(ContextProvider.authUserKey, user);
   }
 
   static setLanguage(language: string): void {
-    ContextService.set(ContextService.languageKey, language);
+    ContextProvider.set(ContextProvider.languageKey, language);
   }
 
   static getLanguage(): string {
-    return ContextService.get(ContextService.languageKey);
+    return ContextProvider.get(ContextProvider.languageKey);
   }
 
   static getAuthUser(): UserEntity {
-    return ContextService.get(ContextService.authUserKey);
+    return ContextProvider.get(ContextProvider.authUserKey);
   }
 }
