@@ -21,10 +21,6 @@ export class AwsS3Service {
       region: awsS3Config.bucketRegion,
     };
 
-    if (awsS3Config.accessKeyId && awsS3Config.secretAccessKey) {
-      options.credentials = awsS3Config;
-    }
-
     this.s3 = new AWS.S3(options);
   }
 
