@@ -31,7 +31,7 @@ export class AuthService {
     });
     const isPasswordValid = await UtilsProvider.validateHash(
       userLoginDto.password,
-      user && user.password,
+      user?.password,
     );
     if (!user || !isPasswordValid) {
       throw new UserNotFoundException();
