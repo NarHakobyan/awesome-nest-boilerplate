@@ -4,7 +4,7 @@ import { registerDecorator } from 'class-validator';
 export function IsPassword(
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return (object: any, propertyName: string) => {
+  return (object, propertyName: string) => {
     registerDecorator({
       propertyName,
       name: 'isPassword',

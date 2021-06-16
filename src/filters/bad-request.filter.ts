@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { ValidationError } from 'class-validator';
 import type { Response } from 'express';
 import { STATUS_CODES } from 'http';
-import { isArray, isEmpty, snakeCase } from 'lodash';
+import _ from 'lodash';
 
 @Catch(UnprocessableEntityException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -18,9 +18,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     let statusCode = exception.getStatus();
+    // FIXME replace any with correct type
     const r = exception.getResponse() as any;
 
-    if (isArray(r.message) && r.message[0] instanceof ValidationError) {
+    if (_.isArray(r.message) && r.message[0] instanceof ValidationError) {
       statusCode = HttpStatus.UNPROCESSABLE_ENTITY;
       r.error = STATUS_CODES[statusCode];
       const validationErrors = r.message as ValidationError[];
@@ -35,7 +36,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   private validationFilter(validationErrors: ValidationError[]): void {
     for (const validationError of validationErrors) {
-      if (!isEmpty(validationError.children)) {
+      if (!_.isEmpty(validationError.children)) {
         this.validationFilter(validationError.children);
         return;
       }
@@ -48,7 +49,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           // convert error message to error.fields.{key} syntax for i18n translation
           validationError.constraints[
             constraintKey
-          ] = `error.fields.${snakeCase(constraintKey)}`;
+          ] = `error.fields.${_.snakeCase(constraintKey)}`;
         }
       }
     }

@@ -7,7 +7,7 @@ import { PageDto } from '../common/dto/page.dto';
 export function ApiPageOkResponse<T extends Type>(
   model: T,
   description?: string,
-) {
+): MethodDecorator {
   return applyDecorators(
     ApiExtraModels(PageDto),
     ApiOkResponse({

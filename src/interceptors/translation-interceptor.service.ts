@@ -8,6 +8,7 @@ import type { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
 import { TranslationService } from '../shared/services/translation.service';
+import type { AbstractDto } from '../common/dto/abstract.dto';
 
 @Injectable()
 export class TranslationInterceptor implements NestInterceptor {
@@ -15,12 +16,12 @@ export class TranslationInterceptor implements NestInterceptor {
   public intercept(
     _context: ExecutionContext,
     next: CallHandler,
-  ): Observable<any> {
+  ): Observable<AbstractDto> {
     return next
       .handle()
       .pipe(
-        mergeMap((data: any) =>
-          this.translationService.translateNecessaryKeys(data),
+        mergeMap((data) =>
+          this.translationService.translateNecessaryKeys<AbstractDto>(data),
         ),
       );
   }

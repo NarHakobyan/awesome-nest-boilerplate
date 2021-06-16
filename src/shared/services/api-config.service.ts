@@ -22,10 +22,13 @@ export class ApiConfigService {
   }
 
   private getString(key: string, defaultValue?: string): string {
-    return this.configService
-      .get(key, defaultValue)
-      .toString()
-      .replace(/\\n/g, '\n');
+    const value = this.configService.get(key, defaultValue);
+
+    if (!value) {
+      console.warn(`"${key}" environment variable is not set`);
+      return;
+    }
+    return value.toString().replace(/\\n/g, '\n');
   }
 
   get nodeEnv(): string {

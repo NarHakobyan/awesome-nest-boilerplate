@@ -1,19 +1,27 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import type { Type } from '@nestjs/common';
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import {
   PARAMTYPES_METADATA,
   ROUTE_ARGS_METADATA,
 } from '@nestjs/common/constants';
 import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
-import { ApiBody, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
-import type { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiExtraModels,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import type {
+  ReferenceObject,
+  SchemaObject,
+} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-keys.util';
-import { mapValues } from 'lodash';
+import _ from 'lodash';
 
-import type { IApiFile } from '../interfaces/IApiFile';
+import type { IApiFile } from '../interfaces';
 
-function explore(instance: any, propertyKey: string) {
+function explore(instance, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
     PARAMTYPES_METADATA,
     instance,
@@ -26,7 +34,7 @@ function explore(instance: any, propertyKey: string) {
       propertyKey,
     ) || {};
 
-  const parametersWithType = mapValues(
+  const parametersWithType = _.mapValues(
     reverseObjectKeys(routeArgsMetadata),
     (param) => ({
       type: types[param.index],
@@ -39,72 +47,76 @@ function explore(instance: any, propertyKey: string) {
     const keyPair = key.split(':');
 
     if (Number(keyPair[0]) === RouteParamtypes.BODY) {
-      return (<any>value).type;
+      return value.type;
     }
   }
 }
 
-const RegisterModels = (): MethodDecorator => (
-  target: any,
-  propertyKey: string,
-  descriptor: PropertyDescriptor,
-) => {
-  const body = explore(target, propertyKey);
-  return body && ApiExtraModels(body)(target, propertyKey, descriptor);
-};
+function RegisterModels(): MethodDecorator {
+  return (target, propertyKey, descriptor: PropertyDescriptor) => {
+    const body = explore(target, propertyKey);
+    return body && ApiExtraModels(body)(target, propertyKey, descriptor);
+  };
+}
 
-const ApiFileDecorator = (
+function ApiFileDecorator(
   files: IApiFile[] = [],
   options: Partial<{ isRequired: boolean }> = {},
-): MethodDecorator => (
-  target: any,
-  propertyKey: string,
-  descriptor: PropertyDescriptor,
-) => {
-  const { isRequired = false } = options;
-  const fileSchema: SchemaObject = {
-    type: 'string',
-    format: 'binary',
-  };
-  let properties = {};
-  if (files) {
-    properties = files.reduce((filesMap, file) => {
+): MethodDecorator {
+  return (target, propertyKey, descriptor: PropertyDescriptor) => {
+    const { isRequired = false } = options;
+    const fileSchema: SchemaObject = {
+      type: 'string',
+      format: 'binary',
+    };
+    const properties: Record<string, SchemaObject | ReferenceObject> = {};
+    for (const file of files) {
       if (file?.isArray) {
-        filesMap[file.name] = {
+        properties[file.name] = {
           type: 'array',
           items: fileSchema,
         };
       } else {
-        filesMap[file.name] = fileSchema;
+        properties[file.name] = fileSchema;
       }
-      return filesMap;
-    }, {});
-  }
+    }
 
-  let schema: SchemaObject = {
-    properties,
-    type: 'object',
-  };
-  const body = explore(target, propertyKey);
-
-  if (body) {
-    schema = {
-      allOf: [
-        {
-          $ref: getSchemaPath(body),
-        },
-        { properties, type: 'object' },
-      ],
+    let schema: SchemaObject = {
+      properties,
+      type: 'object',
     };
-  }
+    const body = explore(target, propertyKey);
 
-  return ApiBody({
-    schema,
-    required: isRequired,
-  })(target, propertyKey, descriptor);
-};
+    if (body) {
+      schema = {
+        allOf: [
+          {
+            $ref: getSchemaPath(body),
+          },
+          { properties, type: 'object' },
+        ],
+      };
+    }
 
-export const ApiFile = (
-  files: IApiFile[] = [],
+    return ApiBody({
+      schema,
+      required: isRequired,
+    })(target, propertyKey, descriptor);
+  };
+}
+
+export function ApiFile(
+  files: _.Many<IApiFile>,
   options: Partial<{ isRequired: boolean }> = {},
-) => applyDecorators(RegisterModels(), ApiFileDecorator(files, options));
+): MethodDecorator {
+  const filesArray = _.castArray(files);
+  const apiFileInterceptors = filesArray.map((file) =>
+    UseInterceptors(FileInterceptor(file.name)),
+  );
+  return applyDecorators(
+    RegisterModels(),
+    ApiConsumes('multipart/form-data'),
+    ApiFileDecorator(filesArray, options),
+    ...apiFileInterceptors,
+  );
+}

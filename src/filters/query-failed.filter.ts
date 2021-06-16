@@ -8,7 +8,7 @@ import { QueryFailedError } from 'typeorm';
 import { constraintErrors } from './constraint-errors';
 
 @Catch(QueryFailedError)
-export class QueryFailedFilter implements ExceptionFilter {
+export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {
   constructor(public reflector: Reflector) {}
 
   catch(exception: any, host: ArgumentsHost) {

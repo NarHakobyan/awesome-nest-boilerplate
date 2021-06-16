@@ -8,10 +8,10 @@ import { castArray, isNil, trim } from 'lodash';
  * @IsString()
  * @Trim()
  * name: string;
- * @returns {(target: any, key: string) => void}
+ * @returns PropertyDecorator
  * @constructor
  */
-export function Trim() {
+export function Trim(): PropertyDecorator {
   return Transform((params) => {
     const value = params.value;
     if (Array.isArray(value)) {
@@ -30,7 +30,7 @@ export function Trim() {
  * @returns {(target: any, key: string) => void}
  * @constructor
  */
-export function ToInt() {
+export function ToInt(): PropertyDecorator {
   return Transform(
     (params) => {
       const value = params.value;
@@ -48,7 +48,7 @@ export function ToInt() {
  * name: number;
  * @constructor
  */
-export function ToArray(): (target: any, key: string) => void {
+export function ToArray(): PropertyDecorator {
   return Transform(
     (params) => {
       const value = params.value;

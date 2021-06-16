@@ -1,8 +1,7 @@
-import type { ITranslationDecoratorInterface } from '../interfaces/ITranslationDecoratorInterface';
+import type { ITranslationDecoratorInterface } from '../interfaces';
 
 export const TRANSLATION_DECORATOR_KEY = 'custom:translate';
 
-// eslint-disable-next-line @typescript-eslint/tslint/config
 export function Translate(
   data: ITranslationDecoratorInterface,
 ): PropertyDecorator {
