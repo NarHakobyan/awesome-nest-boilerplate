@@ -1,4 +1,8 @@
 version: "3"
+
+volumes:
+  db: # mount it internally instead of a folder. it avoids file lock problems
+
 services:
   app:
     env_file:
@@ -10,17 +14,24 @@ services:
       - "$PORT:$PORT"
     links:
       - postgres
+
   postgres:
     image: postgres
+    container_name: postgres
     restart: always
     environment:
-      DB_PASSWORD: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: 'GMT'
+      PGTZ: 'GMT'
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
-      - ./db-data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
+
   adminer:
     image: adminer
     restart: always
+    links:
+      - postgres
     ports:
-      - 8080:8080
+      - "8081:8080" # to avoid conflicting the 8080 default for many cloud providers
