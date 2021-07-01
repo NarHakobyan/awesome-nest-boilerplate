@@ -64,19 +64,20 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   const configService = app.select(SharedModule).get(ApiConfigService);
 
-  const natsConfig = configService.natsConfig;
-
-  app.connectMicroservice({
-    transport: Transport.NATS,
-    options: {
-      url: `nats://${natsConfig.host}:${natsConfig.port}`,
-      queue: 'main_service',
-    },
-  });
-
+  // only start nats if it is enabled
+  if (configService.natsEnabled) {
+    const natsConfig = configService.natsConfig;
+    app.connectMicroservice({
+      transport: Transport.NATS,
+      options: {
+        url: `nats://${natsConfig.host}:${natsConfig.port}`,
+        queue: 'main_service',
+      },
+    });
+  }
   await app.startAllMicroservicesAsync();
 
-  if (['development', 'staging'].includes(configService.nodeEnv)) {
+  if (configService.documentationEnabled) {
     setupSwagger(app);
   }
 

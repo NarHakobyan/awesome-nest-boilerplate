@@ -17,8 +17,28 @@ export class ApiConfigService {
     return this.nodeEnv === 'production';
   }
 
-  private getNumber(key: string): number {
-    return Number(this.configService.get(key));
+  private getNumber(key: string, defaultValue?: number): number {
+    const value = this.configService.get(key, defaultValue);
+    if (value === undefined) {
+      throw new Error(key + ' env var not set'); // probably we should call process.exit() too to avoid locking the service
+    }
+    try {
+      return Number(value);
+    } catch {
+      throw new Error(key + ' env var is not a number');
+    }
+  }
+
+  private getBoolean(key: string, defaultValue?: boolean): boolean {
+    const value = this.configService.get(key, defaultValue?.toString());
+    if (value === undefined) {
+      throw new Error(key + ' env var not set');
+    }
+    try {
+      return Boolean(JSON.parse(value));
+    } catch {
+      throw new Error(key + ' env var is not a boolean');
+    }
   }
 
   private getString(key: string, defaultValue?: string): string {
@@ -78,7 +98,7 @@ export class ApiConfigService {
       database: this.getString('DB_DATABASE'),
       subscribers: [UserSubscriber],
       migrationsRun: true,
-      logging: this.isDevelopment,
+      logging: this.getBoolean('ENABLE_ORMLOGS', this.isDevelopment),
       namingStrategy: new SnakeNamingStrategy(),
     };
   }
@@ -89,6 +109,14 @@ export class ApiConfigService {
       bucketApiVersion: this.getString('AWS_S3_API_VERSION'),
       bucketName: this.getString('AWS_S3_BUCKET_NAME'),
     };
+  }
+
+  get documentationEnabled(): boolean {
+    return this.getBoolean('ENABLE_DOCUMENTATION', this.isDevelopment);
+  }
+
+  get natsEnabled(): boolean {
+    return this.getBoolean('NATS_ENABLED');
   }
 
   get natsConfig() {

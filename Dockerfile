@@ -1,5 +1,5 @@
-FROM node:dubnium AS dist
-COPY package.json yarn.lock ./
+FROM node:lts AS dist
+COPY package.json ./
 
 RUN yarn install
 
@@ -7,12 +7,12 @@ COPY . ./
 
 RUN yarn build:prod
 
-FROM node:dubnium AS node_modules
-COPY package.json yarn.lock ./
+FROM node:lts AS node_modules
+COPY package.json ./
 
 RUN yarn install --prod
 
-FROM node:dubnium
+FROM node:lts
 
 ARG PORT=3000
 
