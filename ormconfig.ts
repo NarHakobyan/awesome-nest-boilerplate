@@ -1,3 +1,5 @@
+import './src/boilerplate.polyfill';
+
 import { SnakeNamingStrategy } from './src/snake-naming.strategy';
 
 module.exports = {
