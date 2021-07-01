@@ -1,14 +1,13 @@
-const path = require('path');
-
 module.exports = {
+    parser: '@typescript-eslint/parser',
     env: {
-        browser: true,
+        jest: true,
         es6: true,
         node: true,
     },
-    parser: '@typescript-eslint/parser',
+    ignorePatterns: ['.eslintrc.js'],
     parserOptions: {
-        project: path.resolve(__dirname, './tsconfig.json'),
+        project: './tsconfig.json',
         sourceType: 'module',
     },
     extends: [

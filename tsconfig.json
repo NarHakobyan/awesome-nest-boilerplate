@@ -12,9 +12,9 @@
         "esModuleInterop": true,
         "target": "ES2017",
         "sourceMap": true,
-        "allowJs": true,
         "outDir": "./dist",
-        "baseUrl": "./src"
+        "baseUrl": "./src",
+        "incremental": true,
     },
     "include": [
         "src/**/*"
