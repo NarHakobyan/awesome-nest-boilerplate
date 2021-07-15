@@ -42,6 +42,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   );
   app.use(compression());
   app.use(morgan('combined'));
+  app.enableVersioning();
 
   const reflector = app.get(Reflector);
 
@@ -74,8 +75,9 @@ export async function bootstrap(): Promise<NestExpressApplication> {
         queue: 'main_service',
       },
     });
+
+    await app.startAllMicroservices();
   }
-  await app.startAllMicroservicesAsync();
 
   if (configService.documentationEnabled) {
     setupSwagger(app);

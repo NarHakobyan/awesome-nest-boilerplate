@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Version,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
@@ -65,6 +66,7 @@ export class AuthController {
     });
   }
 
+  @Version('1')
   @Get('me')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)

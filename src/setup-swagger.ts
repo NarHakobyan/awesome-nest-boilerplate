@@ -12,4 +12,8 @@ export function setupSwagger(app: INestApplication): void {
 
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('documentation', app, document);
+
+  console.info(
+    `Documentation: http://localhost:${process.env.PORT}/documentation`,
+  );
 }

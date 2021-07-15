@@ -41,7 +41,7 @@ import { SharedModule } from './shared/shared.module';
       parser: I18nJsonParser,
       inject: [ApiConfigService],
     }),
-    HealthCheckerModule,
+    // HealthCheckerModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import type { HealthIndicatorResult } from '@nestjs/terminus';
 import { HealthCheckError, HealthIndicator } from '@nestjs/terminus';
+import { firstValueFrom } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 
 @Injectable()
@@ -15,10 +16,9 @@ export class ServiceHealthIndicator extends HealthIndicator {
 
   async isHealthy(eventName: string): Promise<HealthIndicatorResult> {
     try {
-      const result = await this.clientProxy
-        .send(eventName, { check: true })
-        .pipe(timeout(10_000))
-        .toPromise();
+      const result = await firstValueFrom(
+        this.clientProxy.send(eventName, { check: true }).pipe(timeout(10_000)),
+      );
 
       return {
         [eventName]: result,

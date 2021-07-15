@@ -18,7 +18,7 @@ export class ApiConfigService {
   }
 
   private getNumber(key: string, defaultValue?: number): number {
-    const value = this.configService.get(key, defaultValue);
+    const value = this.configService.get<number>(key, defaultValue);
     if (value === undefined) {
       throw new Error(key + ' env var not set'); // probably we should call process.exit() too to avoid locking the service
     }
@@ -30,7 +30,7 @@ export class ApiConfigService {
   }
 
   private getBoolean(key: string, defaultValue?: boolean): boolean {
-    const value = this.configService.get(key, defaultValue?.toString());
+    const value = this.configService.get<string>(key, defaultValue?.toString());
     if (value === undefined) {
       throw new Error(key + ' env var not set');
     }
@@ -42,7 +42,7 @@ export class ApiConfigService {
   }
 
   private getString(key: string, defaultValue?: string): string {
-    const value = this.configService.get(key, defaultValue);
+    const value = this.configService.get<string>(key, defaultValue);
 
     if (!value) {
       console.warn(`"${key}" environment variable is not set`);
@@ -98,7 +98,7 @@ export class ApiConfigService {
       database: this.getString('DB_DATABASE'),
       subscribers: [UserSubscriber],
       migrationsRun: true,
-      logging: this.getBoolean('ENABLE_ORMLOGS', this.isDevelopment),
+      logging: this.getBoolean('ENABLE_ORM_LOGS', this.isDevelopment),
       namingStrategy: new SnakeNamingStrategy(),
     };
   }

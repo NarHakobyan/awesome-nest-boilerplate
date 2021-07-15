@@ -7,6 +7,7 @@ module.exports = {
     },
     ignorePatterns: ['.eslintrc.js'],
     parserOptions: {
+        ecmaVersion: 2018,
         project: './tsconfig.json',
         sourceType: 'module',
     },
@@ -19,6 +20,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:sonarjs/recommended',
     ],
     plugins: [
         '@typescript-eslint',
@@ -27,9 +29,16 @@ module.exports = {
         'simple-import-sort',
         'import',
         'unicorn',
+        'sonarjs',
     ],
     rules: {
+        'sonarjs/cognitive-complexity': 'error',
+        'sonarjs/no-identical-expressions': 'error',
+        'sonarjs/no-duplicate-string': 'off',
         'simple-import-sort/imports': 'error',
+        'import/newline-after-import': 'error',
+        'import/no-absolute-path': 'error',
+        'import/no-duplicates': 'error',
         'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2 }],
         '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/no-unused-vars-experimental': [
@@ -37,6 +46,17 @@ module.exports = {
             { ignoredNamesRegex: '^_' },
         ],
         '@typescript-eslint/adjacent-overload-signatures': 'error',
+        'no-await-in-loop': 'error',
+        'padding-line-between-statements': [
+            'error',
+            { blankLine: 'always', prev: '*', next: 'return' },
+            { blankLine: 'always', prev: '*', next: 'try' },
+            { blankLine: 'always', prev: 'try', next: '*' },
+            { blankLine: 'always', prev: '*', next: 'block-like' },
+            { blankLine: 'always', prev: 'block-like', next: '*' },
+            { blankLine: 'always', prev: '*', next: 'throw' },
+            { blankLine: 'always', prev: 'var', next: '*' },
+        ],
         '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
         '@typescript-eslint/ban-types': [
             'error',
@@ -167,7 +187,7 @@ module.exports = {
                 paths: [
                     {
                         name: 'rxjs/Rx',
-                        message: "Please import directly from 'rxjs' instead",
+                        message: 'Please import directly from \'rxjs\' instead',
                     },
                 ],
             },
@@ -176,7 +196,12 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 'error',
         'object-curly-spacing': ['error', 'always'],
         'no-multi-spaces': 'error',
+        'no-useless-return': 'error',
+        'no-else-return': 'error',
+        'no-implicit-coercion': 'error',
         'constructor-super': 'error',
+        'yoda': 'error',
+        'strict': ['error', 'never'],
         'curly': 'error',
         'dot-notation': 'error',
         'eol-last': 'error',
@@ -198,6 +223,9 @@ module.exports = {
         'no-bitwise': 'error',
         'no-caller': 'error',
         'no-cond-assign': 'error',
+        'no-constant-condition': 'error',
+        'no-dupe-else-if': 'error',
+        'lines-between-class-members': ['error', 'always'],
         'no-console': [
             'error',
             {
@@ -245,7 +273,7 @@ module.exports = {
         ],
         'no-new-func': 'error',
         'no-new-wrappers': 'error',
-        'no-redeclare': 'off',
+        'no-redeclare': 'error',
         'no-return-await': 'error',
         'no-sequences': 'error',
         'no-sparse-arrays': 'error',
@@ -282,9 +310,9 @@ module.exports = {
             {
                 cases: {
                     kebabCase: true,
-                    pascalCase: true
-                }
-            }
+                    pascalCase: true,
+                },
+            },
         ],
         'unicorn/import-index': 'error',
         'unicorn/import-style': 'error',
