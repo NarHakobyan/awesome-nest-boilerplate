@@ -14,13 +14,14 @@
         "typeorm": "ts-node node_modules/typeorm/cli.js  -f ormconfig",
         "migration:generate": "yarn run typeorm migration:generate -d src/migrations -n",
         "migration:create": "yarn run typeorm migration:create -d src/migrations -n",
+        "g:dto": "nest g class modules/auth/dto",
         "migration:revert": "yarn run typeorm migration:revert",
         "schema:drop": "yarn run typeorm schema:drop",
         "watch:dev": "nodemon --config nodemon.json",
         "debug:dev": "nodemon --config nodemon-debug.json",
         "webpack": "webpack --config webpack.config.js --progress",
-        "lint": "eslint . --ext .ts",
-        "lint:fix": "eslint --fix . --ext .ts",
+        "lint": "eslint --format github . --ext .ts",
+        "lint:fix": "eslint --format github --fix . --ext .ts",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
@@ -57,7 +58,7 @@
         "mime-types": "^2.1.31",
         "morgan": "^1.10.0",
         "nats": "^1.4.12",
-        "nestjs-i18n": "^8.1.2",
+        "nestjs-i18n": "^8.1.3",
         "passport": "^0.4.1",
         "passport-jwt": "^4.0.0",
         "pg": "^8.6.0",
@@ -105,7 +106,7 @@
         "eslint-plugin-sonarjs": "^0.9.1",
         "eslint-plugin-unicorn": "^34.0.1",
         "gh-pages": "^3.2.0",
-        "husky": "^6.0.0",
+        "husky": "^7.0.1",
         "jest": "^27.0.4",
         "lint-staged": "~11.0.0",
         "nodemon": "^2.0.12",
@@ -143,6 +144,7 @@
     "lint-staged": {
         "*.ts": [
             "eslint --fix",
+            "eslint --format github",
             "git add"
         ]
     }
