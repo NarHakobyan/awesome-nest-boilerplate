@@ -27,7 +27,7 @@ export class UserController {
   ) {}
 
   @Get('admin')
-  @Auth(RoleType.USER)
+  @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
   async admin(@AuthUser() user: UserEntity): Promise<string> {
     const translation = await this.translationService.translate(
@@ -36,11 +36,12 @@ export class UserController {
         lang: 'en',
       },
     );
+
     return `${translation} ${user.firstName}`;
   }
 
   @Get()
-  @Auth(RoleType.USER)
+  @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,
@@ -55,7 +56,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @Auth(RoleType.USER)
+  @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,

@@ -9,19 +9,19 @@ export class UtilsProvider {
    * @returns {T[] | T}
    */
   public static toDto<T, E>(
-    model: new (entity: E, options?: GetConstructorArgs<T>[1]) => T,
+    model: new (entity: E, options?: any) => T,
     entity: E,
-    options?: GetConstructorArgs<T>[1],
+    options?: any,
   ): T;
   public static toDto<T, E>(
-    model: new (entity: E, options?: GetConstructorArgs<T>[1]) => T,
+    model: new (entity: E, options?: any) => T,
     entity: E[],
-    options?: GetConstructorArgs<T>[1],
+    options?: any,
   ): T[];
   public static toDto<T, E>(
-    model: new (entity: E, options?: GetConstructorArgs<T>[1]) => T,
+    model: new (entity: E, options?: any) => T,
     entity: E | E[],
-    options?: GetConstructorArgs<T>[1],
+    options?: any,
   ): T | T[] {
     if (Array.isArray(entity)) {
       return entity.map((u) => new model(u, options));
