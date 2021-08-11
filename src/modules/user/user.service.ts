@@ -26,6 +26,7 @@ export class UserService {
   findOne(findData: FindConditions<UserEntity>): Promise<UserEntity> {
     return this.userRepository.findOne(findData);
   }
+
   async findByUsernameOrEmail(
     options: Partial<{ username: string; email: string }>,
   ): Promise<UserEntity | undefined> {
@@ -36,6 +37,7 @@ export class UserService {
         email: options.email,
       });
     }
+
     if (options.username) {
       queryBuilder.orWhere('user.username = :username', {
         username: options.username,
@@ -66,7 +68,7 @@ export class UserService {
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<PageDto<UserDto>> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
-    const { items, pageMetaDto } = await queryBuilder.paginate(pageOptionsDto);
+    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
 
     return items.toPageDto(pageMetaDto);
   }

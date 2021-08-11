@@ -14,14 +14,21 @@ import type { RoleType } from '../common/constants/role-type';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';
+import { PublicRoute } from './public-route.decorator';
 
-export function Auth(...roles: RoleType[]) {
+export function Auth(
+  roles: RoleType[] = [],
+  options?: Partial<{ public: boolean }>,
+): MethodDecorator {
+  const isPublicRoute = options?.public;
+
   return applyDecorators(
     SetMetadata('roles', roles),
-    UseGuards(AuthGuard, RolesGuard),
+    UseGuards(AuthGuard({ public: isPublicRoute }), RolesGuard),
     ApiBearerAuth(),
     UseInterceptors(AuthUserInterceptor),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),
+    PublicRoute(isPublicRoute),
   );
 }
 
