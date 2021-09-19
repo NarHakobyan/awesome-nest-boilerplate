@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call */
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+
 import { AppModule } from '../src/app.module';
 
 describe('AuthController (e2e)', () => {
@@ -17,8 +18,8 @@ describe('AuthController (e2e)', () => {
         await app.init();
     });
 
-    it('/auth/register (POST)', async () =>
-        await request(app.getHttpServer())
+    it('/auth/register (POST)', () =>
+        request(app.getHttpServer())
             .post('/auth/register')
             .send({
                 firstName: 'John',
@@ -40,8 +41,8 @@ describe('AuthController (e2e)', () => {
         accessToken = response.body.token.accessToken;
     });
 
-    it('/auth/me (GET)', async () =>
-        await request(app.getHttpServer())
+    it('/auth/me (GET)', () =>
+        request(app.getHttpServer())
             .get('/auth/me')
             .set({ Authorization: `Bearer ${accessToken}` })
             .expect(200));
