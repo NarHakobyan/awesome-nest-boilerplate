@@ -17,6 +17,10 @@ export class ApiConfigService {
     return this.nodeEnv === 'production';
   }
 
+  get isTest(): boolean {
+    return this.nodeEnv === 'test';
+  }
+
   private getNumber(key: string, defaultValue?: number): number {
     const value = this.configService.get(key, defaultValue);
     if (value === undefined) {
@@ -89,7 +93,8 @@ export class ApiConfigService {
     return {
       entities,
       migrations,
-      keepConnectionAlive: true,
+      keepConnectionAlive: !this.isTest,
+      dropSchema: this.isTest,
       type: 'postgres',
       host: this.getString('DB_HOST'),
       port: this.getNumber('DB_PORT'),
