@@ -18,7 +18,8 @@
     "strictNullChecks": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "ormconfig.ts"
   ],
   "exclude": [
     "node_modules",
