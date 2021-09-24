@@ -19,9 +19,11 @@ export class ApiConfigService {
 
   private getNumber(key: string, defaultValue?: number): number {
     const value = this.configService.get<number>(key, defaultValue);
+
     if (value === undefined) {
       throw new Error(key + ' env var not set'); // probably we should call process.exit() too to avoid locking the service
     }
+
     try {
       return Number(value);
     } catch {
@@ -31,9 +33,11 @@ export class ApiConfigService {
 
   private getBoolean(key: string, defaultValue?: boolean): boolean {
     const value = this.configService.get<string>(key, defaultValue?.toString());
+
     if (value === undefined) {
       throw new Error(key + ' env var not set');
     }
+
     try {
       return Boolean(JSON.parse(value));
     } catch {
@@ -46,8 +50,10 @@ export class ApiConfigService {
 
     if (!value) {
       console.warn(`"${key}" environment variable is not set`);
+
       return;
     }
+
     return value.toString().replace(/\\n/g, '\n');
   }
 
@@ -61,7 +67,7 @@ export class ApiConfigService {
 
   get typeOrmConfig(): TypeOrmModuleOptions {
     let entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
-    let migrations = [__dirname + '/../../migrations/*{.ts,.js}'];
+    let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 
     if (module.hot) {
       const entityContext = require.context(
@@ -72,10 +78,11 @@ export class ApiConfigService {
       entities = entityContext.keys().map((id) => {
         const entityModule = entityContext(id);
         const [entity] = Object.values(entityModule);
+
         return entity as string;
       });
       const migrationContext = require.context(
-        './../../migrations',
+        './../../database/migrations',
         false,
         /\.ts$/,
       );
@@ -83,9 +90,11 @@ export class ApiConfigService {
       migrations = migrationContext.keys().map((id) => {
         const migrationModule = migrationContext(id);
         const [migration] = Object.values(migrationModule);
+
         return migration as string;
       });
     }
+
     return {
       entities,
       migrations,

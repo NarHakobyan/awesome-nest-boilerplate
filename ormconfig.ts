@@ -14,7 +14,7 @@ const configs: TypeOrmModuleOptions & {seeds: string[], factories: string[],} = 
   namingStrategy: new SnakeNamingStrategy(),
   subscribers: [UserSubscriber],
   entities: ['src/modules/**/*.entity{.ts,.js}'],
-  migrations: ['src/migrations/*{.ts,.js}'],
+  migrations: ['src/database/migrations/*{.ts,.js}'],
   seeds: ['src/database/seeds/**/*{.ts,.js}'],
   factories: ['src/database/factories/**/*{.ts,.js}'],
 };
