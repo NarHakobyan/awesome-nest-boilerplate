@@ -19,6 +19,7 @@
   },
   "include": [
     "src/**/*",
+    "test/**/*",
     "ormconfig.ts"
   ],
   "exclude": [
