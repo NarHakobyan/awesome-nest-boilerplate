@@ -18,6 +18,9 @@ export class ServiceHealthIndicator extends HealthIndicator {
     try {
       const result = await firstValueFrom(
         this.clientProxy.send(eventName, { check: true }).pipe(timeout(10_000)),
+        {
+          defaultValue: undefined,
+        },
       );
 
       return {

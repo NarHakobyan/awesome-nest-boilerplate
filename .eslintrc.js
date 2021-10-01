@@ -8,7 +8,7 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js'],
   parserOptions: {
     ecmaVersion: 2018,
-    project: './tsconfig.json',
+    project: './tsconfig.eslint.json',
     sourceType: 'module',
   },
   extends: [
@@ -41,6 +41,7 @@ module.exports = {
     'import/no-duplicates': 'error',
     'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2 }],
     '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars-experimental': [
       'error',
       { ignoredNamesRegex: '^_' },
