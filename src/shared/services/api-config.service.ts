@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { isNil } from 'lodash';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
@@ -21,26 +22,18 @@ export class ApiConfigService {
     return this.nodeEnv === 'test';
   }
 
-  private getNumber(key: string, defaultValue?: number): number {
-    const value = this.configService.get<number>(key, defaultValue);
-
-    if (value === undefined) {
-      throw new Error(key + ' env var not set'); // probably we should call process.exit() too to avoid locking the service
-    }
+  private getNumber(key: string): number {
+    const value = this.get(key);
 
     try {
       return Number(value);
     } catch {
-      throw new Error(key + ' env var is not a number');
+      throw new Error(key + ' environment variable is not a number');
     }
   }
 
-  private getBoolean(key: string, defaultValue?: boolean): boolean {
-    const value = this.configService.get<string>(key, defaultValue?.toString());
-
-    if (value === undefined) {
-      throw new Error(key + ' env var not set');
-    }
+  private getBoolean(key: string): boolean {
+    const value = this.get(key);
 
     try {
       return Boolean(JSON.parse(value));
@@ -49,20 +42,14 @@ export class ApiConfigService {
     }
   }
 
-  private getString(key: string, defaultValue?: string): string {
-    const value = this.configService.get<string>(key, defaultValue);
+  private getString(key: string): string {
+    const value = this.get(key);
 
-    if (!value) {
-      console.warn(`"${key}" environment variable is not set`);
-
-      return;
-    }
-
-    return value.toString().replace(/\\n/g, '\n');
+    return value.replace(/\\n/g, '\n');
   }
 
   get nodeEnv(): string {
-    return this.getString('NODE_ENV', 'development');
+    return this.getString('NODE_ENV');
   }
 
   get fallbackLanguage(): string {
@@ -112,7 +99,7 @@ export class ApiConfigService {
       database: this.getString('DB_DATABASE'),
       subscribers: [UserSubscriber],
       migrationsRun: true,
-      logging: this.getBoolean('ENABLE_ORM_LOGS', this.isDevelopment),
+      logging: this.getBoolean('ENABLE_ORM_LOGS'),
       namingStrategy: new SnakeNamingStrategy(),
     };
   }
@@ -126,7 +113,7 @@ export class ApiConfigService {
   }
 
   get documentationEnabled(): boolean {
-    return this.getBoolean('ENABLE_DOCUMENTATION', this.isDevelopment);
+    return this.getBoolean('ENABLE_DOCUMENTATION');
   }
 
   get natsEnabled(): boolean {
@@ -151,5 +138,15 @@ export class ApiConfigService {
     return {
       port: this.getString('PORT'),
     };
+  }
+
+  private get(key: string): string {
+    const value = this.configService.get<string>(key);
+
+    if (isNil(value)) {
+      throw new Error(key + ' environment variable does not set'); // probably we should call process.exit() too to avoid locking the service
+    }
+
+    return value;
   }
 }

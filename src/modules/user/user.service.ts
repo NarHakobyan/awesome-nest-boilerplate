@@ -3,6 +3,7 @@ import type { FindConditions } from 'typeorm';
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception';
+import { UserNotFoundException } from '../../exceptions/user-not-found.exception';
 import type { IFile } from '../../interfaces/IFile';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
@@ -23,7 +24,9 @@ export class UserService {
   /**
    * Find single user
    */
-  findOne(findData: FindConditions<UserEntity>): Promise<UserEntity> {
+  findOne(
+    findData: FindConditions<UserEntity>,
+  ): Promise<UserEntity | undefined> {
     return this.userRepository.findOne(findData);
   }
 
@@ -79,6 +82,10 @@ export class UserService {
     queryBuilder.where('user.id = :userId', { userId });
 
     const userEntity = await queryBuilder.getOne();
+
+    if (!userEntity) {
+      throw new UserNotFoundException();
+    }
 
     return userEntity.toDto();
   }

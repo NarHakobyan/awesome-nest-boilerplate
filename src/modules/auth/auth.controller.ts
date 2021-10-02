@@ -62,7 +62,7 @@ export class AuthController {
       file,
     );
 
-    return createdUser.toDto<typeof UserDto>({
+    return createdUser.toDto({
       isActive: true,
     });
   }

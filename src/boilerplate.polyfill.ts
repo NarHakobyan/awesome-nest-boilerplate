@@ -12,9 +12,6 @@ import type { PageOptionsDto } from './common/dto/page-options.dto';
 import { VIRTUAL_COLUMN_KEY } from './decorators/virtual-column.decorator';
 
 declare global {
-  // Just to differ types where class instance is not mandatory and plain object can work as well
-  type Plain<T> = T;
-
   interface Array<T> {
     toDtos<Dto extends AbstractDto>(this: T[], options?: any): Dto[];
 
