@@ -11,6 +11,10 @@ import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
 import { VIRTUAL_COLUMN_KEY } from './decorators/virtual-column.decorator';
 
+// type GetConstructorArgs<T> = T extends new (...args: infer U) => any
+//   ? U
+//   : never;
+
 declare global {
   interface Array<T> {
     toDtos<Dto extends AbstractDto>(this: T[], options?: any): Dto[];
@@ -18,13 +22,13 @@ declare global {
     toPageDto<Dto extends AbstractDto>(
       this: T[],
       pageMetaDto: PageMetaDto,
+      // FIXME make option type visible from entity
       options?: any,
     ): PageDto<Dto>;
   }
 }
 
 declare module 'typeorm' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface QueryBuilder<Entity> {
     searchByString(q: string, columnNames: string[]): this;
   }

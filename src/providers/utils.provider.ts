@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 
+import type { Optional } from '../types';
+
 export class UtilsProvider {
   /**
    * generate hash from password or string
@@ -29,7 +31,7 @@ export class UtilsProvider {
    */
   static validateHash(
     password: string,
-    hash: string | undefined,
+    hash: Optional<string>,
   ): Promise<boolean> {
     if (!password || !hash) {
       return Promise.resolve(false);
