@@ -33,9 +33,11 @@ export class AuthService {
       userLoginDto.password,
       user?.password,
     );
+
     if (!user || !isPasswordValid) {
       throw new UserNotFoundException();
     }
+
     return user;
   }
 }

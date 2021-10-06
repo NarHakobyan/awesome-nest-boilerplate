@@ -4,31 +4,37 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { UtilsProvider } from '../providers/utils.provider';
+import type { Constructor } from '../types';
 import type { AbstractDto } from './dto/abstract.dto';
 
-export abstract class AbstractEntity<DTO extends AbstractDto = AbstractDto> {
+export abstract class AbstractEntity<
+  DTO extends AbstractDto = AbstractDto,
+  O = never,
+> {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @CreateDateColumn({
-    type: 'timestamp without time zone',
-    name: 'created_at',
+    type: 'timestamp',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp without time zone',
-    name: 'updated_at',
+    type: 'timestamp',
   })
   updatedAt: Date;
 
-  abstract dtoClass: new (
-    entity: AbstractEntity,
-    options?: GetConstructorArgs<DTO>[1],
-  ) => DTO;
+  private dtoClass: Constructor<DTO, [AbstractEntity, O?]>;
 
-  toDto<D = DTO>(options?: GetConstructorArgs<D>[1]): DTO {
-    return UtilsProvider.toDto(this.dtoClass, this, options);
+  toDto(options?: O): DTO {
+    const dtoClass = this.dtoClass;
+
+    if (!dtoClass) {
+      throw new Error(
+        `You need to use @UseDto on class (${this.constructor.name}) be able to call toDto function`,
+      );
+    }
+
+    return new this.dtoClass(this, options);
   }
 }

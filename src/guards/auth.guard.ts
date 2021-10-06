@@ -1,5 +1,14 @@
+import type { IAuthGuard, Type } from '@nestjs/passport';
 import { AuthGuard as NestAuthGuard } from '@nestjs/passport';
 
-// This should be used as guard class
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const AuthGuard = NestAuthGuard('jwt');
+export function AuthGuard(
+  options?: Partial<{ public: boolean }>,
+): Type<IAuthGuard> {
+  const strategies = ['jwt'];
+
+  if (options?.public) {
+    strategies.push('public');
+  }
+
+  return NestAuthGuard(strategies);
+}

@@ -3,9 +3,11 @@ import type { FindConditions } from 'typeorm';
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception';
-import type { IFile } from '../../interfaces/IFile';
+import { UserNotFoundException } from '../../exceptions/user-not-found.exception';
+import type { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
+import type { Optional } from '../../types';
 import type { UserRegisterDto } from '../auth/dto/UserRegisterDto';
 import type { UserDto } from './dto/user-dto';
 import type { UsersPageOptionsDto } from './dto/users-page-options.dto';
@@ -23,12 +25,13 @@ export class UserService {
   /**
    * Find single user
    */
-  findOne(findData: FindConditions<UserEntity>): Promise<UserEntity> {
+  findOne(findData: FindConditions<UserEntity>): Promise<Optional<UserEntity>> {
     return this.userRepository.findOne(findData);
   }
+
   async findByUsernameOrEmail(
     options: Partial<{ username: string; email: string }>,
-  ): Promise<UserEntity | undefined> {
+  ): Promise<Optional<UserEntity>> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
 
     if (options.email) {
@@ -36,6 +39,7 @@ export class UserService {
         email: options.email,
       });
     }
+
     if (options.username) {
       queryBuilder.orWhere('user.username = :username', {
         username: options.username,
@@ -66,7 +70,7 @@ export class UserService {
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<PageDto<UserDto>> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
-    const { items, pageMetaDto } = await queryBuilder.paginate(pageOptionsDto);
+    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
 
     return items.toPageDto(pageMetaDto);
   }
@@ -77,6 +81,10 @@ export class UserService {
     queryBuilder.where('user.id = :userId', { userId });
 
     const userEntity = await queryBuilder.getOne();
+
+    if (!userEntity) {
+      throw new UserNotFoundException();
+    }
 
     return userEntity.toDto();
   }

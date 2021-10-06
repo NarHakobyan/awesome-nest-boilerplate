@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { isNil } from 'lodash';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
@@ -21,23 +22,19 @@ export class ApiConfigService {
     return this.nodeEnv === 'test';
   }
 
-  private getNumber(key: string, defaultValue?: number): number {
-    const value = this.configService.get(key, defaultValue);
-    if (value === undefined) {
-      throw new Error(key + ' env var not set'); // probably we should call process.exit() too to avoid locking the service
-    }
+  private getNumber(key: string): number {
+    const value = this.get(key);
+
     try {
       return Number(value);
     } catch {
-      throw new Error(key + ' env var is not a number');
+      throw new Error(key + ' environment variable is not a number');
     }
   }
 
-  private getBoolean(key: string, defaultValue?: boolean): boolean {
-    const value = this.configService.get(key, defaultValue?.toString());
-    if (value === undefined) {
-      throw new Error(key + ' env var not set');
-    }
+  private getBoolean(key: string): boolean {
+    const value = this.get(key);
+
     try {
       return Boolean(JSON.parse(value));
     } catch {
@@ -45,18 +42,14 @@ export class ApiConfigService {
     }
   }
 
-  private getString(key: string, defaultValue?: string): string {
-    const value = this.configService.get(key, defaultValue);
+  private getString(key: string): string {
+    const value = this.get(key);
 
-    if (!value) {
-      console.warn(`"${key}" environment variable is not set`);
-      return;
-    }
-    return value.toString().replace(/\\n/g, '\n');
+    return value.replace(/\\n/g, '\n');
   }
 
   get nodeEnv(): string {
-    return this.getString('NODE_ENV', 'development');
+    return this.getString('NODE_ENV');
   }
 
   get fallbackLanguage(): string {
@@ -65,7 +58,7 @@ export class ApiConfigService {
 
   get typeOrmConfig(): TypeOrmModuleOptions {
     let entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
-    let migrations = [__dirname + '/../../migrations/*{.ts,.js}'];
+    let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 
     if (module.hot) {
       const entityContext = require.context(
@@ -76,10 +69,11 @@ export class ApiConfigService {
       entities = entityContext.keys().map((id) => {
         const entityModule = entityContext(id);
         const [entity] = Object.values(entityModule);
+
         return entity as string;
       });
       const migrationContext = require.context(
-        './../../migrations',
+        './../../database/migrations',
         false,
         /\.ts$/,
       );
@@ -87,9 +81,11 @@ export class ApiConfigService {
       migrations = migrationContext.keys().map((id) => {
         const migrationModule = migrationContext(id);
         const [migration] = Object.values(migrationModule);
+
         return migration as string;
       });
     }
+
     return {
       entities,
       migrations,
@@ -103,7 +99,7 @@ export class ApiConfigService {
       database: this.getString('DB_DATABASE'),
       subscribers: [UserSubscriber],
       migrationsRun: true,
-      logging: this.getBoolean('ENABLE_ORMLOGS', this.isDevelopment),
+      logging: this.getBoolean('ENABLE_ORM_LOGS'),
       namingStrategy: new SnakeNamingStrategy(),
     };
   }
@@ -117,7 +113,7 @@ export class ApiConfigService {
   }
 
   get documentationEnabled(): boolean {
-    return this.getBoolean('ENABLE_DOCUMENTATION', this.isDevelopment);
+    return this.getBoolean('ENABLE_DOCUMENTATION');
   }
 
   get natsEnabled(): boolean {
@@ -142,5 +138,15 @@ export class ApiConfigService {
     return {
       port: this.getString('PORT'),
     };
+  }
+
+  private get(key: string): string {
+    const value = this.configService.get<string>(key);
+
+    if (isNil(value)) {
+      throw new Error(key + ' environment variable does not set'); // probably we should call process.exit() too to avoid locking the service
+    }
+
+    return value;
   }
 }

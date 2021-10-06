@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Version,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
@@ -44,6 +45,7 @@ export class AuthController {
     const userEntity = await this.authService.validateUser(userLoginDto);
 
     const token = await this.authService.createToken(userEntity);
+
     return new LoginPayloadDto(userEntity.toDto(), token);
   }
 
@@ -60,11 +62,12 @@ export class AuthController {
       file,
     );
 
-    return createdUser.toDto<typeof UserDto>({
+    return createdUser.toDto({
       isActive: true,
     });
   }
 
+  @Version('1')
   @Get('me')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)

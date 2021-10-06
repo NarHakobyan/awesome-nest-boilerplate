@@ -55,6 +55,7 @@ function explore(instance, propertyKey: string | symbol) {
 function RegisterModels(): MethodDecorator {
   return (target, propertyKey, descriptor: PropertyDescriptor) => {
     const body = explore(target, propertyKey);
+
     return body && ApiExtraModels(body)(target, propertyKey, descriptor);
   };
 }
@@ -70,6 +71,7 @@ function ApiFileDecorator(
       format: 'binary',
     };
     const properties: Record<string, SchemaObject | ReferenceObject> = {};
+
     for (const file of files) {
       if (file?.isArray) {
         properties[file.name] = {
@@ -113,6 +115,7 @@ export function ApiFile(
   const apiFileInterceptors = filesArray.map((file) =>
     UseInterceptors(FileInterceptor(file.name)),
   );
+
   return applyDecorators(
     RegisterModels(),
     ApiConsumes('multipart/form-data'),

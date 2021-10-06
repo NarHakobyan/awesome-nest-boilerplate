@@ -11,19 +11,19 @@ import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
 import { VIRTUAL_COLUMN_KEY } from './decorators/virtual-column.decorator';
 
-declare global {
-  export type GetConstructorArgs<T> = T extends new (...args: infer U) => any
-    ? U
-    : never;
-  interface Array<T> {
-    toDtos<Entity extends AbstractEntity<Dto>, Dto extends AbstractDto>(
-      this: T[],
-      options?: any,
-    ): Dto[];
+// type GetConstructorArgs<T> = T extends new (...args: infer U) => any
+//   ? U
+//   : never;
 
-    toPageDto<T extends AbstractEntity<Dto>, Dto extends AbstractDto>(
+declare global {
+  interface Array<T> {
+    toDtos<Dto extends AbstractDto>(this: T[], options?: any): Dto[];
+
+    toPageDto<Dto extends AbstractDto>(
       this: T[],
       pageMetaDto: PageMetaDto,
+      // FIXME make option type visible from entity
+      options?: any,
     ): PageDto<Dto>;
   }
 }
@@ -37,25 +37,29 @@ declare module 'typeorm' {
     paginate(
       this: SelectQueryBuilder<Entity>,
       pageOptionsDto: PageOptionsDto,
-    ): Promise<{ items: Entity[]; pageMetaDto: PageMetaDto }>;
+      options?: Partial<{ takeAll: boolean }>,
+    ): Promise<[Entity[], PageMetaDto]>;
   }
 }
 
 Array.prototype.toDtos = function <
-  T extends AbstractEntity<Dto>,
+  Entity extends AbstractEntity<Dto>,
   Dto extends AbstractDto,
 >(options?: any): Dto[] {
-  return compact(map<T, Dto>(this, (item) => item.toDto(options)));
+  return compact(
+    map<Entity, Dto>(this, (item) => item.toDto(options as never)),
+  );
 };
 
-Array.prototype.toPageDto = function (pageMetaDto: PageMetaDto) {
-  return new PageDto(this.toDtos(), pageMetaDto);
+Array.prototype.toPageDto = function (pageMetaDto: PageMetaDto, options?: any) {
+  return new PageDto(this.toDtos(options), pageMetaDto);
 };
 
 QueryBuilder.prototype.searchByString = function (q, columnNames) {
   if (!q) {
     return this;
   }
+
   this.andWhere(
     new Brackets((qb) => {
       for (const item of columnNames) {
@@ -71,22 +75,25 @@ QueryBuilder.prototype.searchByString = function (q, columnNames) {
 
 SelectQueryBuilder.prototype.paginate = async function (
   pageOptionsDto: PageOptionsDto,
+  options?: Partial<{ takeAll: boolean }>,
 ) {
-  const selectQueryBuilder = this.skip(pageOptionsDto.skip).take(
-    pageOptionsDto.take,
-  );
-  const itemCount = await selectQueryBuilder.getCount();
+  if (options?.takeAll) {
+    this.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+  }
 
-  const { entities, raw } = await selectQueryBuilder.getRawAndEntities();
+  const itemCount = await this.getCount();
 
-  const items = entities.map((entitiy, index) => {
-    const metaInfo = Reflect.getMetadata(VIRTUAL_COLUMN_KEY, entitiy) ?? {};
+  const { entities, raw } = await this.getRawAndEntities();
+
+  const items = entities.map((entity, index) => {
+    const metaInfo = Reflect.getMetadata(VIRTUAL_COLUMN_KEY, entity) ?? {};
     const item = raw[index];
 
     for (const [propertyKey, name] of Object.entries<string>(metaInfo)) {
-      entitiy[propertyKey] = item[name];
+      entity[propertyKey] = item[name];
     }
-    return entitiy;
+
+    return entity;
   });
 
   const pageMetaDto = new PageMetaDto({
@@ -94,5 +101,5 @@ SelectQueryBuilder.prototype.paginate = async function (
     pageOptionsDto,
   });
 
-  return { items, pageMetaDto };
+  return [items, pageMetaDto];
 };

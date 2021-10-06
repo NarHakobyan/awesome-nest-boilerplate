@@ -36,20 +36,27 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   private validationFilter(validationErrors: ValidationError[]): void {
     for (const validationError of validationErrors) {
-      if (!_.isEmpty(validationError.children)) {
-        this.validationFilter(validationError.children);
+      const children = validationError.children;
+
+      if (children) {
+        this.validationFilter(children);
+
         return;
       }
 
-      for (const [constraintKey, constraint] of Object.entries(
-        validationError.constraints,
-      )) {
+      const constraints = validationError.constraints;
+
+      if (!constraints) {
+        return;
+      }
+
+      for (const [constraintKey, constraint] of Object.entries(constraints)) {
         // convert default messages
         if (!constraint) {
           // convert error message to error.fields.{key} syntax for i18n translation
-          validationError.constraints[
-            constraintKey
-          ] = `error.fields.${_.snakeCase(constraintKey)}`;
+          constraints[constraintKey] = `error.fields.${_.snakeCase(
+            constraintKey,
+          )}`;
         }
       }
     }
