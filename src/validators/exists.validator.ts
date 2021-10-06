@@ -14,11 +14,14 @@ import { Connection } from 'typeorm';
 export class ExistsValidator implements ValidatorConstraintInterface {
   constructor(@InjectConnection() private readonly connection: Connection) {}
 
-  public async validate<E>(value: string, args: ExistsValidationArguments<E>) {
-    const [EntityClass, findCondition = args.property] = args.constraints;
+  public async validate<E>(
+    value: string,
+    args: IExistsValidationArguments<E>,
+  ): Promise<boolean> {
+    const [entityClass, findCondition = args.property] = args.constraints;
 
     return (
-      (await this.connection.getRepository(EntityClass).count({
+      (await this.connection.getRepository(entityClass).count({
         where:
           typeof findCondition === 'function'
             ? findCondition(args)
@@ -29,9 +32,9 @@ export class ExistsValidator implements ValidatorConstraintInterface {
     );
   }
 
-  defaultMessage(args: ValidationArguments) {
-    const [EntityClass] = args.constraints;
-    const entity = EntityClass.name || 'Entity';
+  defaultMessage(args: ValidationArguments): string {
+    const [entityClass] = args.constraints;
+    const entity = entityClass.name || 'Entity';
 
     return `The selected ${args.property}  does not exist in ${entity} entity`;
   }
@@ -41,15 +44,15 @@ type ExistsValidationConstraints<E> = [
   ObjectType<E> | EntitySchema<E> | string,
   ((validationArguments: ValidationArguments) => FindConditions<E>) | keyof E,
 ];
-interface ExistsValidationArguments<E> extends ValidationArguments {
+interface IExistsValidationArguments<E> extends ValidationArguments {
   constraints: ExistsValidationConstraints<E>;
 }
 
 export function Exists<E>(
   constraints: Partial<ExistsValidationConstraints<E>>,
   validationOptions?: ValidationOptions,
-) {
-  return function (object: Object, propertyName: string) {
+): PropertyDecorator {
+  return (object, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       propertyName,

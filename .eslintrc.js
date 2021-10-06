@@ -212,7 +212,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'error',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'object-curly-spacing': ['error', 'always'],
     'no-multi-spaces': 'error',
     'no-useless-return': 'error',

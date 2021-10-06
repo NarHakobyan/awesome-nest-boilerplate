@@ -1,35 +1,24 @@
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
-import {
-  Catch,
-  HttpStatus,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Catch, UnprocessableEntityException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ValidationError } from 'class-validator';
+import type { ValidationError } from 'class-validator';
 import type { Response } from 'express';
-import { STATUS_CODES } from 'http';
 import _ from 'lodash';
 
 @Catch(UnprocessableEntityException)
-export class HttpExceptionFilter implements ExceptionFilter {
+export class HttpExceptionFilter
+  implements ExceptionFilter<UnprocessableEntityException>
+{
   constructor(public reflector: Reflector) {}
 
   catch(exception: UnprocessableEntityException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    let statusCode = exception.getStatus();
-    // FIXME replace any with correct type
-    const r = exception.getResponse() as any;
+    const statusCode = exception.getStatus();
+    const r = exception.getResponse() as { message: ValidationError[] };
 
-    if (_.isArray(r.message) && r.message[0] instanceof ValidationError) {
-      statusCode = HttpStatus.UNPROCESSABLE_ENTITY;
-      r.error = STATUS_CODES[statusCode];
-      const validationErrors = r.message as ValidationError[];
-      this.validationFilter(validationErrors);
-    }
-
-    r.statusCode = statusCode;
-    r.error = STATUS_CODES[statusCode];
+    const validationErrors = r.message;
+    this.validationFilter(validationErrors);
 
     response.status(statusCode).json(r);
   }
@@ -38,11 +27,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     for (const validationError of validationErrors) {
       const children = validationError.children;
 
-      if (children) {
+      if (children && !_.isEmpty(children)) {
         this.validationFilter(children);
 
         return;
       }
+
+      delete validationError.children;
 
       const constraints = validationError.constraints;
 

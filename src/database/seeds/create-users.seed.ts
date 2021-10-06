@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import type { Factory, Seeder } from 'typeorm-seeding';
 
 import { UserEntity } from '../../modules/user/user.entity';

@@ -14,8 +14,6 @@ const providers = [
   AwsS3Service,
   GeneratorService,
   TranslationService,
-
-
   // {
   //   provide: 'NATS_SERVICE',
   //   useFactory: (configService: ApiConfigService) => {
