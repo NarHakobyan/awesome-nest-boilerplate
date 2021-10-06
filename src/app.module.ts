@@ -9,6 +9,7 @@ import path from 'path';
 
 import { contextMiddleware } from './middlewares';
 import { AuthModule } from './modules/auth/auth.module';
+import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 import { PostModule } from './modules/post/post.module';
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
@@ -41,7 +42,7 @@ import { SharedModule } from './shared/shared.module';
       parser: I18nJsonParser,
       inject: [ApiConfigService],
     }),
-    // HealthCheckerModule,
+    HealthCheckerModule,
   ],
 })
 export class AppModule implements NestModule {

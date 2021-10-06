@@ -24,7 +24,7 @@ export abstract class AbstractEntity<
   })
   updatedAt: Date;
 
-  private dtoClass: Constructor<DTO>;
+  private dtoClass: Constructor<DTO, [AbstractEntity, O?]>;
 
   toDto(options?: O): DTO {
     const dtoClass = this.dtoClass;
