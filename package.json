@@ -119,7 +119,7 @@
         "tslint": "^6.1.3",
         "typeorm-seeding": "^1.6.1",
         "typescript": "^4.4.3",
-        "vuepress": "^1.8.2",
+        "vuepress": "^2.0.0-beta.26",
         "webpack": "^5.52.1",
         "webpack-cli": "^4.8.0",
         "webpack-node-externals": "^3.0.0"

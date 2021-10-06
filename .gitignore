@@ -76,3 +76,8 @@ mongo
 
 # Docker compose ganarated files
 db-data
+
+
+# Vuepress
+.temp
+.cache
