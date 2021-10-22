@@ -70,7 +70,7 @@ export class AuthController {
   @Version('1')
   @Get('me')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard())
   @UseInterceptors(AuthUserInterceptor)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserDto, description: 'current user info' })
