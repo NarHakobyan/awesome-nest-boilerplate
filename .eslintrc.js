@@ -42,10 +42,7 @@ module.exports = {
     'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2 }],
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars-experimental': [
-      'error',
-      { ignoredNamesRegex: '^_' },
-    ],
+    '@typescript-eslint/no-unused-vars-experimental': 'off',
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     'no-await-in-loop': 'error',
     'padding-line-between-statements': [
