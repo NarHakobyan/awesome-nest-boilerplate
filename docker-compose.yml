@@ -1,37 +1,48 @@
-version: "3"
+version: "3.8"
 
 volumes:
   db: # mount it internally instead of a folder. it avoids file lock problems
 
 services:
   app:
+    depends_on:
+      - postgres
+      - adminer
     env_file:
       - .env
     container_name: awesome_nest_boilerplate
+    networks:
+      - default
     restart: always
     build: .
     ports:
-      - "$PORT:$PORT"
-    links:
-      - postgres
+      - $PORT:$PORT
 
   postgres:
     image: postgres
     container_name: postgres
+    networks:
+      - default
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
       TZ: 'GMT'
       PGTZ: 'GMT'
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
 
   adminer:
-    image: adminer
-    restart: always
-    links:
+    depends_on:
       - postgres
+    image: adminer
+    networks:
+      - default
+    restart: always
     ports:
-      - "8081:8080" # to avoid conflicting the 8080 default for many cloud providers
+      - 8081:8080 # to avoid conflicting the 8080 default for many cloud providers
+
+networks:
+  default:
+    name: nestjs-postgre-adminer-network
