@@ -7,10 +7,10 @@
     "license": "MIT",
     "scripts": {
         "build:prod": "tsc -p tsconfig.build.json",
-        "postbuild:prod": "copyfiles --up 1 src/**/*.json dist",
+        "postbuild:prod": "copyfiles --up 1 src/**/*.json dist/src",
         "start:hmr": "node dist/main.hmr.ts",
         "start:dev": "ts-node src/main.ts",
-        "start:prod": "node dist/main.js",
+        "start:prod": "node dist/src/main.js",
         "typeorm": "ts-node node_modules/typeorm/cli.js  -f ormconfig",
         "migration:generate": "yarn run typeorm migration:generate -d src/database/migrations -n",
         "migration:create": "yarn run typeorm migration:create -d src/database/migrations -n",
