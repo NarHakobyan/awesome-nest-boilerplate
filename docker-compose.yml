@@ -12,8 +12,25 @@ services:
     build: .
     ports:
       - "$PORT:$PORT"
+    depends_on:
+      - postgres
+      - redis
     links:
       - postgres
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
 
   postgres:
     image: postgres
@@ -27,11 +44,3 @@ services:
       - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
-
-  adminer:
-    image: adminer
-    restart: always
-    links:
-      - postgres
-    ports:
-      - "8081:8080" # to avoid conflicting the 8080 default for many cloud providers

@@ -26,15 +26,15 @@ Make sure you have the following installed:
 yarn install
 ```
 
-> Note: don't delete yarn.lock before installation
+> Note: don't delete yarn.lock before installation, See more [in yarn docs](https://classic.yarnpkg.com/en/docs/yarn-lock/)
 
 ### Database
 
-> Note: Awesome nest boilerplate uses [TypeORM](https://github.com/typeorm/typeorm) with Data Mapper pattern.
+> Note: Awesome NestJS Boilerplate uses [TypeORM](https://github.com/typeorm/typeorm) with Data Mapper pattern.
 
 ### Configuration
 
-Before start install PostgreSQL and fill correct configurations in `.development.env` file
+Before start install PostgreSQL and fill correct configurations in `.env` file
 
 ```env
 DB_HOST=localhost

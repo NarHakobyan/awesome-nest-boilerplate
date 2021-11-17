@@ -1,4 +1,4 @@
-# Awesome NestJS v8 Boilerplate
+# Awesome NestJS Boilerplate v8
 
 [![Awesome NestJS](https://img.shields.io/badge/Awesome-NestJS-blue.svg?longCache=true&style=flat-square)](https://github.com/juliandavidmr/awesome-nestjs)
 
@@ -25,8 +25,8 @@ yarn start:dev
 ## Features
 
 <dl>
-  <dt><b>Quick scaffolding</b></dt>
-  <dd>Create modules, services, controller - right from the CLI!</dd>
+  <!-- <dt><b>Quick scaffolding</b></dt>
+  <dd>Create modules, services, controller - right from the CLI!</dd> -->
 
   <dt><b>Instant feedback</b></dt>
   <dd>Enjoy the best DX (Developer eXperience) and code your app at the speed of thought! Your saved changes are reflected instantaneously.</dd>
