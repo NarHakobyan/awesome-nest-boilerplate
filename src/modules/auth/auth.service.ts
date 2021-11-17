@@ -29,15 +29,16 @@ export class AuthService {
     const user = await this.userService.findOne({
       email: userLoginDto.email,
     });
+
     const isPasswordValid = await UtilsProvider.validateHash(
       userLoginDto.password,
       user?.password,
     );
 
-    if (!user || !isPasswordValid) {
+    if (!isPasswordValid) {
       throw new UserNotFoundException();
     }
 
-    return user;
+    return user!;
   }
 }

@@ -1,6 +1,6 @@
 import { define } from 'typeorm-seeding';
 
-import { RoleType } from '../../common/constants/role-type';
+import { RoleType } from '../../constants/role-type';
 import { UserEntity } from '../../modules/user/user.entity';
 
 define(UserEntity, (faker) => {

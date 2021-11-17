@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { Column } from 'typeorm';
 
-import { Trim } from '../../../decorators/transforms.decorator';
+import { Trim } from '../../../decorators/transform.decorators';
 
 export class UserRegisterDto {
   @ApiProperty()

@@ -10,7 +10,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { Order } from '../constants/order';
+import { Order } from '../../constants/order';
 
 export class PageOptionsDto {
   @ApiPropertyOptional({
