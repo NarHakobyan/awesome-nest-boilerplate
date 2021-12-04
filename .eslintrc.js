@@ -41,10 +41,9 @@ module.exports = {
     'import/no-duplicates': 'error',
     'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2 }],
     '@typescript-eslint/camelcase': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars-experimental': [
+    '@typescript-eslint/no-unused-vars': [
       'error',
-      { ignoredNamesRegex: '^_' },
+      { varsIgnorePattern: '^_' },
     ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     'no-await-in-loop': 'error',
@@ -303,7 +302,8 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'no-undef-init': 'error',
     'no-unsafe-finally': 'error',
-    'no-unused-expressions': 'error',
+    'no-unused-expressions': "off",
+    '@typescript-eslint/no-unused-expressions': ['error'],
     'no-unused-labels': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',

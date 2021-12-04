@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 
 import { AbstractEntity } from '../../common/abstract.entity';
-import { RoleType } from '../../constants/role-type';
+import { RoleType } from '../../constants';
 import { UseDto, VirtualColumn } from '../../decorators';
 import type { UserDtoOptions } from './dto/user-dto';
 import { UserDto } from './dto/user-dto';

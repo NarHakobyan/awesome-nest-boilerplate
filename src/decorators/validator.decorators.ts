@@ -2,6 +2,7 @@ import type { ValidationOptions } from 'class-validator';
 import {
   IsPhoneNumber as isPhoneNumber,
   registerDecorator,
+  ValidateIf,
 } from 'class-validator';
 import * as _ from 'lodash';
 
@@ -54,4 +55,12 @@ export function IsTmpKey(
       },
     });
   };
+}
+
+export function IsUndefinable(options?: ValidationOptions): PropertyDecorator {
+  return ValidateIf((obj, value) => value !== undefined, options);
+}
+
+export function IsNullable(options?: ValidationOptions): PropertyDecorator {
+  return ValidateIf((obj, value) => value !== null, options);
 }
