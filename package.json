@@ -47,7 +47,7 @@
     "@nestjs/swagger": "^5.1.5",
     "@nestjs/terminus": "^8.0.1",
     "@nestjs/typeorm": "^8.0.2",
-    "aws-sdk": "^2.1037.0",
+    "aws-sdk": "^2.1046.0",
     "bcrypt": "^5.0.1",
     "cache-manager-redis-store": "^2.0.0",
     "class-transformer": "^0.5.1",
