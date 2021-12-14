@@ -75,7 +75,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.1.5",
+    "@nestjs/cli": "^8.1.6",
     "@nestjs/testing": "^8.2.3",
     "@types/bcrypt": "^5.0.0",
     "@types/cache-manager-redis-store": "^2.0.0",
@@ -85,10 +85,10 @@
     "@types/faker": "^5.5.9",
     "@types/jest": "^27.0.3",
     "@types/jsonwebtoken": "^8.5.6",
-    "@types/lodash": "^4.14.177",
+    "@types/lodash": "^4.14.178",
     "@types/mime-types": "^2.1.1",
     "@types/morgan": "^1.9.3",
-    "@types/node": "^16.11.10",
+    "@types/node": "^16.11.12",
     "@types/passport-jwt": "^3.0.6",
     "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.3",
