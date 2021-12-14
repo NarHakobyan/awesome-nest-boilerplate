@@ -75,7 +75,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.1.5",
+    "@nestjs/cli": "^8.1.6",
     "@nestjs/testing": "^8.2.3",
     "@types/bcrypt": "^5.0.0",
     "@types/cache-manager-redis-store": "^2.0.0",
