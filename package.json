@@ -78,7 +78,7 @@
     "@nestjs/cli": "^8.1.6",
     "@nestjs/testing": "^8.2.3",
     "@types/bcrypt": "^5.0.0",
-    "@types/cache-manager-redis-store": "^2.0.0",
+    "@types/cache-manager-redis-store": "^2.0.1",
     "@types/compression": "^1.7.2",
     "@types/express": "^4.17.13",
     "@types/express-rate-limit": "^5.1.3",

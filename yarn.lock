@@ -904,13 +904,13 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/cache-manager-redis-store@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/cache-manager-redis-store/-/cache-manager-redis-store-2.0.0.tgz#81bbc12efb66898e5484f81779850eef43f599be"
-  integrity sha512-6svzdqXFcjsBPtTjkrLinlcB/XsIY4kkVh7KgFYjJHqw0usg2nALXN9YNe7q2r7RErymoCAvnnlNqjwTd3k/sQ==
+"@types/cache-manager-redis-store@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager-redis-store/-/cache-manager-redis-store-2.0.1.tgz#42cf1400a6dbf42d06fbcbd82e04b0a44856e50a"
+  integrity sha512-8QuccvcPieh1xM/5kReE76SfdcIdEB0ePc+54ah/NBuK2eG+6O50SX4WKoJX81UxGdW3sh/WlDaDNqjnqxWNsA==
   dependencies:
     "@types/cache-manager" "*"
-    "@types/redis" "*"
+    "@types/redis" "^2.8.0"
 
 "@types/cache-manager@*":
   version "3.4.2"
@@ -1201,7 +1201,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/redis@*":
+"@types/redis@^2.8.0":
   version "2.8.32"
   resolved "https://registry.yarnpkg.com/@types/redis/-/redis-2.8.32.tgz#1d3430219afbee10f8cfa389dad2571a05ecfb11"
   integrity sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==
