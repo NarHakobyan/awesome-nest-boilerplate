@@ -56,7 +56,7 @@ export class ApiConfigService {
     return this.getString('FALLBACK_LANGUAGE').toLowerCase();
   }
 
-  get typeOrmConfig(): TypeOrmModuleOptions {
+  get postgresConfig(): TypeOrmModuleOptions {
     let entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
     let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 

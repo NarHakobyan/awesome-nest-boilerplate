@@ -3,8 +3,9 @@ updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: daily
-      time: "13:00"
+      interval: weekly
+      day: tuesday
+      time: "12:00"
     open-pull-requests-limit: 10
     labels:
       - dependabot
