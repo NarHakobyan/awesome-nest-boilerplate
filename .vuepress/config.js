@@ -8,7 +8,7 @@ module.exports = {
       ['/', 'Introduction'],
       '/docs/development',
       '/docs/architecture',
-      // '/docs/tech',
+      '/docs/naming-cheatsheet',
       // '/docs/routing',
       // '/docs/state',
       // '/docs/linting',
