@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 export const VIRTUAL_COLUMN_KEY = Symbol('VIRTUAL_COLUMN_KEY');
 
 export function VirtualColumn(name?: string): PropertyDecorator {
