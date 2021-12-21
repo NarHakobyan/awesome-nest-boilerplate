@@ -12,6 +12,7 @@ import type { UserDto } from './dto/user-dto';
 import type { UsersPageOptionsDto } from './dto/users-page-options.dto';
 import type { UserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
+import { relationOf } from '../../common/utils';
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,9 @@ export class UserService {
   async findByUsernameOrEmail(
     options: Partial<{ username: string; email: string }>,
   ): Promise<Optional<UserEntity>> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect(relationOf<UserEntity, 'user'>('user.settings'), 'settings');
 
     if (options.email) {
       queryBuilder.orWhere('user.email = :email', {
