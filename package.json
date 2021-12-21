@@ -43,7 +43,7 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/microservices": "^8.2.3",
     "@nestjs/passport": "^8.0.1",
-    "@nestjs/platform-express": "^8.2.3",
+    "@nestjs/platform-express": "^8.2.4",
     "@nestjs/swagger": "^5.1.5",
     "@nestjs/terminus": "^8.0.1",
     "@nestjs/typeorm": "^8.0.2",
