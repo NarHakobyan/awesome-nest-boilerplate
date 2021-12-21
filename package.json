@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^8.1.6",
-    "@nestjs/testing": "^8.2.3",
+    "@nestjs/testing": "^8.2.4",
     "@types/bcrypt": "^5.0.0",
     "@types/cache-manager-redis-store": "^2.0.1",
     "@types/compression": "^1.7.2",
