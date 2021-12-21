@@ -677,10 +677,10 @@
     lodash.set "4.3.2"
     uuid "8.3.2"
 
-"@nestjs/core@^8.2.3":
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-8.2.3.tgz#26fb3858df586b00362d1bd492ba432698590d67"
-  integrity sha512-CP/Z+uTEdblTZQXRf+xvZHvESZ6v2vxX/YaRcpJDv/ytgxxOafmOJ/RDKSzNOGBkt8kVwYNFpWXzzll4P5AJ0g==
+"@nestjs/core@^8.2.4":
+  version "8.2.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-8.2.4.tgz#d8cb54f7bd5530de1f162a649c2b63852c91c8df"
+  integrity sha512-CWyS5Rj5tUxwtTGKkGei+ii6CvkGNhuo5hbKGBkCK3McfAMwpCq2pYDjSEFAqn6R2ylL4H3U5H9WU6OWJD1cVw==
   dependencies:
     "@nuxtjs/opencollective" "0.3.2"
     fast-safe-stringify "2.1.1"
@@ -703,10 +703,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-1.0.0.tgz#52a0441795f6da8144a35970d3ebc19281f31cfd"
   integrity sha512-26AW5jHadLXtvHs+M+Agd9KZ92dDlBrmD0rORlBlvn2KvsWs4JRaKl2mUsrW7YsdZeAu3Hc4ukqyYyDdyCmMWQ==
 
-"@nestjs/microservices@^8.2.3":
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-8.2.3.tgz#512e5d3cee9cd8afb1c744648943732a1e19b6a6"
-  integrity sha512-wcT23VLlPLfigJ6B8gfifk2EbP9Tawb9+mB0kYkHNKq2WldRzETk6NaQ4dNygiiOqlUlgdzUhMPMR2Ylzu9iWA==
+"@nestjs/microservices@^8.2.4":
+  version "8.2.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-8.2.4.tgz#b81c21396f53251fb756a4a2a9d6475e9c2a6a41"
+  integrity sha512-u2/p8qJVYVZdUsh+3NNPX00WL/TIQCUnhlWtwaRlydJONI8E47fczclxCnj/LKfiWTf8JYkS4GEXmDdRafrKqQ==
   dependencies:
     iterare "1.2.1"
     json-socket "0.3.0"
@@ -6946,10 +6946,10 @@ passport-strategy@1.x.x, passport-strategy@^1.0.0:
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
 
-passport@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/passport/-/passport-0.5.1.tgz#8e56bee3cbfeec9ae88e6e169014473d798661f8"
-  integrity sha512-MSLMqXppCECdQp4tM5kPwOr9SC6tYgDAJ+8boyFIZeGp7fvpxDuFD0Mfx5DEa6b+LsCjdA843HC+ZGavG9vDiA==
+passport@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.5.2.tgz#0cb38dd8a71552c8390dfa6a9a6f7f3909954bcf"
+  integrity sha512-w9n/Ot5I7orGD4y+7V3EFJCQEznE5RxHamUxcqLT2QoJY0f2JdN8GyHonYFvN0Vz+L6lUJfVhrk2aZz2LbuREw==
   dependencies:
     passport-strategy "1.x.x"
     pause "0.0.1"
