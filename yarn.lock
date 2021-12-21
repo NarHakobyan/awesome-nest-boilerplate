@@ -703,10 +703,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-1.0.0.tgz#52a0441795f6da8144a35970d3ebc19281f31cfd"
   integrity sha512-26AW5jHadLXtvHs+M+Agd9KZ92dDlBrmD0rORlBlvn2KvsWs4JRaKl2mUsrW7YsdZeAu3Hc4ukqyYyDdyCmMWQ==
 
-"@nestjs/microservices@^8.2.3":
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-8.2.3.tgz#512e5d3cee9cd8afb1c744648943732a1e19b6a6"
-  integrity sha512-wcT23VLlPLfigJ6B8gfifk2EbP9Tawb9+mB0kYkHNKq2WldRzETk6NaQ4dNygiiOqlUlgdzUhMPMR2Ylzu9iWA==
+"@nestjs/microservices@^8.2.4":
+  version "8.2.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-8.2.4.tgz#b81c21396f53251fb756a4a2a9d6475e9c2a6a41"
+  integrity sha512-u2/p8qJVYVZdUsh+3NNPX00WL/TIQCUnhlWtwaRlydJONI8E47fczclxCnj/LKfiWTf8JYkS4GEXmDdRafrKqQ==
   dependencies:
     iterare "1.2.1"
     json-socket "0.3.0"
@@ -6946,10 +6946,10 @@ passport-strategy@1.x.x, passport-strategy@^1.0.0:
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
 
-passport@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/passport/-/passport-0.5.1.tgz#8e56bee3cbfeec9ae88e6e169014473d798661f8"
-  integrity sha512-MSLMqXppCECdQp4tM5kPwOr9SC6tYgDAJ+8boyFIZeGp7fvpxDuFD0Mfx5DEa6b+LsCjdA843HC+ZGavG9vDiA==
+passport@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.5.2.tgz#0cb38dd8a71552c8390dfa6a9a6f7f3909954bcf"
+  integrity sha512-w9n/Ot5I7orGD4y+7V3EFJCQEznE5RxHamUxcqLT2QoJY0f2JdN8GyHonYFvN0Vz+L6lUJfVhrk2aZz2LbuREw==
   dependencies:
     passport-strategy "1.x.x"
     pause "0.0.1"
@@ -8272,17 +8272,17 @@ supports-hyperlinks@^2.0.0:
     has-flag "^4.0.0"
     supports-color "^7.0.0"
 
-swagger-ui-dist@>3.52.5:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.1.2.tgz#5dd182400eaead52511707b50bde29672a975794"
-  integrity sha512-Pj960coj9L0nAQPE1vgBzHulKGPNw1ifn/1GTIv/mlV9V3PoRM0uTcE0uhTiizx6aHg+vnFFmbA2J1gjFekOaQ==
+swagger-ui-dist@>=4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.1.3.tgz#2be9f9de9b5c19132fa4a5e40933058c151563dc"
+  integrity sha512-WvfPSfAAMlE/sKS6YkW47nX/hA7StmhYnAHc6wWCXNL0oclwLj6UXv0hQCkLnDgvebi0MEV40SJJpVjKUgH1IQ==
 
-swagger-ui-express@^4.1.6:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui-express/-/swagger-ui-express-4.2.0.tgz#98797cc147071170670415c9193951cfbde173bd"
-  integrity sha512-znrHTwh9UpvsjqgWopA4noIet7mi7UGuIYZ465YfUDKQ5Dpas0jxnkfUKCo+0aB17YCBv26AhIjiQYDV4uvJFA==
+swagger-ui-express@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui-express/-/swagger-ui-express-4.3.0.tgz#226238ab231f7718f9109d63a66efc3a795618dd"
+  integrity sha512-jN46SEEe9EoXa3ZgZoKgnSF6z0w3tnM1yqhO4Y+Q4iZVc8JOQB960EZpIAz6rNROrDApVDwcMHR0mhlnc/5Omw==
   dependencies:
-    swagger-ui-dist ">3.52.5"
+    swagger-ui-dist ">=4.1.3"
 
 symbol-observable@4.0.0:
   version "4.0.0"
