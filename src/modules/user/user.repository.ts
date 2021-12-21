@@ -1,5 +1,4 @@
-import { Repository } from 'typeorm';
-import { EntityRepository } from 'typeorm/decorator/EntityRepository';
+import { EntityRepository, Repository } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 

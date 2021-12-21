@@ -21,10 +21,11 @@ export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
   }
 
   beforeUpdate(event: UpdateEvent<UserEntity>): void {
-    if (event.entity!.password !== event.databaseEntity.password) {
-      event.entity!.password = UtilsProvider.generateHash(
-        event.entity!.password,
-      );
+    // FIXME check event.databaseEntity.password
+    const entity = event.entity as UserEntity;
+
+    if (entity.password !== event.databaseEntity.password) {
+      entity.password = generateHash(entity.password!);
     }
   }
 }
