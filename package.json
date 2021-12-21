@@ -93,7 +93,7 @@
     "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.3",
     "@types/webpack-env": "^1.16.3",
-    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/eslint-plugin-tslint": "^5.4.0",
     "@typescript-eslint/parser": "^5.8.0",
     "clean-webpack-plugin": "^4.0.0",
