@@ -69,7 +69,7 @@
     "request-context": "^2.0.0",
     "rxjs": "^7.4.0",
     "source-map-support": "^0.5.21",
-    "swagger-ui-express": "^4.1.6",
+    "swagger-ui-express": "^4.3.0",
     "typeorm": "^0.2.41",
     "typeorm-transactional-cls-hooked": "^0.1.21",
     "uuid": "^8.3.2"
