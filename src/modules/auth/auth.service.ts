@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { UserNotFoundException } from '../../exceptions/user-not-found.exception';
-import { UtilsProvider } from '../../providers/utils.provider';
+import { validateHash } from '../../common/utils';
+import { UserNotFoundException } from '../../exceptions';
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import type { UserDto } from '../user/dto/user-dto';
 import type { UserEntity } from '../user/user.entity';
@@ -30,7 +30,7 @@ export class AuthService {
       email: userLoginDto.email,
     });
 
-    const isPasswordValid = await UtilsProvider.validateHash(
+    const isPasswordValid = await validateHash(
       userLoginDto.password,
       user?.password,
     );
