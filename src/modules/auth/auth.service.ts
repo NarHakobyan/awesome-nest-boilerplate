@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { validateHash } from '../../common/utils';
+import type { RoleType } from '../../constants';
+import { TokenType } from '../../constants/token-type';
 import { UserNotFoundException } from '../../exceptions';
 import { ApiConfigService } from '../../shared/services/api-config.service';
-import type { UserDto } from '../user/dto/user-dto';
 import type { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { TokenPayloadDto } from './dto/TokenPayloadDto';
@@ -18,10 +19,17 @@ export class AuthService {
     public readonly userService: UserService,
   ) {}
 
-  async createToken(user: UserEntity | UserDto): Promise<TokenPayloadDto> {
+  async createAccessToken(data: {
+    role: RoleType;
+    userId: string;
+  }): Promise<TokenPayloadDto> {
     return new TokenPayloadDto({
       expiresIn: this.configService.authConfig.jwtExpirationTime,
-      accessToken: await this.jwtService.signAsync({ id: user.id }),
+      accessToken: await this.jwtService.signAsync({
+        userId: data.userId,
+        type: TokenType.ACCESS_TOKEN,
+        role: data.role,
+      }),
     });
   }
 

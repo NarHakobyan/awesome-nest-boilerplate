@@ -46,7 +46,10 @@ export class AuthController {
   ): Promise<LoginPayloadDto> {
     const userEntity = await this.authService.validateUser(userLoginDto);
 
-    const token = await this.authService.createToken(userEntity);
+    const token = await this.authService.createAccessToken({
+      userId: userEntity.id,
+      role: userEntity.role,
+    });
 
     return new LoginPayloadDto(userEntity.toDto(), token);
   }
