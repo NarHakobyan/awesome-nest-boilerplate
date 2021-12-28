@@ -3763,10 +3763,10 @@ expect@^27.4.2:
     jest-message-util "^27.4.2"
     jest-regex-util "^27.4.0"
 
-express-rate-limit@^5.5.1:
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-5.5.1.tgz#110c23f6a65dfa96ab468eda95e71697bc6987a2"
-  integrity sha512-MTjE2eIbHv5DyfuFz4zLYWxpqVhEhkTiwFGuB74Q9CSou2WHO52nlE5y3Zlg6SIsiYUIPj6ifFxnkPz6O3sIUg==
+express-rate-limit@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.0.1.tgz#f6d0b0417dc5dcb7e4d4936f8bdbba20f408860f"
+  integrity sha512-4J8og2zuaafv9egUfQ3G5+hRZfTtckimd4leYPkEXNn2XOQ/IBJIwDmHrwbd2ZbI6UEX3AlyAKLG2EWiXvgCig==
 
 express@4.17.1:
   version "4.17.1"

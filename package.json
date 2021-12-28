@@ -54,7 +54,7 @@
     "class-validator": "^0.13.2",
     "compression": "^1.7.4",
     "express": "^4.17.2",
-    "express-rate-limit": "^5.5.1",
+    "express-rate-limit": "^6.0.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
