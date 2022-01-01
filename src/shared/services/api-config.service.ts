@@ -67,7 +67,7 @@ export class ApiConfigService {
         /\.entity\.ts$/,
       );
       entities = entityContext.keys().map((id) => {
-        const entityModule = entityContext(id);
+        const entityModule = entityContext<Record<string, unknown>>(id);
         const [entity] = Object.values(entityModule);
 
         return entity as string;
@@ -79,7 +79,7 @@ export class ApiConfigService {
       );
 
       migrations = migrationContext.keys().map((id) => {
-        const migrationModule = migrationContext(id);
+        const migrationModule = migrationContext<Record<string, unknown>>(id);
         const [migration] = Object.values(migrationModule);
 
         return migration as string;

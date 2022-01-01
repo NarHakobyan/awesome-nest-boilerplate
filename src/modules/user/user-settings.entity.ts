@@ -3,8 +3,8 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
-import type { UserDtoOptions } from './dto/user-dto';
-import { UserDto } from './dto/user-dto';
+import type { UserDtoOptions } from './dto/user.dto';
+import { UserDto } from './dto/user.dto';
 import type { IUserEntity } from './user.entity';
 import { UserEntity } from './user.entity';
 

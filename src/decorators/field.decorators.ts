@@ -50,8 +50,8 @@ interface IStringFieldOptions {
 
 interface INumberFieldOptions {
   each?: boolean;
-  min?: number;
-  max?: number;
+  minimum?: number;
+  maximum?: number;
   int?: boolean;
   isPositive?: boolean;
   swagger?: boolean;
@@ -62,12 +62,14 @@ export function NumberField(
 ): PropertyDecorator {
   const decorators = [Type(() => Number)];
 
-  if (options?.swagger !== false) {
-    decorators.push(ApiProperty({ type: Number, ...options }));
-  }
-
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { each, int, min, max, isPositive } = options;
+  const { each, int, minimum, maximum, isPositive, swagger } = options;
+
+  if (swagger !== false) {
+    decorators.push(
+      ApiProperty({ type: Number, ...options, example: int ? 1 : 1.2 }),
+    );
+  }
 
   if (each) {
     decorators.push(ToArray());
@@ -79,12 +81,12 @@ export function NumberField(
     decorators.push(IsNumber({}, { each }));
   }
 
-  if (_.isNumber(min)) {
-    decorators.push(Min(min, { each }));
+  if (_.isNumber(minimum)) {
+    decorators.push(Min(minimum, { each }));
   }
 
-  if (_.isNumber(max)) {
-    decorators.push(Max(max, { each }));
+  if (_.isNumber(maximum)) {
+    decorators.push(Max(maximum, { each }));
   }
 
   if (isPositive) {
@@ -98,8 +100,6 @@ export function NumberFieldOptional(
   options: Omit<ApiPropertyOptions, 'type' | 'required'> &
     Partial<{
       each: boolean;
-      min: number;
-      max: number;
       int: boolean;
       isPositive: boolean;
     }> = {},
