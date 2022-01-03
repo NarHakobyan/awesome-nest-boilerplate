@@ -13,6 +13,9 @@ npx degit NarHakobyan/awesome-nest-boilerplate my-nest-app
 # 2. Enter your newly-cloned folder.
 cd my-nest-app
 
+# 3. Create Environment variables file.
+cp .env.example .env
+
 # 3. Install dependencies. (Make sure yarn is installed: https://yarnpkg.com/lang/en/docs/install)
 yarn
 ```
