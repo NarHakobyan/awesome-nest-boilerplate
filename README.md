@@ -8,19 +8,44 @@
 
 ```bash
 # 1. Clone the repository or click on "Use this template" button.
-git clone https://github.com/NarHakobyan/awesome-nest-boilerplate.git my-new-project
+npx degit NarHakobyan/awesome-nest-boilerplate my-nest-app
 
 # 2. Enter your newly-cloned folder.
-cd my-new-project
+cd my-nest-app
 
 # 3. Install dependencies. (Make sure yarn is installed: https://yarnpkg.com/lang/en/docs/install)
 yarn
+```
 
+## Checklist
+
+When you use this template, try follow the checklist to update your info properly
+
+- [ ] Change the author name in `LICENSE`
+- [ ] Change configurations in `.env`
+- [ ] Remove the `.github` folder which contains the funding info
+- [ ] Clean up the README.md file
+
+And, enjoy :)
+
+
+### Development
+```bash
 # 4. Run development server and open http://localhost:3000
 yarn start:dev
 
 # 5. Read the documentation linked below for "Setup and development".
 ```
+
+### Build
+
+To build the App, run
+
+```bash
+yarn build:prod
+```
+
+And you will see the generated file in `dist` that ready to be served.
 
 ## Features
 
