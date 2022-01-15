@@ -3,26 +3,29 @@ import type {
   ExecutionContext,
   NestInterceptor,
 } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseInterceptors } from '@nestjs/common';
 import type { Observable } from 'rxjs';
 
 import { LanguageCode } from '../constants';
 import { ContextProvider } from '../providers';
 
 @Injectable()
-export class LanguageCodeInterceptor implements NestInterceptor {
+export class LanguageInterceptor implements NestInterceptor {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<undefined> {
     const request = context.switchToHttp().getRequest();
-    const languageCode: LanguageCode =
-      request.headers['x-language-code']?.toUpperCase();
+    const language: LanguageCode = request.headers['x-language']?.toUpperCase();
 
-    if (LanguageCode[languageCode]) {
-      ContextProvider.setLanguage(languageCode);
+    if (LanguageCode[language]) {
+      ContextProvider.setLanguage(language);
     }
 
     return next.handle();
   }
+}
+
+export function UseLanguageInterceptor() {
+  return UseInterceptors(LanguageInterceptor);
 }

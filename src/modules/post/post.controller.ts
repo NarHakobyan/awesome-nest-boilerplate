@@ -6,14 +6,13 @@ import {
   Optional,
   Post,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
 import { Auth, AuthUser } from '../../decorators';
-import { LanguageCodeInterceptor } from '../../interceptors/language-code.interceptor';
+import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { UserEntity } from '../user/user.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PostsPageOptionsDto } from './dtos/posts-page-options.dto';
@@ -43,7 +42,7 @@ export class PostController {
 
   @Get()
   @Auth([RoleType.USER])
-  @UseInterceptors(LanguageCodeInterceptor)
+  @UseLanguageInterceptor()
   async getPosts(@Query() postsPageOptionsDto: PostsPageOptionsDto) {
     return this.postService.getPosts(postsPageOptionsDto);
   }
