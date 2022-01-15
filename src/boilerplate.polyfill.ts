@@ -9,9 +9,11 @@ import type { AbstractDto } from './common/dto/abstract.dto';
 import { PageDto } from './common/dto/page.dto';
 import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
-import { VIRTUAL_COLUMN_KEY } from './decorators/virtual-column.decorator';
+import { VIRTUAL_COLUMN_KEY } from './decorators';
 
 declare global {
+  export type Uuid = string & { _uuidBrand: undefined };
+
   interface Array<T> {
     toDtos<Dto extends AbstractDto>(this: T[], options?: any): Dto[];
 

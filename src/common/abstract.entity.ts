@@ -16,7 +16,7 @@ import type { AbstractDto } from './dto/abstract.dto';
  * otherwise just delete and use your own entity.
  */
 export interface IAbstractEntity<DTO extends AbstractDto, O = never> {
-  id: string;
+  id: Uuid;
   createdAt: Date;
   updatedAt: Date;
 
@@ -29,7 +29,7 @@ export abstract class AbstractEntity<
 > implements IAbstractEntity<DTO, O>
 {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: Uuid;
 
   @CreateDateColumn({
     type: 'timestamp',

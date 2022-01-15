@@ -21,7 +21,7 @@ export class AuthService {
 
   async createAccessToken(data: {
     role: RoleType;
-    userId: string;
+    userId: Uuid;
   }): Promise<TokenPayloadDto> {
     return new TokenPayloadDto({
       expiresIn: this.configService.authConfig.jwtExpirationTime,

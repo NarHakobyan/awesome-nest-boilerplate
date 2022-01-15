@@ -92,7 +92,7 @@ export class UserService {
     return items.toPageDto(pageMetaDto);
   }
 
-  async getUser(userId: string): Promise<UserDto> {
+  async getUser(userId: Uuid): Promise<UserDto> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
 
     queryBuilder.where('user.id = :userId', { userId });
@@ -107,7 +107,7 @@ export class UserService {
   }
 
   async createSettings(
-    userId: string,
+    userId: Uuid,
     createSettingsDto: CreateSettingsDto,
   ): Promise<UserSettingsEntity> {
     return this.commandBus.execute<CreateSettingsCommand, UserSettingsEntity>(

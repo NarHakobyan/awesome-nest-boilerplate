@@ -4,7 +4,7 @@ import {
   registerDecorator,
   ValidateIf,
 } from 'class-validator';
-import * as _ from 'lodash';
+import { isString } from 'lodash';
 
 export function IsPassword(
   validationOptions?: ValidationOptions,
@@ -47,7 +47,7 @@ export function IsTmpKey(
       options: validationOptions,
       validator: {
         validate(value: string): boolean {
-          return _.isString(value) && /^tmp\//.test(value);
+          return isString(value) && /^tmp\//.test(value);
         },
         defaultMessage(): string {
           return 'error.invalidTmpKey';

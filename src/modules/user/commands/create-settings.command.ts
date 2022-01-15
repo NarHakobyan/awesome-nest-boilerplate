@@ -7,7 +7,7 @@ import { UserSettingsRepository } from '../user-settings.repository';
 
 export class CreateSettingsCommand implements ICommand {
   constructor(
-    public readonly userId: string,
+    public readonly userId: Uuid,
     public readonly createSettingsDto: CreateSettingsDto,
   ) {}
 }

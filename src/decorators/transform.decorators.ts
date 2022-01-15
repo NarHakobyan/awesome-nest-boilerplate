@@ -1,6 +1,6 @@
 import { Transform, TransformationType } from 'class-transformer';
 import { parsePhoneNumber } from 'libphonenumber-js';
-import { castArray, isNil, trim } from 'lodash';
+import { castArray, isArray, isNil, map, trim } from 'lodash';
 
 import { GeneratorProvider } from '../providers';
 
@@ -16,10 +16,10 @@ import { GeneratorProvider } from '../providers';
  */
 export function Trim(): PropertyDecorator {
   return Transform((params) => {
-    const value = params.value;
+    const value = params.value as string[] | string;
 
-    if (Array.isArray(value)) {
-      return value.map((v) => trim(v).replace(/\s\s+/g, ' '));
+    if (isArray(value)) {
+      return map(value, (v) => trim(v).replace(/\s\s+/g, ' '));
     }
 
     return trim(value).replace(/\s\s+/g, ' ');
@@ -54,7 +54,7 @@ export function ToBoolean(): PropertyDecorator {
 export function ToInt(): PropertyDecorator {
   return Transform(
     (params) => {
-      const value = params.value;
+      const value = params.value as string;
 
       return Number.parseInt(value, 10);
     },
@@ -129,7 +129,7 @@ export function ToUpperCase(): PropertyDecorator {
 
 export function S3UrlParser(): PropertyDecorator {
   return Transform((params) => {
-    const key = params.value;
+    const key = params.value as string;
 
     switch (params.type) {
       case TransformationType.CLASS_TO_PLAIN:
@@ -143,5 +143,5 @@ export function S3UrlParser(): PropertyDecorator {
 }
 
 export function PhoneNumberSerializer(): PropertyDecorator {
-  return Transform((params) => parsePhoneNumber(params.value).number);
+  return Transform((params) => parsePhoneNumber(params.value as string).number);
 }
