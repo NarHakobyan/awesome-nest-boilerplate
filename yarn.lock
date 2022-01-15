@@ -2188,10 +2188,10 @@ autoprefixer@^10.4.0:
     picocolors "^1.0.0"
     postcss-value-parser "^4.1.0"
 
-aws-sdk@^2.1047.0:
-  version "2.1047.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1047.0.tgz#a3b1fc3280245b2b66847c558db4dd2641573f23"
-  integrity sha512-aZg6HzcwgRpXLi8HnpwBwK+NTXlWPjLSChvdeJ+/IE9912aoAKyaV+Ydo+9h6XH0cQhkvZ2u3pFINWZVbwo+TA==
+aws-sdk@^2.1058.0:
+  version "2.1058.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1058.0.tgz#77755516c6f678b98a1f29bd939f0d7ae42da90c"
+  integrity sha512-q6bTq1DBBeBaU6GKKoTHmJj16WOQHhOoK7jwV93IT8pO0P1XH99gesFofhew3eT0h8Ev7quVKutk4B1kfnIXPQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
