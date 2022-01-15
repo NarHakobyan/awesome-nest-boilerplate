@@ -115,7 +115,7 @@
     "lint-staged": "~12.1.7",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
-    "supertest": "^6.1.6",
+    "supertest": "^6.2.1",
     "ts-jest": "^27.1.2",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
