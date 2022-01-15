@@ -1,7 +1,7 @@
 import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 
-import type { CreateSettingsDto } from '../dto/create-settings.dto';
+import type { CreateSettingsDto } from '../dtos/create-settings.dto';
 import type { UserSettingsEntity } from '../user-settings.entity';
 import { UserSettingsRepository } from '../user-settings.repository';
 

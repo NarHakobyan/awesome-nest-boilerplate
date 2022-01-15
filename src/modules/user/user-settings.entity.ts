@@ -3,8 +3,8 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
-import type { UserDtoOptions } from './dto/user.dto';
-import { UserDto } from './dto/user.dto';
+import type { UserDtoOptions } from './dtos/user.dto';
+import { UserDto } from './dtos/user.dto';
 import type { IUserEntity } from './user.entity';
 import { UserEntity } from './user.entity';
 
@@ -31,7 +31,10 @@ export class UserSettingsEntity
   @Column({ type: 'uuid' })
   userId?: string;
 
-  @OneToOne(() => UserEntity, (user) => user.settings)
+  @OneToOne(() => UserEntity, (user) => user.settings, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
 }

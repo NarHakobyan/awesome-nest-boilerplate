@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CreateSettingsHandler } from './commands/create-settings.command';
@@ -11,10 +10,7 @@ import { UserSettingsRepository } from './user-settings.repository';
 export const handlers = [CreateSettingsHandler];
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserRepository, UserSettingsRepository]),
-    CqrsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([UserRepository, UserSettingsRepository])],
   controllers: [UserController],
   exports: [UserService],
   providers: [UserService, ...handlers],

@@ -12,8 +12,8 @@ import { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
 import { Auth, AuthUser, UUIDParam } from '../../decorators';
 import { TranslationService } from '../../shared/services/translation.service';
-import { UserDto } from './dto/user.dto';
-import { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import { UserDto } from './dtos/user.dto';
+import { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 

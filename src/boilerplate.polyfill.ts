@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
 import 'source-map-support/register';
 
 import { compact, map } from 'lodash';
