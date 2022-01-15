@@ -37,7 +37,7 @@
   "dependencies": {
     "@nanogiants/nestjs-swagger-api-exception-decorator": "^1.6.0",
     "@nestjs/axios": "^0.0.3",
-    "@nestjs/common": "^8.2.4",
+    "@nestjs/common": "^8.2.5",
     "@nestjs/config": "^1.1.5",
     "@nestjs/core": "^8.2.4",
     "@nestjs/cqrs": "^8.0.1",
@@ -103,7 +103,7 @@
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-import-helpers": "^1.2.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
