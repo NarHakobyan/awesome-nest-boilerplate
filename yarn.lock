@@ -729,12 +729,12 @@
   resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-8.0.1.tgz#f1ed39a19489f794d1fe3fef592b4523bc48da68"
   integrity sha512-vn/ZJLXQKvSf9D0BvEoNFJLfzl9AVqfGtDyQMfWDLbaNpoEB2FyeaHGxdiX6H71oLSrQV78c/yuhfantzwdjdg==
 
-"@nestjs/platform-express@^8.2.4":
-  version "8.2.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-8.2.4.tgz#076ecda6e35c9f328302e1a5384e754b7c977f1a"
-  integrity sha512-1f4y38t4oPYZwDqvBXCsLKU0UBDEubh/zxgiJmnQFLA5xS7U8LQHGXa3+6P7W/kplyw8Wd6i8nmzQKmQfw5q7w==
+"@nestjs/platform-express@^8.2.5":
+  version "8.2.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-8.2.5.tgz#a9685de8769b5ddfd65594499f906e9d12b61564"
+  integrity sha512-TnOgJ5C63r+8/5xt9FHYkveTB9suBtvXaYliNVM0dNj0zQ7w7kMI5Mcy4TF6JkRuMN63uiqReNTBtmtF2kPsBg==
   dependencies:
-    body-parser "1.19.0"
+    body-parser "1.19.1"
     cors "2.8.5"
     express "4.17.1"
     multer "1.4.4"
@@ -1277,18 +1277,6 @@
     regexpp "^3.2.0"
     semver "^7.3.5"
     tsutils "^3.21.0"
-
-"@typescript-eslint/experimental-utils@5.8.0":
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-5.8.0.tgz#0916ffe98d34b3c95e3652efa0cace61a7b25728"
-  integrity sha512-KN5FvNH71bhZ8fKtL+lhW7bjm7cxs1nt+hrDZWIqb6ViCffQcWyLunGrgvISgkRojIDcXIsH+xlFfI4RCDA0xA==
-  dependencies:
-    "@types/json-schema" "^7.0.9"
-    "@typescript-eslint/scope-manager" "5.8.0"
-    "@typescript-eslint/types" "5.8.0"
-    "@typescript-eslint/typescript-estree" "5.8.0"
-    eslint-scope "^5.1.1"
-    eslint-utils "^3.0.0"
 
 "@typescript-eslint/experimental-utils@5.9.1":
   version "5.9.1"
