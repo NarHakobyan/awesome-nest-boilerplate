@@ -16,7 +16,7 @@ import { PostRepository } from './post.repository';
 @Injectable()
 export class PostService {
   constructor(
-    private userRepository: PostRepository,
+    private postRepository: PostRepository,
     private validatorService: ValidatorService,
     private awsS3Service: AwsS3Service,
     private commandBus: CommandBus,
@@ -32,16 +32,18 @@ export class PostService {
   async getPosts(
     pageOptionsDto: PostsPageOptionsDto,
   ): Promise<PageDto<PostDto>> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
+    const queryBuilder = this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.translations', 'postTranslation');
     const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
 
     return items.toPageDto(pageMetaDto);
   }
 
   async getPost(userId: Uuid): Promise<PostDto> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
-
-    queryBuilder.where('user.id = :userId', { userId });
+    const queryBuilder = this.postRepository
+      .createQueryBuilder('user')
+      .where('user.id = :userId', { userId });
 
     const userEntity = await queryBuilder.getOne();
 

@@ -9,6 +9,7 @@ import { Transport } from '@nestjs/microservices';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import compression from 'compression';
+import { middleware as expressCtx } from 'express-ctx';
 import RateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -82,6 +83,13 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   if (configService.documentationEnabled) {
     setupSwagger(app);
+  }
+
+  app.use(expressCtx);
+
+  // Starts listening for shutdown hooks
+  if (process.env.NODE_ENV !== 'development') {
+    app.enableShutdownHooks();
   }
 
   const port = configService.appConfig.port;
