@@ -42,7 +42,7 @@
     "@nestjs/core": "^8.2.5",
     "@nestjs/cqrs": "^8.0.1",
     "@nestjs/jwt": "^8.0.0",
-    "@nestjs/microservices": "^8.2.4",
+    "@nestjs/microservices": "^8.2.5",
     "@nestjs/passport": "^8.0.1",
     "@nestjs/platform-express": "^8.2.5",
     "@nestjs/swagger": "^5.1.5",
