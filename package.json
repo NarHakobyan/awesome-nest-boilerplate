@@ -110,7 +110,7 @@
     "eslint-plugin-unicorn": "^39.0.0",
     "gh-pages": "^3.2.3",
     "husky": "^7.0.4",
-    "jest": "^27.4.5",
+    "jest": "^27.4.7",
     "lint-staged": "~12.1.7",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
