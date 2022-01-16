@@ -38,7 +38,7 @@
     "@nanogiants/nestjs-swagger-api-exception-decorator": "^1.6.0",
     "@nestjs/axios": "^0.0.4",
     "@nestjs/common": "^8.2.5",
-    "@nestjs/config": "^1.1.5",
+    "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.2.5",
     "@nestjs/cqrs": "^8.0.1",
     "@nestjs/jwt": "^8.0.0",
