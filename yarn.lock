@@ -948,10 +948,10 @@
   dependencies:
     check-disk-space "3.1.0"
 
-"@nestjs/testing@^8.2.4":
-  version "8.2.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.2.4.tgz#75619de2d362c8ea2a346f1ef14457e875840dc5"
-  integrity sha512-kRpLbb/y4TFzqP7iuQd3qiCg+auwdnj4qWeBDIW5ugqdnfCjgk/TzlbeTZF08mPYyjvHscg+0bMHri6r0Pm3sQ==
+"@nestjs/testing@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.2.6.tgz#a0677d6b2e774cc805f6fa9e46a74584ca82d8f9"
+  integrity sha512-Cg8tM7yxlLDBO+CTNjk6X/UkxGRsprFc8gDHGEGesiE9wLErxNnslFugfUnYWJaSzmLZSqcFFig7mThc8VSxrw==
   dependencies:
     optional "0.1.4"
     tslib "2.3.1"
