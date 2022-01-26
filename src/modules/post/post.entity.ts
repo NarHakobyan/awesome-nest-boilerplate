@@ -21,7 +21,7 @@ export class PostEntity extends AbstractEntity<PostDto> {
 
   @OneToMany(
     () => PostTranslationEntity,
-    (questionTranslationEntity) => questionTranslationEntity.post,
+    (postTranslationEntity) => postTranslationEntity.post,
   )
   translations: PostTranslationEntity[];
 }

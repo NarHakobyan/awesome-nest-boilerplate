@@ -44,7 +44,7 @@ module.exports = {
     'import/no-default-export': 'error',
     'import/no-self-import': 'error',
     'import/no-deprecated': 'error',
-    'import/no-cycle': 'error',
+    'import/no-cycle': 'off',
     'import/no-unused-modules': 'error',
     'import/no-namespace': 'error',
     'import/extensions': ['error', 'never'],

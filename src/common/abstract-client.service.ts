@@ -51,7 +51,7 @@ export class AbstractClientService<ActionType> {
       throw new PageTypeException();
     }
 
-    if (!returnDataOptions?.class || returnDataOptions?.isPage) {
+    if (!returnDataOptions?.class || returnDataOptions.isPage) {
       return returnData;
     }
 

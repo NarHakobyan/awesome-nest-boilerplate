@@ -3,7 +3,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { ContextProvider } from '../../../providers';
 import type { PostEntity } from '../post.entity';
-import { PostTranslationDto } from '../post-translation.dto';
+import { PostTranslationDto } from './post-translation.dto';
 
 export class PostDto extends AbstractDto {
   @ApiPropertyOptional()
