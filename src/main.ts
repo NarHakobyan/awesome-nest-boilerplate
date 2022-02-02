@@ -88,14 +88,14 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   app.use(expressCtx);
 
   // Starts listening for shutdown hooks
-  if (process.env.NODE_ENV !== 'development') {
+  if (!configService.isDevelopment) {
     app.enableShutdownHooks();
   }
 
   const port = configService.appConfig.port;
   await app.listen(port);
 
-  console.info(`server running on port ${port}`);
+  console.info(`server running on ${await app.getUrl()}`);
 
   return app;
 }

@@ -3,8 +3,8 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { LanguageCode } from '../../constants';
 import { UseDto } from '../../decorators';
+import { PostTranslationDto } from './dtos/post-translation.dto';
 import { PostEntity } from './post.entity';
-import { PostTranslationDto } from './post-translation.dto';
 
 @Entity({ name: 'post_translations' })
 @UseDto(PostTranslationDto)

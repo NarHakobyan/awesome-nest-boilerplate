@@ -15,18 +15,19 @@ declare global {
   export type Uuid = string & { _uuidBrand: undefined };
 
   interface Array<T> {
-    toDtos<Dto extends AbstractDto>(this: T[], options?: any): Dto[];
+    toDtos<Dto extends AbstractDto>(this: T[], options?: unknown): Dto[];
 
     toPageDto<Dto extends AbstractDto>(
       this: T[],
       pageMetaDto: PageMetaDto,
       // FIXME make option type visible from entity
-      options?: any,
+      options?: unknown,
     ): PageDto<Dto>;
   }
 }
 
 declare module 'typeorm' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface QueryBuilder<Entity> {
     searchByString(q: string, columnNames: string[]): this;
   }
@@ -43,13 +44,16 @@ declare module 'typeorm' {
 Array.prototype.toDtos = function <
   Entity extends AbstractEntity<Dto>,
   Dto extends AbstractDto,
->(options?: any): Dto[] {
+>(options?: unknown): Dto[] {
   return compact(
-    map<Entity, Dto>(this, (item) => item.toDto(options as never)),
+    map<Entity, Dto>(this as Entity[], (item) => item.toDto(options as never)),
   );
 };
 
-Array.prototype.toPageDto = function (pageMetaDto: PageMetaDto, options?: any) {
+Array.prototype.toPageDto = function (
+  pageMetaDto: PageMetaDto,
+  options?: unknown,
+) {
   return new PageDto(this.toDtos(options), pageMetaDto);
 };
 
@@ -83,8 +87,9 @@ SelectQueryBuilder.prototype.paginate = async function (
 
   const { entities, raw } = await this.getRawAndEntities();
 
-  const items = entities.map((entity, index) => {
-    const metaInfo = Reflect.getMetadata(VIRTUAL_COLUMN_KEY, entity) ?? {};
+  const items = entities.map((entity: AbstractEntity, index) => {
+    const metaInfo: Record<string, string> =
+      Reflect.getMetadata(VIRTUAL_COLUMN_KEY, entity) ?? {};
     const item = raw[index];
 
     for (const [propertyKey, name] of Object.entries<string>(metaInfo)) {

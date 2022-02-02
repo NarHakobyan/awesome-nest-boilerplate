@@ -130,7 +130,8 @@ export class ApiConfigService {
 
   get authConfig() {
     return {
-      jwtSecret: this.getString('JWT_SECRET_KEY'),
+      privateKey: this.getString('JWT_PRIVATE_KEY'),
+      publicKey: this.getString('JWT_PUBLIC_KEY'),
       jwtExpirationTime: this.getNumber('JWT_EXPIRATION_TIME'),
     };
   }

@@ -27,7 +27,7 @@ export class CreatePostHandler
   async execute(command: CreatePostCommand) {
     const { userId, createPostDto } = command;
     const postEntity = this.postRepository.create({ userId });
-    const translationEntities: PostTranslationEntity[] = [];
+    const translations: PostTranslationEntity[] = [];
 
     await this.postRepository.save(postEntity);
 
@@ -43,12 +43,12 @@ export class CreatePostHandler
         })!.text,
       });
 
-      translationEntities.push(translationEntity);
+      translations.push(translationEntity);
     }
 
-    await this.postTranslationRepository.save(translationEntities);
+    await this.postTranslationRepository.save(translations);
 
-    postEntity.translations = translationEntities;
+    postEntity.translations = translations;
 
     return postEntity;
   }

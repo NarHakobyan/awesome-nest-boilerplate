@@ -44,7 +44,7 @@ module.exports = {
     'import/no-default-export': 'error',
     'import/no-self-import': 'error',
     'import/no-deprecated': 'error',
-    'import/no-cycle': 'error',
+    'import/no-cycle': 'off',
     'import/no-unused-modules': 'error',
     'import/no-namespace': 'error',
     'import/extensions': ['error', 'never'],
@@ -87,7 +87,7 @@ module.exports = {
     "no-unused-vars": "off",
     '@typescript-eslint/no-unused-vars': [
       'error',
-      { varsIgnorePattern: '^_' },
+      { argsIgnorePattern: '^_' },
     ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
