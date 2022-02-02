@@ -20,7 +20,7 @@ import { SharedModule } from './shared/shared.module';
     PostModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'test' ? '.test.env' : '.env',
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [SharedModule],
