@@ -87,7 +87,7 @@ module.exports = {
     "no-unused-vars": "off",
     '@typescript-eslint/no-unused-vars': [
       'error',
-      { varsIgnorePattern: '^_' },
+      { argsIgnorePattern: '^_' },
     ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],

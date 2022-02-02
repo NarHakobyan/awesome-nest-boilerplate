@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call */
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
@@ -47,5 +46,5 @@ describe('AuthController (e2e)', () => {
       .set({ Authorization: `Bearer ${accessToken}` })
       .expect(200));
 
-  afterAll(async () => await app.close());
+  afterAll(() => app.close());
 });
