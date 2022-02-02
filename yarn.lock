@@ -6317,11 +6317,6 @@ nestjs-i18n@^8.2.2:
     cookie "^0.4.1"
     string-format "^2.0.0"
 
-nestjs-pino@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/nestjs-pino/-/nestjs-pino-2.4.0.tgz#510f6808514538b09624e2819fee32f8d8a203be"
-  integrity sha512-mfpXc2ibVcWYWAvuj8YWLcvKk3UPC3kI4TebFMMVlFNVDkzA5CFL9I4LqFcX8NyhEnOWy9FQlFA2c1AjdYpTLQ==
-
 nkeys.js@^1.0.0-9:
   version "1.0.0-9"
   resolved "https://registry.yarnpkg.com/nkeys.js/-/nkeys.js-1.0.0-9.tgz#c804acb061a5c4a61e8667adbf15bfd2978285ad"
