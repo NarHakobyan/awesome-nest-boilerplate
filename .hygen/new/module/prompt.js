@@ -16,25 +16,30 @@ module.exports = [
     type: 'MultiSelect',
     name: 'blocks',
     message: 'Blocks:',
-    initial: ['<script>', '<template>', '<style>'],
+    initial: ['Controller', 'Service', 'Entity', 'Repository', 'TranslationEntity'],
     choices: [
       {
-        name: '<script>',
-        value: 'script',
+        name: 'Controller',
+        value: 'controller',
       },
       {
-        name: '<template>',
+        name: 'service',
         value: 'template',
       },
       {
-        name: '<style>',
-        value: 'style',
+        name: 'Entity',
+        value: 'entity',
+      },
+      {
+        name: 'Repository',
+        value: 'repository',
+      },
+      {
+        name: 'TranslationEntity',
+        value: 'translationEntity',
       },
     ],
     validate(value) {
-      if (value.indexOf('<script>') === -1 && value.indexOf('<template>') === -1) {
-        return 'Components require at least a <script> or <template> tag.';
-      }
       return true;
     },
   },

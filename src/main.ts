@@ -96,7 +96,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   await app.listen(port);
 
   console.info(`server running on ${await app.getUrl()}`);
-4
+
   return app;
 }
 
