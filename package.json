@@ -45,7 +45,7 @@
     "@nestjs/microservices": "^8.2.6",
     "@nestjs/passport": "^8.1.0",
     "@nestjs/platform-express": "^8.2.6",
-    "@nestjs/swagger": "^5.1.5",
+    "@nestjs/swagger": "^5.2.0",
     "@nestjs/terminus": "^8.0.4",
     "@nestjs/typeorm": "^8.0.3",
     "aws-sdk": "^2.1058.0",
