@@ -37,7 +37,7 @@
   "dependencies": {
     "@nanogiants/nestjs-swagger-api-exception-decorator": "^1.6.0",
     "@nestjs/axios": "^0.0.4",
-    "@nestjs/common": "^8.2.5",
+    "@nestjs/common": "^8.2.6",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.2.6",
     "@nestjs/cqrs": "^8.0.1",
@@ -62,7 +62,7 @@
     "lodash": "^4.17.21",
     "mime-types": "^2.1.34",
     "morgan": "^1.10.0",
-    "nats": "^2.2.0",
+    "nats": "^2.6.0",
     "nestjs-i18n": "^8.2.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
