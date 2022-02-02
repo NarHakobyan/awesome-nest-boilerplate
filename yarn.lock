@@ -1323,17 +1323,12 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@^16.11.12":
-  version "16.11.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.12.tgz#ac7fb693ac587ee182c3780c26eb65546a1a3c10"
-  integrity sha512-+2Iggwg7PxoO5Kyhvsq9VarmPbIelXP070HMImEpbtGCoyWNINQj4wzjbQCXzdHTRXnqufutJb5KAURZANNBAw==
+"@types/node@*", "@types/node@^17.0.14":
+  version "17.0.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.14.tgz#33b9b94f789a8fedd30a68efdbca4dbb06b61f20"
+  integrity sha512-SbjLmERksKOGzWzPNuW7fJM7fk3YXVTFiZWB/Hs99gwhk+/dnrQRPBQjPW9aO+fi1tAffi9PrwFvsmOKmDTyng==
 
-"@types/node@^14.0.26":
-  version "14.18.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.0.tgz#98df2397f6936bfbff4f089e40e06fa5dd88d32a"
-  integrity sha512-0GeIl2kmVMXEnx8tg1SlG6Gg8vkqirrW752KqolYo1PHevhhZN3bhJ67qHj+bQaINhX0Ra3TlWwRvMCd9iEfNQ==
-
-"@types/node@^14.14.41":
+"@types/node@^14.0.26", "@types/node@^14.14.41":
   version "14.18.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.7.tgz#bf973dbd8e156dbf860504a8811033cbd26967d1"
   integrity sha512-UpLEO1iBG7esNPusSAjoZhWFK5Mfd8QfwWhHRrg5io13POn/stsBgTCba9suQaFflNA4tc0+6AFM3R6BZNng6A==
@@ -6316,11 +6311,6 @@ nestjs-i18n@^8.2.2:
     chokidar "^3.5.1"
     cookie "^0.4.1"
     string-format "^2.0.0"
-
-nestjs-pino@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/nestjs-pino/-/nestjs-pino-2.4.0.tgz#510f6808514538b09624e2819fee32f8d8a203be"
-  integrity sha512-mfpXc2ibVcWYWAvuj8YWLcvKk3UPC3kI4TebFMMVlFNVDkzA5CFL9I4LqFcX8NyhEnOWy9FQlFA2c1AjdYpTLQ==
 
 nkeys.js@^1.0.0-9:
   version "1.0.0-9"
