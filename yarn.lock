@@ -905,10 +905,10 @@
     json-socket "0.3.0"
     tslib "2.3.1"
 
-"@nestjs/passport@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-8.0.1.tgz#f1ed39a19489f794d1fe3fef592b4523bc48da68"
-  integrity sha512-vn/ZJLXQKvSf9D0BvEoNFJLfzl9AVqfGtDyQMfWDLbaNpoEB2FyeaHGxdiX6H71oLSrQV78c/yuhfantzwdjdg==
+"@nestjs/passport@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-8.1.0.tgz#ba3b28803666bf2afc644f82979585a886f353ed"
+  integrity sha512-IJ0AumoIWPzzki8d1TixTLcWJiNhJxzpn9ejAYA0TaKsC2B1zyg58WotTU3U/perCOiiAgjpvTB4vA/7L8K9Mg==
 
 "@nestjs/platform-express@^8.2.6":
   version "8.2.6"
