@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { applyDecorators } from '@nestjs/common';
 import type { ApiPropertyOptions } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
@@ -254,7 +255,7 @@ export function EnumField<TEnum>(
 ): PropertyDecorator {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const enumValue = getEnum() as any;
-  const decorators = [IsEnum(enumValue, { each: options.each })];
+  const decorators = [IsEnum(enumValue as object, { each: options.each })];
 
   if (options?.swagger !== false) {
     decorators.push(ApiEnumProperty(getEnum, options));
