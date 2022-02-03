@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@nanogiants/nestjs-swagger-api-exception-decorator": "^1.6.0",
-    "@nestjs/axios": "^0.0.4",
+    "@nestjs/axios": "^0.0.5",
     "@nestjs/common": "^8.2.6",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.2.6",
@@ -120,7 +120,7 @@
     "typeorm-seeding": "^1.6.1",
     "typescript": "^4.5.4",
     "vuepress": "^2.0.0-beta.35",
-    "webpack": "^5.64.4",
+    "webpack": "^5.68.0",
     "webpack-cli": "^4.9.1",
     "webpack-node-externals": "^3.0.0"
   },
