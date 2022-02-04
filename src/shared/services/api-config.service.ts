@@ -57,7 +57,10 @@ export class ApiConfigService {
   }
 
   get postgresConfig(): TypeOrmModuleOptions {
-    let entities = [__dirname + '/../../modules/**/*.(view-)?entity{.ts,.js}'];
+    let entities = [
+      __dirname + '/../../modules/**/*.entity{.ts,.js}',
+      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
+    ];
     let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 
     if (module.hot) {
