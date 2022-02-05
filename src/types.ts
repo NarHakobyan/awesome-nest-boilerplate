@@ -38,5 +38,9 @@ export type PathValue<
   : never;
 
 export type KeyOfType<Entity, U> = {
-  [P in keyof Required<Entity>]: Required<Entity>[P] extends U ? P : never;
+  [P in keyof Required<Entity>]: Required<Entity>[P] extends U
+    ? P
+    : Required<Entity>[P] extends U[]
+    ? P
+    : never;
 }[keyof Entity];

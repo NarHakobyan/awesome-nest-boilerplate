@@ -1,8 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import type { UserEntity } from '../modules/user/user.entity';
-import type { KeyOfType, Optional } from '../types';
-import type { AbstractEntity } from './abstract.entity';
+import type { Optional } from '../types';
 
 /**
  * generate hash from password or string
@@ -46,11 +44,4 @@ export function getVariableName<TResult>(getVar: () => TResult): string {
   const memberParts = fullMemberName.split('.');
 
   return memberParts[memberParts.length - 1];
-}
-
-// FIXME Remove hardcoded UserEntity
-export function relationOf<Entity extends AbstractEntity, Alias extends string>(
-  property: `${Alias}.${KeyOfType<UserEntity, AbstractEntity>}`,
-): string {
-  return property;
 }

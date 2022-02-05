@@ -5,7 +5,6 @@ import type { FindConditions } from 'typeorm';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 import type { PageDto } from '../../common/dto/page.dto';
-import { relationOf } from '../../common/utils';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
 import { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
@@ -41,10 +40,7 @@ export class UserService {
   ): Promise<Optional<UserEntity>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect(
-        relationOf<UserEntity, 'user'>('user.settings'),
-        'settings',
-      );
+      .leftJoinAndSelect<UserEntity, 'user'>('user.settings', 'settings');
 
     if (options.email) {
       queryBuilder.orWhere('user.email = :email', {
