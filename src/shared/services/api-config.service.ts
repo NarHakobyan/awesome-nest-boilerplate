@@ -57,7 +57,10 @@ export class ApiConfigService {
   }
 
   get postgresConfig(): TypeOrmModuleOptions {
-    let entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
+    let entities = [
+      __dirname + '/../../modules/**/*.entity{.ts,.js}',
+      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
+    ];
     let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 
     if (module.hot) {
@@ -67,7 +70,7 @@ export class ApiConfigService {
         /\.entity\.ts$/,
       );
       entities = entityContext.keys().map((id) => {
-        const entityModule = entityContext(id);
+        const entityModule = entityContext<Record<string, unknown>>(id);
         const [entity] = Object.values(entityModule);
 
         return entity as string;
@@ -79,7 +82,7 @@ export class ApiConfigService {
       );
 
       migrations = migrationContext.keys().map((id) => {
-        const migrationModule = migrationContext(id);
+        const migrationModule = migrationContext<Record<string, unknown>>(id);
         const [migration] = Object.values(migrationModule);
 
         return migration as string;
@@ -130,7 +133,8 @@ export class ApiConfigService {
 
   get authConfig() {
     return {
-      jwtSecret: this.getString('JWT_SECRET_KEY'),
+      privateKey: this.getString('JWT_PRIVATE_KEY'),
+      publicKey: this.getString('JWT_PUBLIC_KEY'),
       jwtExpirationTime: this.getNumber('JWT_EXPIRATION_TIME'),
     };
   }

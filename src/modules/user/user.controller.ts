@@ -9,11 +9,11 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/page.dto';
-import { RoleType } from '../../constants/role-type';
-import { Auth, AuthUser, UUIDParam } from '../../decorators';
+import { RoleType } from '../../constants';
+import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
 import { TranslationService } from '../../shared/services/translation.service';
-import { UserDto } from './dto/user-dto';
-import { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import { UserDto } from './dtos/user.dto';
+import { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -42,8 +42,7 @@ export class UserController {
   @Get()
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
+  @ApiPageOkResponse({
     description: 'Get users list',
     type: PageDto,
   })
@@ -62,7 +61,7 @@ export class UserController {
     description: 'Get users list',
     type: UserDto,
   })
-  getUser(@UUIDParam('id') userId: string): Promise<UserDto> {
+  getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
     return this.userService.getUser(userId);
   }
 }

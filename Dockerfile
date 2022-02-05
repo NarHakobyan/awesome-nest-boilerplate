@@ -1,5 +1,5 @@
 FROM node:lts AS dist
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 RUN yarn install
 
@@ -8,7 +8,7 @@ COPY . ./
 RUN yarn build:prod
 
 FROM node:lts AS node_modules
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 RUN yarn install --prod
 

@@ -7,18 +7,15 @@ import {
   HttpStatus,
   Post,
   UploadedFile,
-  UseGuards,
-  UseInterceptors,
   Version,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { ApiFile, AuthUser } from '../../decorators';
+import { RoleType } from '../../constants';
+import { ApiFile, Auth, AuthUser } from '../../decorators';
 import { UserNotFoundException } from '../../exceptions';
-import { AuthGuard } from '../../guards/auth.guard';
-import { AuthUserInterceptor } from '../../interceptors/auth-user-interceptor.service';
 import { IFile } from '../../interfaces';
-import { UserDto } from '../user/dto/user-dto';
+import { UserDto } from '../user/dtos/user.dto';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
@@ -30,8 +27,8 @@ import { UserRegisterDto } from './dto/UserRegisterDto';
 @ApiTags('auth')
 export class AuthController {
   constructor(
-    public readonly userService: UserService,
-    public readonly authService: AuthService,
+    private userService: UserService,
+    private authService: AuthService,
   ) {}
 
   @Post('login')
@@ -46,7 +43,10 @@ export class AuthController {
   ): Promise<LoginPayloadDto> {
     const userEntity = await this.authService.validateUser(userLoginDto);
 
-    const token = await this.authService.createToken(userEntity);
+    const token = await this.authService.createAccessToken({
+      userId: userEntity.id,
+      role: userEntity.role,
+    });
 
     return new LoginPayloadDto(userEntity.toDto(), token);
   }
@@ -72,9 +72,7 @@ export class AuthController {
   @Version('1')
   @Get('me')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
-  @UseInterceptors(AuthUserInterceptor)
-  @ApiBearerAuth()
+  @Auth([RoleType.USER, RoleType.ADMIN])
   @ApiOkResponse({ type: UserDto, description: 'current user info' })
   getCurrentUser(@AuthUser() user: UserEntity): UserDto {
     return user.toDto();

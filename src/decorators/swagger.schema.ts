@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-unsafe-argument */
 import type { Type } from '@nestjs/common';
 import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import {
@@ -21,7 +22,7 @@ import _ from 'lodash';
 
 import type { IApiFile } from '../interfaces';
 
-function explore(instance, propertyKey: string | symbol) {
+function explore(instance: Object, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
     PARAMTYPES_METADATA,
     instance,

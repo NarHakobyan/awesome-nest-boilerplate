@@ -9,7 +9,8 @@ import { Transport } from '@nestjs/microservices';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import compression from 'compression';
-import RateLimit from 'express-rate-limit';
+import { middleware as expressCtx } from 'express-ctx';
+import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import {
@@ -34,8 +35,9 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   );
   app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
   app.use(helmet());
+  // app.setGlobalPrefix('/api'); use api as global prefix if you don't have subdomain
   app.use(
-    RateLimit({
+    rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
       max: 100, // limit each IP to 100 requests per windowMs
     }),
@@ -83,10 +85,17 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     setupSwagger(app);
   }
 
+  app.use(expressCtx);
+
+  // Starts listening for shutdown hooks
+  if (!configService.isDevelopment) {
+    app.enableShutdownHooks();
+  }
+
   const port = configService.appConfig.port;
   await app.listen(port);
 
-  console.info(`server running on port ${port}`);
+  console.info(`server running on ${await app.getUrl()}`);
 
   return app;
 }

@@ -1,55 +1,35 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Order } from '../../constants';
 import {
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
-
-import { Order } from '../../constants/order';
+  EnumFieldOptional,
+  NumberFieldOptional,
+  StringFieldOptional,
+} from '../../decorators';
 
 export class PageOptionsDto {
-  @ApiPropertyOptional({
-    enum: Order,
+  @EnumFieldOptional(() => Order, {
     default: Order.ASC,
   })
-  @IsEnum(Order)
-  @IsOptional()
   readonly order: Order = Order.ASC;
 
-  @ApiPropertyOptional({
+  @NumberFieldOptional({
     minimum: 1,
     default: 1,
+    int: true,
   })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @IsOptional()
   readonly page: number = 1;
 
-  @ApiPropertyOptional({
+  @NumberFieldOptional({
     minimum: 1,
     maximum: 50,
     default: 10,
+    int: true,
   })
-  @Type(() => Number)
-  @IsInt()
-  @Min(10)
-  @Max(50)
-  @IsOptional()
   readonly take: number = 10;
 
   get skip(): number {
     return (this.page - 1) * this.take;
   }
 
-  @ApiPropertyOptional()
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
+  @StringFieldOptional()
   readonly q?: string;
 }

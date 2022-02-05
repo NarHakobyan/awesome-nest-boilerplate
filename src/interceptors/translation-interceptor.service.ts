@@ -10,6 +10,7 @@ import { mergeMap } from 'rxjs/operators';
 import type { AbstractDto } from '../common/dto/abstract.dto';
 import { TranslationService } from '../shared/services/translation.service';
 
+// FIXME: add implementation
 @Injectable()
 export class TranslationInterceptor implements NestInterceptor {
   constructor(private readonly translationService: TranslationService) {}
@@ -22,7 +23,7 @@ export class TranslationInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         mergeMap((data) =>
-          this.translationService.translateNecessaryKeys<AbstractDto>(data),
+          this.translationService.translateNecessaryKeys(data),
         ),
       );
   }

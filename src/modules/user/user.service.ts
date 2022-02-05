@@ -1,25 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
+import { plainToClass } from 'class-transformer';
 import type { FindConditions } from 'typeorm';
+import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 import type { PageDto } from '../../common/dto/page.dto';
+import { relationOf } from '../../common/utils';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
-import type { IFile } from '../../interfaces';
+import { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
 import type { Optional } from '../../types';
-import type { UserRegisterDto } from '../auth/dto/UserRegisterDto';
-import type { UserDto } from './dto/user-dto';
-import type { UsersPageOptionsDto } from './dto/users-page-options.dto';
+import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
+import { CreateSettingsCommand } from './commands/create-settings.command';
+import { CreateSettingsDto } from './dtos/create-settings.dto';
+import type { UserDto } from './dtos/user.dto';
+import type { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import type { UserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
-import { relationOf } from '../../common/utils';
+import type { UserSettingsEntity } from './user-settings.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    public readonly userRepository: UserRepository,
-    public readonly validatorService: ValidatorService,
-    public readonly awsS3Service: AwsS3Service,
+    private userRepository: UserRepository,
+    private validatorService: ValidatorService,
+    private awsS3Service: AwsS3Service,
+    private commandBus: CommandBus,
   ) {}
 
   /**
@@ -34,7 +41,10 @@ export class UserService {
   ): Promise<Optional<UserEntity>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect(relationOf<UserEntity, 'user'>('user.settings'), 'settings');
+      .leftJoinAndSelect(
+        relationOf<UserEntity, 'user'>('user.settings'),
+        'settings',
+      );
 
     if (options.email) {
       queryBuilder.orWhere('user.email = :email', {
@@ -51,6 +61,7 @@ export class UserService {
     return queryBuilder.getOne();
   }
 
+  @Transactional()
   async createUser(
     userRegisterDto: UserRegisterDto,
     file: IFile,
@@ -65,7 +76,17 @@ export class UserService {
       user.avatar = await this.awsS3Service.uploadImage(file);
     }
 
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+
+    user.settings = await this.createSettings(
+      user.id,
+      plainToClass(CreateSettingsDto, {
+        isEmailVerified: false,
+        isPhoneVerified: false,
+      }),
+    );
+
+    return user;
   }
 
   async getUsers(
@@ -77,7 +98,7 @@ export class UserService {
     return items.toPageDto(pageMetaDto);
   }
 
-  async getUser(userId: string): Promise<UserDto> {
+  async getUser(userId: Uuid): Promise<UserDto> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
 
     queryBuilder.where('user.id = :userId', { userId });
@@ -89,5 +110,14 @@ export class UserService {
     }
 
     return userEntity.toDto();
+  }
+
+  async createSettings(
+    userId: Uuid,
+    createSettingsDto: CreateSettingsDto,
+  ): Promise<UserSettingsEntity> {
+    return this.commandBus.execute<CreateSettingsCommand, UserSettingsEntity>(
+      new CreateSettingsCommand(userId, createSettingsDto),
+    );
   }
 }
