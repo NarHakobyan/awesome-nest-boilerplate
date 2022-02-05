@@ -3,6 +3,7 @@ import 'source-map-support/register';
 
 import { compact, map } from 'lodash';
 import { Brackets, QueryBuilder, SelectQueryBuilder } from 'typeorm';
+import type { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 
 import type { AbstractEntity } from './common/abstract.entity';
 import type { AbstractDto } from './common/dto/abstract.dto';
@@ -10,6 +11,7 @@ import { PageDto } from './common/dto/page.dto';
 import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
 import { VIRTUAL_COLUMN_KEY } from './decorators';
+import type { KeyOfType } from './types';
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };
@@ -38,6 +40,53 @@ declare module 'typeorm' {
       pageOptionsDto: PageOptionsDto,
       options?: Partial<{ takeAll: boolean }>,
     ): Promise<[Entity[], PageMetaDto]>;
+
+    leftJoinAndSelect<AliasEntity extends AbstractEntity, Alias extends string>(
+      this: SelectQueryBuilder<Entity>,
+      property: `${Alias}.${Exclude<
+        KeyOfType<AliasEntity, AbstractEntity>,
+        symbol
+      >}`,
+      alias: string,
+      condition?: string,
+      parameters?: ObjectLiteral,
+    ): this;
+
+    leftJoin<AliasEntity extends AbstractEntity, Alias extends string>(
+      this: SelectQueryBuilder<Entity>,
+      property: `${Alias}.${Exclude<
+        KeyOfType<AliasEntity, AbstractEntity>,
+        symbol
+      >}`,
+      alias: string,
+      condition?: string,
+      parameters?: ObjectLiteral,
+    ): this;
+
+    innerJoinAndSelect<
+      AliasEntity extends AbstractEntity,
+      Alias extends string,
+    >(
+      this: SelectQueryBuilder<Entity>,
+      property: `${Alias}.${Exclude<
+        KeyOfType<AliasEntity, AbstractEntity>,
+        symbol
+      >}`,
+      alias: string,
+      condition?: string,
+      parameters?: ObjectLiteral,
+    ): this;
+
+    innerJoin<AliasEntity extends AbstractEntity, Alias extends string>(
+      this: SelectQueryBuilder<Entity>,
+      property: `${Alias}.${Exclude<
+        KeyOfType<AliasEntity, AbstractEntity>,
+        symbol
+      >}`,
+      alias: string,
+      condition?: string,
+      parameters?: ObjectLiteral,
+    ): this;
   }
 }
 
