@@ -2,8 +2,8 @@
 import 'source-map-support/register';
 
 import { compact, map } from 'lodash';
+import type { ObjectLiteral } from 'typeorm';
 import { Brackets, QueryBuilder, SelectQueryBuilder } from 'typeorm';
-import type { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 
 import type { AbstractEntity } from './common/abstract.entity';
 import type { AbstractDto } from './common/dto/abstract.dto';

@@ -1,15 +1,12 @@
 {
   "separateMajorMinor": false,
-  "schedule": [
-    "after 10pm every weekday",
-    "before 5am every weekday",
-    "every weekend"
-  ],
-  "timezone": "Asia/Yerevan",
   "extends": [
     "config:base",
-    ":prHourlyLimit1",
-    ":preserveSemverRanges",
-    "docker:enableMajor"
+    "docker:disable"
+  ],
+  "pinVersions": false,
+  "rebaseStalePrs": true,
+  "schedule": [
+    "after 9am and before 3pm"
   ]
 }
