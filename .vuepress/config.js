@@ -11,7 +11,7 @@ module.exports = {
       '/docs/naming-cheatsheet',
       // '/docs/routing',
       // '/docs/state',
-      // '/docs/linting',
+      '/docs/linting',
       // '/docs/editors',
       // '/docs/production',
       // '/docs/troubleshooting',
