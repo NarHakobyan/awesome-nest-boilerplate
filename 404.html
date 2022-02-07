@@ -3,13 +3,31 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="generator" content="VuePress 2.0.0-beta.29">
+    <meta name="generator" content="VuePress 2.0.0-beta.35">
+    <style>
+      :root {
+        --c-bg: #fff;
+      }
+      html.dark {
+        --c-bg: #22272e;
+      }
+      html, body {
+        background-color: var(--c-bg);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem('vuepress-color-scheme');
+			const systemDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			if (userMode === 'dark' || (userMode !== 'light' && systemDarkMode)) {
+				document.documentElement.classList.toggle('dark', true);
+			}
+    </script>
     <title>Awesome NestJS v8 Boilerplate Documentation 🎉</title><meta name="description" content="An ultimate and awesome nodejs boilerplate wrote in typescript">
-    <link rel="modulepreload" href="/awesome-nest-boilerplate/assets/app.3fdcf0f2.js"><link rel="modulepreload" href="/awesome-nest-boilerplate/assets/404.html.37b0c78d.js"><link rel="modulepreload" href="/awesome-nest-boilerplate/assets/plugin-vue_export-helper.21dcd24c.js"><link rel="modulepreload" href="/awesome-nest-boilerplate/assets/404.html.3298f375.js">
-    <link rel="stylesheet" href="/awesome-nest-boilerplate/assets/style.80e00a0c.css">
+    <link rel="modulepreload" href="/awesome-nest-boilerplate/assets/app.67f487a6.js"><link rel="modulepreload" href="/awesome-nest-boilerplate/assets/404.html.0f07aaf0.js"><link rel="modulepreload" href="/awesome-nest-boilerplate/assets/404.html.37b0c78d.js"><link rel="modulepreload" href="/awesome-nest-boilerplate/assets/plugin-vue_export-helper.21dcd24c.js">
+    <link rel="stylesheet" href="/awesome-nest-boilerplate/assets/style.029b7187.css">
   </head>
   <body>
     <div id="app"><!--[--><div class="theme-container"><div class="theme-default-content"><h1>404</h1><blockquote>How did we get here?</blockquote><a href="/awesome-nest-boilerplate/" class="">Take me home</a></div></div><!----><!--]--></div>
-    <script type="module" src="/awesome-nest-boilerplate/assets/app.3fdcf0f2.js" defer></script>
+    <script type="module" src="/awesome-nest-boilerplate/assets/app.67f487a6.js" defer></script>
   </body>
 </html>
