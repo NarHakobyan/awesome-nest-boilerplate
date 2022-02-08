@@ -28,6 +28,14 @@ declare global {
   }
 }
 
+// declare module 'cache-manager-redis-store' {
+//   import type { CacheStoreFactory } from '@nestjs/common/cache/interfaces/cache-manager.interface';
+//
+//   const cacheStore: CacheStoreFactory;
+//
+//   export = cacheStore;
+// }
+
 declare module 'typeorm' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface QueryBuilder<Entity> {

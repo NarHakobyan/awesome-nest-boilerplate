@@ -3,6 +3,7 @@ import './boilerplate.polyfill';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+// import redisStore from 'cache-manager-redis-store';
 import { I18nJsonParser, I18nModule } from 'nestjs-i18n';
 import path from 'path';
 
@@ -22,6 +23,16 @@ import { SharedModule } from './shared/shared.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    // CacheModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: (configService: ConfigService) => ({
+    //     store: redisStore,
+    //     host: configService.get('REDIS_HOST'),
+    //     port: configService.get('REDIS_PORT'),
+    //     ttl: 120,
+    //   }),
+    // }),
     TypeOrmModule.forRootAsync({
       imports: [SharedModule],
       useFactory: (configService: ApiConfigService) =>
