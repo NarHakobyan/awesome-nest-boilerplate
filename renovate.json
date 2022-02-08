@@ -1,9 +1,5 @@
 {
-  "separateMajorMinor": false,
   "extends": [
-    "config:base",
-    "docker:disable"
-  ],
-  "pinVersions": false,
-  "rebaseStalePrs": true
+    "config:base"
+  ]
 }
