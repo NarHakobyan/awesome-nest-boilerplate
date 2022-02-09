@@ -1,5 +1,23 @@
 {
+  "separateMajorMinor": false,
   "extends": [
     "config:base"
-  ]
+  ],
+  "packageRules": [
+    {
+      "updateTypes": [
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "updateTypes": [
+        "minor",
+        "major"
+      ],
+      "automerge": false
+    }
+  ],
+  "pinVersions": false,
+  "rebaseStalePrs": true
 }
