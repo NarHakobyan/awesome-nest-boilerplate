@@ -110,7 +110,7 @@
     "husky": "^7.0.4",
     "hygen": "^6.1.0",
     "jest": "27.5.1",
-    "lint-staged": "~12.3.2",
+    "lint-staged": "12.3.3",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
     "supertest": "6.2.2",
