@@ -23,7 +23,7 @@ module.exports = [
         value: 'controller',
       },
       {
-        name: 'service',
+        name: 'Service',
         value: 'template',
       },
       {
