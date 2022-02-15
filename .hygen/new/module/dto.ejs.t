@@ -1,6 +1,7 @@
 ---
 to: "src/modules/<%= h.fileName(name) %>/dtos/<%= h.dtoFileName(name) %>.ts"
 unless_exists: true
+skip_if: <%= !blocks.includes('DTO') %>
 ---
 <%
 

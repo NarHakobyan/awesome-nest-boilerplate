@@ -1,6 +1,7 @@
 ---
 to: "src/modules/<%= h.fileName(name) %>/<%= h.translationRepositoryFileName(name) %>.ts"
 unless_exists: true
+skip_if: <%= !blocks.includes('TranslationRepository') %>
 ---
 <%
  TranslationEntityName = h.TranslationEntityName(name);

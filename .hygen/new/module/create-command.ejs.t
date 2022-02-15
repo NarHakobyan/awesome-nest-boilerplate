@@ -1,6 +1,7 @@
 ---
 to: "src/modules/<%= h.fileName(name) %>/commands/<%= h.createCommandFileName(name) %>.ts"
 unless_exists: true
+skip_if: <%= !blocks.includes('CreateCommand') %>
 ---
 <%
 
