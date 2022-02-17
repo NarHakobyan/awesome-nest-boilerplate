@@ -18,20 +18,16 @@ unless_exists: true
  translationEntityName = h.changeCase.camel(TranslationEntityName);
 %>import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-import { AbstractEntity } from '../../common/abstract.entity';
-import { LanguageCode } from '../../constants';
+import { AbstractTranslationEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
 import { <%= TranslationDtoName %> } from './dtos/<%= translationDtoFileName %>';
 import { <%= EntityName %> } from './<%= entityFileName %>';
 
 @Entity({ name: '<%= var_name %>_translations' })
 @UseDto(<%= TranslationDtoName %>)
-export class <%= TranslationEntityName %> extends AbstractEntity<<%= TranslationDtoName %>> {
+export class <%= TranslationEntityName %> extends AbstractTranslationEntity<<%= TranslationDtoName %>> {
   @Column({ type: 'uuid' })
   <%= fieldName %>Id: Uuid;
-
-  @Column({ type: 'enum', enum: LanguageCode })
-  languageCode: LanguageCode;
 
   @ManyToOne(() => <%= EntityName %>, (<%= entityName %>) => <%= entityName %>.translations, {
     onDelete: 'CASCADE',
