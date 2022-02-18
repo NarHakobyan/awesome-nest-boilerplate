@@ -104,7 +104,7 @@
     "eslint-plugin-import-helpers": "^1.2.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "eslint-plugin-sonarjs": "^0.11.0",
+    "eslint-plugin-sonarjs": "^0.12.0",
     "eslint-plugin-unicorn": "^41.0.0",
     "gh-pages": "^3.2.3",
     "husky": "^7.0.4",
