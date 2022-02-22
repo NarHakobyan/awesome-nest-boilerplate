@@ -1,6 +1,7 @@
 ---
 to: "src/modules/<%= h.fileName(name) %>/dtos/<%= h.pageOptionsDtoFileName(name) %>.ts"
 unless_exists: true
+skip_if: <%= !blocks.includes('PageOptionsDTO') %>
 ---
 <%
 

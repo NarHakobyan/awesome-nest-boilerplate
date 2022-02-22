@@ -1,6 +1,7 @@
 ---
 to: "src/modules/<%= h.fileName(name) %>/exceptions/<%= h.notFoundExceptionFileName(name) %>.ts"
 unless_exists: true
+skip_if: <%= !blocks.includes('NotFoundException') %>
 ---
 <%
 

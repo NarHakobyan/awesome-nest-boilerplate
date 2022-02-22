@@ -580,6 +580,23 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@handfish/hygen@^6.1.3":
+  version "6.1.3"
+  resolved "https://registry.yarnpkg.com/@handfish/hygen/-/hygen-6.1.3.tgz#e6c9a6b0cf5c9aa502cf7f629f60a652deefa35c"
+  integrity sha512-mq9GoB42Iz0LhqJTn8+MdXaDdYFE8RPz98F/Jkwy+fg+r/tkatLu/5zZVE9mKum3vE0SWDcMg4D4DrlTGlqbiA==
+  dependencies:
+    "@types/node" "^14.14.41"
+    chalk "^4.1.1"
+    change-case "^3.1.0"
+    ejs "^3.1.3"
+    enquirer "^2.3.6"
+    execa "^5.0.0"
+    front-matter "^4.0.2"
+    fs-extra "^9.1.0"
+    ignore-walk "^3.0.3"
+    inflection "^1.12.0"
+    yargs-parser "^20.2.7"
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.2.tgz#68be55c737023009dfc5fe245d51181bb6476914"
@@ -4959,23 +4976,6 @@ husky@^7.0.4:
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.4.tgz#242048245dc49c8fb1bf0cc7cfb98dd722531535"
   integrity sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==
-
-hygen@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/hygen/-/hygen-6.1.0.tgz#0428edb32aead724d040354fa03585a858dda509"
-  integrity sha512-y2zhj/n20QZ27VxJKnCWxdKDsx9ilUFq7B7em/gFnhDrOOZ9Kf6syCFnrluFFDDIj/0IzijlsD61lL5iJXoSnw==
-  dependencies:
-    "@types/node" "^14.14.41"
-    chalk "^4.1.1"
-    change-case "^3.1.0"
-    ejs "^3.1.3"
-    enquirer "^2.3.6"
-    execa "^5.0.0"
-    front-matter "^4.0.2"
-    fs-extra "^9.1.0"
-    ignore-walk "^3.0.3"
-    inflection "^1.12.0"
-    yargs-parser "^20.2.7"
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
