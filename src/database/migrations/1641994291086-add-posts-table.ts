@@ -7,7 +7,7 @@ export class AddPostsTable1641994291086 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "user_settings"
       DROP CONSTRAINT "FK_19f4e08665a1f4bbbb7d5631f35"`);
     await queryRunner.query(`
-        CREATE TYPE "public"."post_translations_language_code_enum" AS ENUM('EN', 'RU')`);
+        CREATE TYPE "public"."post_translations_language_code_enum" AS ENUM('en_US', 'ru_RU')`);
     await queryRunner.query(`
       CREATE TABLE "post_translations"
       (

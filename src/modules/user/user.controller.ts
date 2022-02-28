@@ -11,6 +11,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
 import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
+import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { TranslationService } from '../../shared/services/translation.service';
 import { UserDto } from './dtos/user.dto';
 import { UsersPageOptionsDto } from './dtos/users-page-options.dto';
@@ -28,15 +29,15 @@ export class UserController {
   @Get('admin')
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
-  async admin(@AuthUser() user: UserEntity): Promise<string> {
+  @UseLanguageInterceptor()
+  async admin(@AuthUser() user: UserEntity) {
     const translation = await this.translationService.translate(
-      'keywords.admin',
-      {
-        lang: 'en',
-      },
+      'admin.keywords.admin',
     );
 
-    return `${translation} ${user.firstName}`;
+    return {
+      text: `${translation} ${user.firstName}`,
+    };
   }
 
   @Get()

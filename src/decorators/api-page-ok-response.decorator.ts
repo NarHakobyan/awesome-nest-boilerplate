@@ -10,6 +10,7 @@ export function ApiPageOkResponse<T extends Type>(options: {
 }): MethodDecorator {
   return applyDecorators(
     ApiExtraModels(PageDto),
+    ApiExtraModels(options.type),
     ApiOkResponse({
       description: options.description,
       schema: {
