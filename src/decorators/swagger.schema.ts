@@ -6,7 +6,7 @@ import {
   ROUTE_ARGS_METADATA,
 } from '@nestjs/common/constants';
 import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,
   ApiConsumes,
@@ -114,7 +114,9 @@ export function ApiFile(
 ): MethodDecorator {
   const filesArray = _.castArray(files);
   const apiFileInterceptors = filesArray.map((file) =>
-    UseInterceptors(FileInterceptor(file.name)),
+    file.isArray
+      ? UseInterceptors(FilesInterceptor(file.name))
+      : UseInterceptors(FileInterceptor(file.name))
   );
 
   return applyDecorators(
