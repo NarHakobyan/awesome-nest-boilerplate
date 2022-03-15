@@ -18,6 +18,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@awesome-nestjs-boilerplate/nestjs/recommended',
   ],
   plugins: [
     '@typescript-eslint',
@@ -26,6 +27,7 @@ module.exports = {
     'import',
     'unicorn',
     'sonarjs',
+    '@awesome-nestjs-boilerplate/nestjs',
   ],
   rules: {
     'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2 }],

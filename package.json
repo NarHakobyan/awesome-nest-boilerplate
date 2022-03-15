@@ -80,6 +80,7 @@
   },
   "devDependencies": {
     "@handfish/hygen": "^6.1.3",
+    "@awesome-nestjs-boilerplate/eslint-plugin-nestjs": "https://github.com/NarHakobyan/eslint-plugin-nestjs.git",
     "@nestjs/cli": "^8.2.0",
     "@nestjs/testing": "^8.2.6",
     "@types/bcrypt": "^5.0.0",
