@@ -1,22 +1,20 @@
+import type { FilterQuery } from '@mikro-orm/core/typings';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { plainToClass } from 'class-transformer';
-import type { FindConditions } from 'typeorm';
-import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
-import { IFile } from '../../interfaces';
+import type { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
-import type { Optional } from '../../types';
-import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
+import type { UserRegisterDto } from '../auth/dto/UserRegisterDto';
 import { CreateSettingsCommand } from './commands/create-settings.command';
 import { CreateSettingsDto } from './dtos/create-settings.dto';
 import type { UserDto } from './dtos/user.dto';
 import type { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import type { UserEntity } from './user.entity';
-import { UserRepository } from './user.repository';
+import { UserRepository } from './user.entity';
 import type { UserSettingsEntity } from './user-settings.entity';
 
 @Injectable()
@@ -31,33 +29,27 @@ export class UserService {
   /**
    * Find single user
    */
-  findOne(findData: FindConditions<UserEntity>): Promise<Optional<UserEntity>> {
+  findOne(findData: FilterQuery<UserEntity>) {
     return this.userRepository.findOne(findData);
   }
 
-  async findByUsernameOrEmail(
-    options: Partial<{ username: string; email: string }>,
-  ): Promise<Optional<UserEntity>> {
+  findByUsernameOrEmail(options: Partial<{ email: string; username: string }>) {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect<UserEntity, 'user'>('user.settings', 'settings');
+      .select('*')
+      .leftJoinAndSelect('user.settings', 'settings');
 
     if (options.email) {
-      queryBuilder.orWhere('user.email = :email', {
-        email: options.email,
-      });
+      queryBuilder.orWhere('user.email = ?', [options.email]);
     }
 
     if (options.username) {
-      queryBuilder.orWhere('user.username = :username', {
-        username: options.username,
-      });
+      queryBuilder.orWhere('user.username = ?', [options.username]);
     }
 
-    return queryBuilder.getOne();
+    return queryBuilder.getSingleResult();
   }
 
-  @Transactional()
   async createUser(
     userRegisterDto: UserRegisterDto,
     file: IFile,
@@ -72,7 +64,7 @@ export class UserService {
       user.avatar = await this.awsS3Service.uploadImage(file);
     }
 
-    await this.userRepository.save(user);
+    await this.userRepository.flush();
 
     user.settings = await this.createSettings(
       user.id,
@@ -89,7 +81,9 @@ export class UserService {
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<PageDto<UserDto>> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
-    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
+    const [items, pageMetaDto] = await (queryBuilder as any).paginate(
+      pageOptionsDto,
+    );
 
     return items.toPageDto(pageMetaDto);
   }
@@ -97,15 +91,15 @@ export class UserService {
   async getUser(userId: Uuid): Promise<UserDto> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
 
-    queryBuilder.where('user.id = :userId', { userId });
+    queryBuilder.where('user.id = ?', [userId]);
 
-    const userEntity = await queryBuilder.getOne();
+    const userEntity = await queryBuilder.getSingleResult();
 
     if (!userEntity) {
       throw new UserNotFoundException();
     }
 
-    return userEntity.toDto();
+    return (userEntity as any).toDto();
   }
 
   async createSettings(

@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { RoleType } from '../../../constants';
+import { ApiEnumProperty } from '../../../decorators';
 import type { UserEntity } from '../user.entity';
 
 // TODO, remove this class and use constructor's second argument's type
@@ -17,7 +18,7 @@ export class UserDto extends AbstractDto {
   @ApiProperty()
   username: string;
 
-  @ApiPropertyOptional({ enum: RoleType })
+  @ApiEnumProperty(() => RoleType)
   role: RoleType;
 
   @ApiPropertyOptional()

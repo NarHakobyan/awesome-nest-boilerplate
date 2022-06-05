@@ -1,7 +1,7 @@
 import type { ICommand, IQueryHandler } from '@nestjs/cqrs';
 import { QueryHandler } from '@nestjs/cqrs';
 
-import { PostRepository } from '../post.repository';
+import { PostRepository } from '../post.entity';
 
 export class GetPostQuery implements ICommand {
   constructor(public readonly userId: Uuid) {}

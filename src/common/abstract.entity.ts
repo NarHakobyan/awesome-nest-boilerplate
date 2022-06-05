@@ -1,69 +1,61 @@
+import type { Collection } from '@mikro-orm/core';
 import {
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  BaseEntity,
+  Enum,
+  OptionalProps,
+  PrimaryKey,
+  Property,
+  t,
+} from '@mikro-orm/core';
+import { v4 } from 'uuid';
 
 import { LanguageCode } from '../constants';
-import type { Constructor } from '../types';
-import type { AbstractDto, AbstractTranslationDto } from './dto/abstract.dto';
+import type { PostTranslationEntity } from '../modules/post/post-translation.entity';
 
-/**
- * Abstract Entity
- * @author Narek Hakobyan <narek.hakobyan.07@gmail.com>
- *
- * @description This class is an abstract class for all entities.
- * It's experimental and recommended using it only in microservice architecture,
- * otherwise just delete and use your own entity.
- */
-export interface IAbstractEntity<DTO extends AbstractDto, O = never> {
-  id: Uuid;
-  createdAt: Date;
-  updatedAt: Date;
+export type BaseEntityOptional = 'createdAt' | 'updatedAt';
 
-  toDto(options?: O): DTO;
-}
-
+@Entity({ abstract: true })
 export abstract class AbstractEntity<
-  DTO extends AbstractDto = AbstractDto,
-  O = never,
-> implements IAbstractEntity<DTO, O>
-{
-  @PrimaryGeneratedColumn('uuid')
-  id: Uuid;
+  T extends AbstractEntity<T, any>,
+  Optional extends keyof T = never,
+> extends BaseEntity<T, 'id'> {
+  [OptionalProps]?: BaseEntityOptional | Optional;
 
-  @CreateDateColumn({
-    type: 'timestamp',
+  @PrimaryKey({ type: t.uuid, defaultRaw: 'uuid_generate_v4()' })
+  id: Uuid = v4() as Uuid;
+
+  @Property({ defaultRaw: 'current_timestamp(3)', length: 3 })
+  createdAt: Date = new Date();
+
+  @Property({
+    onUpdate: () => new Date(),
+    length: 3,
+    defaultRaw: 'current_timestamp(3)',
   })
-  createdAt: Date;
+  updatedAt: Date = new Date();
 
-  @UpdateDateColumn({
-    type: 'timestamp',
-  })
-  updatedAt: Date;
+  translations?: Collection<PostTranslationEntity, unknown>;
 
-  translations?: AbstractTranslationEntity[];
+  // private dtoClass: Constructor<DTO, [AbstractEntity, O?]>;
+  private dtoClass?: any;
 
-  private dtoClass: Constructor<DTO, [AbstractEntity, O?]>;
-
-  toDto(options?: O): DTO {
-    const dtoClass = this.dtoClass;
-
-    if (!dtoClass) {
-      throw new Error(
-        `You need to use @UseDto on class (${this.constructor.name}) be able to call toDto function`,
-      );
-    }
-
-    return new this.dtoClass(this, options);
-  }
+  // toDto(options?: O): DTO {
+  //   const dtoClass = this.dtoClass;
+  //
+  //   if (!dtoClass) {
+  //     throw new Error(
+  //       `You need to use @UseDto on class (${this.constructor.name}) be able to call toDto function`,
+  //     );
+  //   }
+  //
+  //   return new this.dtoClass(this, options);
+  // }
 }
 
 export class AbstractTranslationEntity<
-  DTO extends AbstractTranslationDto = AbstractTranslationDto,
-  O = never,
-> extends AbstractEntity<DTO, O> {
-  @Column({ type: 'enum', enum: LanguageCode })
+  T extends AbstractTranslationEntity<T, any>,
+  Optional extends keyof T = never,
+> extends AbstractEntity<T, Optional> {
+  @Enum(() => LanguageCode)
   languageCode: LanguageCode;
 }

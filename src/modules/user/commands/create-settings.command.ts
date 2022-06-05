@@ -3,7 +3,7 @@ import { CommandHandler } from '@nestjs/cqrs';
 
 import type { CreateSettingsDto } from '../dtos/create-settings.dto';
 import type { UserSettingsEntity } from '../user-settings.entity';
-import { UserSettingsRepository } from '../user-settings.repository';
+import { UserSettingsRepository } from '../user-settings.entity';
 
 export class CreateSettingsCommand implements ICommand {
   constructor(
@@ -25,6 +25,8 @@ export class CreateSettingsHandler
 
     userSettingsEntity.userId = userId;
 
-    return this.userSettingsRepository.save(userSettingsEntity);
+    await this.userSettingsRepository.flush();
+
+    return userSettingsEntity;
   }
 }

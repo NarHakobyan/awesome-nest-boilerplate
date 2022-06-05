@@ -18,7 +18,7 @@ import {
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
-import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
+import { ApiPageResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { UserEntity } from '../user/user.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -45,13 +45,13 @@ export class PostController {
       createPostDto,
     );
 
-    return postEntity.toDto();
+    return (<any>postEntity).toDto();
   }
 
   @Get()
   @Auth([RoleType.USER])
   @UseLanguageInterceptor()
-  @ApiPageOkResponse({ type: PostDto })
+  @ApiPageResponse({ type: PostDto })
   async getPosts(
     @Query() postsPageOptionsDto: PostPageOptionsDto,
   ): Promise<PageDto<PostDto>> {
@@ -65,7 +65,7 @@ export class PostController {
   async getSinglePost(@UUIDParam('id') id: Uuid): Promise<PostDto> {
     const entity = await this.postService.getSinglePost(id);
 
-    return entity.toDto();
+    return (<any>entity).toDto();
   }
 
   @Put(':id')

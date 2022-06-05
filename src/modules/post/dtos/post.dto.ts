@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/abstract.dto';
 import { DynamicTranslate, StaticTranslate } from '../../../decorators';
@@ -13,7 +13,7 @@ export class PostDto extends AbstractDto {
   @ApiPropertyOptional()
   description?: string;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   @StaticTranslate()
   info: string;
 

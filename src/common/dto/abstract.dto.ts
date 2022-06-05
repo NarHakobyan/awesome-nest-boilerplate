@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { DYNAMIC_TRANSLATION_DECORATOR_KEY } from '../../decorators';
 import { ContextProvider } from '../../providers';
-import type { AbstractEntity } from '../abstract.entity';
+import type {
+  AbstractEntity,
+  AbstractTranslationEntity,
+} from '../abstract.entity';
 
 export class AbstractDto {
   @ApiProperty()
@@ -16,11 +19,14 @@ export class AbstractDto {
 
   translations?: AbstractTranslationDto[];
 
-  constructor(entity: AbstractEntity, options?: { excludeFields?: boolean }) {
+  constructor(
+    entity: AbstractEntity<any, any>,
+    options?: { excludeFields?: boolean },
+  ) {
     if (!options?.excludeFields) {
       this.id = entity.id;
-      this.createdAt = entity.createdAt;
-      this.updatedAt = entity.updatedAt;
+      this.createdAt = entity.createdAt!;
+      this.updatedAt = entity.updatedAt!;
     }
 
     const languageCode = ContextProvider.getLanguage();
@@ -52,7 +58,7 @@ export class AbstractDto {
 }
 
 export class AbstractTranslationDto extends AbstractDto {
-  constructor(entity: AbstractEntity) {
+  constructor(entity: AbstractTranslationEntity<any>) {
     super(entity, { excludeFields: true });
   }
 }

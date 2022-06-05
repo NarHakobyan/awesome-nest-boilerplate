@@ -76,6 +76,8 @@ mongo
 # Docker compose ganarated files
 db-data
 
+# MacOs
+.DS_Store
 
 # Vuepress
 .temp

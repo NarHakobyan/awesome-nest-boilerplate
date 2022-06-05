@@ -1,26 +1,33 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 import { AbstractTranslationEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
 import { PostTranslationDto } from './dtos/post-translation.dto';
 import { PostEntity } from './post.entity';
 
-@Entity({ name: 'post_translations' })
+export class PostTranslationRepository extends EntityRepository<PostTranslationEntity> {}
+
+@Entity({ tableName: 'post_translations' })
 @UseDto(PostTranslationDto)
-export class PostTranslationEntity extends AbstractTranslationEntity<PostTranslationDto> {
-  @Column()
+export class PostTranslationEntity extends AbstractTranslationEntity<
+  PostTranslationEntity,
+  'post'
+> {
+  @Property()
   title: string;
 
-  @Column()
+  @Property()
   description: string;
 
-  @Column({ type: 'uuid' })
+  @Property({ type: 'uuid' })
   postId: Uuid;
 
-  @ManyToOne(() => PostEntity, (postEntity) => postEntity.translations, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+  @ManyToOne(() => PostEntity, {
+    mapToPk: true,
+    fieldName: 'postId',
+    onDelete: 'cascade',
+    onUpdateIntegrity: 'cascade',
   })
-  @JoinColumn({ name: 'post_id' })
   post: PostEntity;
 }

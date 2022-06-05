@@ -1,18 +1,18 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { AbstractTranslationDto } from '../../../common/dto/abstract.dto';
 import { LanguageCode } from '../../../constants';
-import { ApiEnumPropertyOptional } from '../../../decorators';
+import { ApiEnumProperty } from '../../../decorators';
 import type { PostTranslationEntity } from '../post-translation.entity';
 
 export class PostTranslationDto extends AbstractTranslationDto {
-  @ApiPropertyOptional()
+  @ApiProperty()
   title: string;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   description: string;
 
-  @ApiEnumPropertyOptional(() => LanguageCode)
+  @ApiEnumProperty(() => LanguageCode)
   languageCode: LanguageCode;
 
   constructor(postTranslationEntity: PostTranslationEntity) {

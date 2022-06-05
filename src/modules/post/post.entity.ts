@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Collection,
+  Entity,
+  EntityRepositoryType,
+  ManyToOne,
+  OneToMany,
+  Property,
+  t,
+} from '@mikro-orm/core';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 import { AbstractEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
@@ -6,22 +15,24 @@ import { UserEntity } from '../user/user.entity';
 import { PostDto } from './dtos/post.dto';
 import { PostTranslationEntity } from './post-translation.entity';
 
-@Entity({ name: 'posts' })
+export class PostRepository extends EntityRepository<PostEntity> {}
+
+@Entity({ tableName: 'posts', customRepository: () => PostRepository })
 @UseDto(PostDto)
-export class PostEntity extends AbstractEntity<PostDto> {
-  @Column({ type: 'uuid' })
+export class PostEntity extends AbstractEntity<PostEntity, 'user'> {
+  [EntityRepositoryType]?: PostRepository;
+
+  @Property({ type: t.uuid })
   userId: Uuid;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.posts, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+  @ManyToOne(() => UserEntity, {
+    fieldName: 'userId',
   })
-  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
   @OneToMany(
     () => PostTranslationEntity,
     (postTranslationEntity) => postTranslationEntity.post,
   )
-  translations: PostTranslationEntity[];
+  translations = new Collection<PostTranslationEntity>(this);
 }

@@ -11,7 +11,7 @@ import type { PostPageOptionsDto } from './dtos/post-page-options.dto';
 import type { UpdatePostDto } from './dtos/update-post.dto';
 import { PostNotFoundException } from './exceptions/post-not-found.exception';
 import type { PostEntity } from './post.entity';
-import { PostRepository } from './post.repository';
+import { PostRepository } from './post.entity';
 
 @Injectable()
 export class PostService {
@@ -44,9 +44,9 @@ export class PostService {
   async getSinglePost(id: Uuid): Promise<PostEntity> {
     const queryBuilder = this.postRepository
       .createQueryBuilder('post')
-      .where('post.id = :id', { id });
+      .where('post.id = ?', [id]);
 
-    const postEntity = await queryBuilder.getOne();
+    const postEntity = await queryBuilder.getSingleResult();
 
     if (!postEntity) {
       throw new PostNotFoundException();
@@ -58,9 +58,9 @@ export class PostService {
   async updatePost(id: Uuid, updatePostDto: UpdatePostDto): Promise<void> {
     const queryBuilder = this.postRepository
       .createQueryBuilder('post')
-      .where('post.id = :id', { id });
+      .where('post.id = ?', [id]);
 
-    const postEntity = await queryBuilder.getOne();
+    const postEntity = await queryBuilder.getSingleResult();
 
     if (!postEntity) {
       throw new PostNotFoundException();
@@ -68,20 +68,20 @@ export class PostService {
 
     this.postRepository.merge(postEntity, updatePostDto);
 
-    await this.postRepository.save(updatePostDto);
+    await this.postRepository.flush();
   }
 
   async deletePost(id: Uuid): Promise<void> {
     const queryBuilder = this.postRepository
       .createQueryBuilder('post')
-      .where('post.id = :id', { id });
+      .where('post.id = ?', [id]);
 
-    const postEntity = await queryBuilder.getOne();
+    const postEntity = await queryBuilder.getSingleResult();
 
     if (!postEntity) {
       throw new PostNotFoundException();
     }
 
-    await this.postRepository.remove(postEntity);
+    this.postRepository.remove(postEntity);
   }
 }

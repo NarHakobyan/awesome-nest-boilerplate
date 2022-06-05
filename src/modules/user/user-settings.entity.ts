@@ -1,40 +1,41 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import {
+  Entity,
+  EntityRepositoryType,
+  OneToOne,
+  Property,
+} from '@mikro-orm/core';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
-import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
-import type { UserDtoOptions } from './dtos/user.dto';
 import { UserDto } from './dtos/user.dto';
-import type { IUserEntity } from './user.entity';
 import { UserEntity } from './user.entity';
 
-export interface IUserSettingsEntity extends IAbstractEntity<UserDto> {
-  isEmailVerified?: boolean;
+export class UserSettingsRepository extends EntityRepository<UserSettingsEntity> {}
 
-  isPhoneVerified?: boolean;
-
-  user?: IUserEntity;
-}
-
-@Entity({ name: 'user_settings' })
+@Entity({
+  tableName: 'user_settings',
+  customRepository: () => UserSettingsRepository,
+})
 @UseDto(UserDto)
-export class UserSettingsEntity
-  extends AbstractEntity<UserDto, UserDtoOptions>
-  implements IUserSettingsEntity
-{
-  @Column({ default: false })
+export class UserSettingsEntity extends AbstractEntity<UserSettingsEntity> {
+  [EntityRepositoryType]?: UserSettingsRepository;
+
+  @Property({ default: false })
   isEmailVerified?: boolean;
 
-  @Column({ default: false })
+  @Property({ default: false })
   isPhoneVerified?: boolean;
 
-  @Column({ type: 'uuid' })
+  @Property({ type: 'uuid' })
   userId?: string;
 
   @OneToOne(() => UserEntity, (user) => user.settings, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+    owner: true,
+    mapToPk: true,
+    onDelete: 'cascade',
+    onUpdateIntegrity: 'cascade',
+    fieldName: 'user_id',
   })
-  @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
 }

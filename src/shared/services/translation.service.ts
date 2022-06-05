@@ -37,8 +37,6 @@ export class TranslationService {
 
         if (value instanceof AbstractDto) {
           return this.translateNecessaryKeys(value);
-
-          return;
         }
 
         if (isArray(value)) {

@@ -6,11 +6,11 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
-import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
+import { ApiPageResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { TranslationService } from '../../shared/services/translation.service';
 import { UserDto } from './dtos/user.dto';
@@ -30,6 +30,7 @@ export class UserController {
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
   @UseLanguageInterceptor()
+  @ApiOkResponse()
   async admin(@AuthUser() user: UserEntity) {
     const translation = await this.translationService.translate(
       'admin.keywords.admin',
@@ -43,12 +44,12 @@ export class UserController {
   @Get()
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
-  @ApiPageOkResponse({
+  @ApiPageResponse({
     description: 'Get users list',
     type: PageDto,
   })
   getUsers(
-    @Query(new ValidationPipe({ transform: true }))
+    @Query(new ValidationPipe({ transform: true, forbidUnknownValues: true }))
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<PageDto<UserDto>> {
     return this.userService.getUsers(pageOptionsDto);

@@ -1,10 +1,3 @@
-import type {
-  EntitySubscriberInterface,
-  InsertEvent,
-  UpdateEvent,
-} from 'typeorm';
-import { EventSubscriber } from 'typeorm';
-
 import { generateHash } from '../common/utils';
 import { UserEntity } from '../modules/user/user.entity';
 

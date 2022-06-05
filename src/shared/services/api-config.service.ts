@@ -1,10 +1,9 @@
+import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
-
-import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
-import { SnakeNamingStrategy } from '../../snake-naming.strategy';
+import path from 'path';
 
 @Injectable()
 export class ApiConfigService {
@@ -56,55 +55,45 @@ export class ApiConfigService {
     return this.getString('FALLBACK_LANGUAGE');
   }
 
-  get postgresConfig(): TypeOrmModuleOptions {
-    let entities = [
-      __dirname + '/../../modules/**/*.entity{.ts,.js}',
-      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
+  get postgresConfig(): MikroOrmModuleSyncOptions {
+    const entities = [
+      __dirname + '/../../modules/**/*.entity.js',
+      __dirname + '/../../modules/**/*.view-entity.js',
     ];
-    let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
-
-    if (module.hot) {
-      const entityContext = require.context(
-        './../../modules',
-        true,
-        /\.entity\.ts$/,
-      );
-      entities = entityContext.keys().map((id) => {
-        const entityModule = entityContext<Record<string, unknown>>(id);
-        const [entity] = Object.values(entityModule);
-
-        return entity as string;
-      });
-      const migrationContext = require.context(
-        './../../database/migrations',
-        false,
-        /\.ts$/,
-      );
-
-      migrations = migrationContext.keys().map((id) => {
-        const migrationModule = migrationContext<Record<string, unknown>>(id);
-        const [migration] = Object.values(migrationModule);
-
-        return migration as string;
-      });
-    }
+    const entitiesTs = [
+      __dirname + '/../../modules/**/*.entity.ts',
+      __dirname + '/../../modules/**/*.view-entity.ts',
+    ];
 
     return {
       entities,
-      migrations,
-      keepConnectionAlive: !this.isTest,
-      dropSchema: this.isTest,
-      type: 'postgres',
+      entitiesTs,
+      // metadataProvider: TsMorphMetadataProvider,
+      migrations: {
+        tableName: 'mikro_orm_migrations',
+        path: path.resolve(__dirname + '/../../database/migrations/*.js'),
+        pathTs: path.resolve(__dirname + '/../../database/migrations/*.ts'),
+        glob: '!(*.d).{js,ts}',
+        transactional: true,
+        disableForeignKeys: true,
+        allOrNothing: true,
+        dropTables: true,
+        safe: false,
+        snapshot: true,
+        emit: 'ts',
+        generator: TSMigrationGenerator,
+      },
+      type: 'postgresql',
       name: 'default',
       host: this.getString('DB_HOST'),
       port: this.getNumber('DB_PORT'),
-      username: this.getString('DB_USERNAME'),
+      user: this.getString('DB_USERNAME'),
       password: this.getString('DB_PASSWORD'),
-      database: this.getString('DB_DATABASE'),
-      subscribers: [UserSubscriber],
-      migrationsRun: true,
-      logging: this.getBoolean('ENABLE_ORM_LOGS'),
-      namingStrategy: new SnakeNamingStrategy(),
+      dbName: this.getString('DB_DATABASE'),
+      // subscribers: [UserSubscriber],
+      // migrationsRun: true,
+      // logging: this.getBoolean('ENABLE_ORM_LOGS'),
+      // namingStrategy: new SnakeNamingStrategy(),
     };
   }
 

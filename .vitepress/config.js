@@ -1,7 +1,9 @@
-module.exports = {
-  lang: 'en-US',
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
   title: 'Awesome NestJS v8 Boilerplate Documentation 🎉',
   description: 'An ultimate and awesome nodejs boilerplate wrote in typescript',
+  lang: 'en-US',
   base: process.env.DEPLOY_ENV === 'gh-pages' ? '/awesome-nest-boilerplate/' : '/',
   themeConfig: {
     sidebar: [
@@ -11,10 +13,10 @@ module.exports = {
       '/docs/naming-cheatsheet',
       // '/docs/routing',
       // '/docs/state',
-      '/docs/linting',
+      '/linting',
       // '/docs/editors',
       // '/docs/production',
       // '/docs/troubleshooting',
     ],
-  },
-};
+  }
+})

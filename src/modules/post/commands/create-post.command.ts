@@ -4,9 +4,9 @@ import { find } from 'lodash';
 
 import type { CreatePostDto } from '../dtos/create-post.dto';
 import type { PostEntity } from '../post.entity';
-import { PostRepository } from '../post.repository';
+import { PostRepository } from '../post.entity';
 import type { PostTranslationEntity } from '../post-translation.entity';
-import { PostTranslationRepository } from '../post-translation.repository';
+import { PostTranslationRepository } from '../post-translation.entity';
 
 export class CreatePostCommand implements ICommand {
   constructor(
@@ -29,7 +29,7 @@ export class CreatePostHandler
     const postEntity = this.postRepository.create({ userId });
     const translations: PostTranslationEntity[] = [];
 
-    await this.postRepository.save(postEntity);
+    await this.postRepository.flush();
 
     // FIXME: Create generic function for translation creation
     for (const createTranslationDto of createPostDto.title) {
@@ -46,9 +46,9 @@ export class CreatePostHandler
       translations.push(translationEntity);
     }
 
-    await this.postTranslationRepository.save(translations);
+    await this.postTranslationRepository.flush();
 
-    postEntity.translations = translations;
+    postEntity.translations.set(translations);
 
     return postEntity;
   }

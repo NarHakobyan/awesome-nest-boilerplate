@@ -115,9 +115,9 @@ Open terminal and navigate to project directory and run the following command.
 PORT=3000 docker-compose up
 ```
 
-> Note: application will run on port 3000 (<http://localhost:3000>)
+> Note: application will run on port :3000
 
-Navigate to <http://localhost:8080> and connect to you database with the following configurations
+Navigate to `localhost:8080` and connect to you database with the following configurations
 
 ```text
 host: postgres

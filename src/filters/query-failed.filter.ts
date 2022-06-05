@@ -3,7 +3,6 @@ import { Catch, HttpStatus } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Response } from 'express';
 import { STATUS_CODES } from 'http';
-import { QueryFailedError } from 'typeorm';
 
 import { constraintErrors } from './constraint-errors';
 
@@ -18,7 +17,7 @@ export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    const status = exception.constraint?.startsWith('UQ')
+    const status = exception.constraint?.endsWith('_unique')
       ? HttpStatus.CONFLICT
       : HttpStatus.INTERNAL_SERVER_ERROR;
 

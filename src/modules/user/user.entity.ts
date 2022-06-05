@@ -1,68 +1,60 @@
-import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
+import {
+  Collection,
+  Entity,
+  EntityRepositoryType,
+  Enum,
+  OneToMany,
+  OneToOne,
+  Property,
+} from '@mikro-orm/core';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
-import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constants';
-import { UseDto, VirtualColumn } from '../../decorators';
+import { UseDto } from '../../decorators';
 import { PostEntity } from '../post/post.entity';
-import type { UserDtoOptions } from './dtos/user.dto';
 import { UserDto } from './dtos/user.dto';
-import type { IUserSettingsEntity } from './user-settings.entity';
 import { UserSettingsEntity } from './user-settings.entity';
 
-export interface IUserEntity extends IAbstractEntity<UserDto> {
-  firstName?: string;
+export class UserRepository extends EntityRepository<UserEntity> {}
 
-  lastName?: string;
-
-  role: RoleType;
-
-  email?: string;
-
-  password?: string;
-
-  phone?: string;
-
-  avatar?: string;
-
-  fullName?: string;
-
-  settings?: IUserSettingsEntity;
-}
-
-@Entity({ name: 'users' })
+@Entity({ tableName: 'users', customRepository: () => UserRepository })
 @UseDto(UserDto)
-export class UserEntity
-  extends AbstractEntity<UserDto, UserDtoOptions>
-  implements IUserEntity
-{
-  @Column({ nullable: true })
+export class UserEntity extends AbstractEntity<UserEntity, 'role'> {
+  [EntityRepositoryType]?: UserRepository;
+
+  @Property({ nullable: true })
   firstName?: string;
 
-  @Column({ nullable: true })
+  @Property({ nullable: true })
   lastName?: string;
 
-  @Column({ type: 'enum', enum: RoleType, default: RoleType.USER })
-  role: RoleType;
+  @Enum({
+    items: () => RoleType,
+    default: RoleType.USER,
+  })
+  role: RoleType = RoleType.USER;
 
-  @Column({ unique: true, nullable: true })
+  @Property({ unique: true, nullable: true })
   email?: string;
 
-  @Column({ nullable: true })
+  @Property({ nullable: true })
   password?: string;
 
-  @Column({ nullable: true })
+  @Property({ nullable: true })
   phone?: string;
 
-  @Column({ nullable: true })
+  @Property({ nullable: true })
   avatar?: string;
 
-  @VirtualColumn()
-  fullName?: string;
+  @Property({ name: 'fullName' })
+  getFullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
 
   @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
   settings?: UserSettingsEntity;
 
   @OneToMany(() => PostEntity, (postEntity) => postEntity.user)
-  posts: PostEntity[];
+  posts = new Collection<PostEntity>(this);
 }
