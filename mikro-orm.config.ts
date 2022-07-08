@@ -17,12 +17,12 @@ const configs: MikroOrmModuleSyncOptions = {
   // subscribers: [UserSubscriber],
   entities: ['src/modules/**/*.entity.ts', 'src/modules/**/*.view-entity.ts'],
   migrations: {
-    tableName: 'mikro_orm_migrations', // name of database table with log of executed transactions
-    path: './src/database/migrations', // path to the folder with migrations
-    pathTs: './src/database/migrations', // path to the folder with TS migrations (if used, we should put path to compiled files in `path`)
-    glob: '!(*.d).{js,ts}', // how to match migration files (all .js and .ts files, but not .d.ts)
-    transactional: true, // wrap each migration in a transaction
-    disableForeignKeys: true, // wrap statements with `set foreign_key_checks = 0` or equivalent
+    tableName: 'mikro_orm_migrations',
+    path: './src/database/migrations',
+    pathTs: './src/database/migrations',
+    glob: '!(*.d).{js,ts}',
+    transactional: true,
+    disableForeignKeys: true,
     allOrNothing: true, // wrap all migrations in master transaction
     dropTables: true, // allow to disable table dropping
     safe: false, // allow to disable table and column dropping
@@ -30,8 +30,14 @@ const configs: MikroOrmModuleSyncOptions = {
     emit: 'ts', // migration generation mode
     generator: TSMigrationGenerator, // migration generator, e.g. to allow custom formatting
   },
-  // seeds: ['src/database/seeds/**/*{.ts,.js}'],
-  // factories: ['src/database/factories/**/*{.ts,.js}'],
+  seeder: {
+    path: './src/database/migrations',
+    pathTs: './src/database/migrations',
+    defaultSeeder: 'DatabaseSeeder',
+    glob: '!(*.d).{js,ts}',
+    emit: 'ts',
+    fileName: (className: string) => className, // seeder file naming convention
+  },
 };
 
 module.exports = configs;

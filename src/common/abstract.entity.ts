@@ -1,6 +1,7 @@
 import type { Collection } from '@mikro-orm/core';
 import {
   BaseEntity,
+  Entity,
   Enum,
   OptionalProps,
   PrimaryKey,

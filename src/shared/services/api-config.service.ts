@@ -69,6 +69,7 @@ export class ApiConfigService {
       entities,
       entitiesTs,
       // metadataProvider: TsMorphMetadataProvider,
+      debug: this.getBoolean('ENABLE_ORM_LOGS'),
       migrations: {
         tableName: 'mikro_orm_migrations',
         path: path.resolve(__dirname + '/../../database/migrations/*.js'),

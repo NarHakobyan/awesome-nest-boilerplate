@@ -78,7 +78,6 @@
     "rxjs": "^7.5.5",
     "source-map-support": "^0.5.21",
     "swagger-ui-express": "^4.4.0",
-    "typeorm-transactional-cls-hooked": "^0.1.21",
     "uuid": "^8.3.2",
     "vitepress": "^0.22.4"
   },

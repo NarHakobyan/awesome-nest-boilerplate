@@ -1,11 +1,11 @@
+import { wrap } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { ValidatorService } from '../../shared/services/validator.service';
 import { CreatePostCommand } from './commands/create-post.command';
-import { CreatePostDto } from './dtos/create-post.dto';
+import type { CreatePostDto } from './dtos/create-post.dto';
 import type { PostDto } from './dtos/post.dto';
 import type { PostPageOptionsDto } from './dtos/post-page-options.dto';
 import type { UpdatePostDto } from './dtos/update-post.dto';
@@ -21,7 +21,6 @@ export class PostService {
     private commandBus: CommandBus,
   ) {}
 
-  @Transactional()
   createPost(userId: Uuid, createPostDto: CreatePostDto): Promise<PostEntity> {
     return this.commandBus.execute<CreatePostCommand, PostEntity>(
       new CreatePostCommand(userId, createPostDto),
@@ -66,7 +65,7 @@ export class PostService {
       throw new PostNotFoundException();
     }
 
-    this.postRepository.merge(postEntity, updatePostDto);
+    wrap(postEntity).assign(updatePostDto);
 
     await this.postRepository.flush();
   }
