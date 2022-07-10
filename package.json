@@ -39,6 +39,10 @@
     "commit": "cz"
   },
   "dependencies": {
+    "@mikro-orm/core": "^5.1.5",
+    "@mikro-orm/migrations": "^5.1.5",
+    "@mikro-orm/nestjs": "^5.0.1",
+    "@mikro-orm/postgresql": "^5.1.5",
     "@nestjs/axios": "^0.1.0",
     "@nestjs/common": "^9.0.1",
     "@nestjs/config": "^2.2.0",
@@ -51,10 +55,6 @@
     "@nestjs/swagger": "^6.0.1",
     "@nestjs/terminus": "^8.1.1",
     "aws-sdk": "^2.1171.0",
-    "@mikro-orm/core": "^5.1.5",
-    "@mikro-orm/migrations": "^5.1.5",
-    "@mikro-orm/nestjs": "^5.0.1",
-    "@mikro-orm/postgresql": "^5.1.5",
     "bcrypt": "^5.0.1",
     "cache-manager-redis-store": "^2.0.0",
     "class-transformer": "^0.5.1",
@@ -80,8 +80,8 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@mikro-orm/cli": "^5.1.5",
     "@handfish/hygen": "^6.1.6",
+    "@mikro-orm/cli": "^5.1.5",
     "@moneteam/eslint-plugin-nestjs": "^1.6.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/testing": "^9.0.1",
@@ -127,8 +127,8 @@
     "ts-node": "^10.8.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.4",
-    "webpack": "^5.73.0",
     "vitepress": "^1.0.0-alpha.4",
+    "webpack": "^5.73.0",
     "webpack-cli": "^4.10.0",
     "webpack-node-externals": "^3.0.0"
   },
