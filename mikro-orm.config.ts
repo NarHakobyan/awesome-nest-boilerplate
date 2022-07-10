@@ -3,8 +3,8 @@ import './src/boilerplate.polyfill';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
 
-import { UserSubscriber } from './src/entity-subscribers/user-subscriber';
-import { SnakeNamingStrategy } from './src/snake-naming.strategy';
+// import { UserSubscriber } from './src/entity-subscribers/user-subscriber';
+// import { SnakeNamingStrategy } from './src/snake-naming.strategy';
 import { Configuration } from '@mikro-orm/core';
 
 const configs: MikroOrmModuleSyncOptions = {

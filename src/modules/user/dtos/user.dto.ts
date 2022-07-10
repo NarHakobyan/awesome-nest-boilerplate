@@ -16,7 +16,7 @@ export class UserDto extends AbstractDto {
   lastName?: string;
 
   @ApiProperty()
-  username: string;
+  username!: string;
 
   @ApiEnumProperty(() => RoleType)
   role: RoleType;

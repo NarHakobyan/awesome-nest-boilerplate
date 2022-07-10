@@ -1,42 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsPhoneNumber,
-  IsString,
-  MinLength,
-} from 'class-validator';
-
-import { Trim } from '../../../decorators';
+import { EmailField, PasswordField, PhoneFieldOptional, StringField } from '../../../decorators';
 
 export class UserRegisterDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @Trim()
-  readonly firstName: string;
+  @StringField()
+  readonly firstName!: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @Trim()
-  readonly lastName: string;
+  @StringField()
+  readonly lastName!: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsEmail()
-  @IsNotEmpty()
-  @Trim()
-  readonly email: string;
+  @EmailField()
+  readonly email!: string;
 
-  @ApiProperty({ minLength: 6 })
-  @IsString()
-  @MinLength(6)
-  readonly password: string;
+  @PasswordField()
+  readonly password!: string;
 
-  @ApiProperty()
-  @IsPhoneNumber()
-  @IsOptional()
-  phone: string;
+  @PhoneFieldOptional()
+  phone?: string;
 }

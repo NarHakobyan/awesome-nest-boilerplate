@@ -58,5 +58,5 @@ export class AbstractTranslationEntity<
   Optional extends keyof T = never,
 > extends AbstractEntity<T, Optional> {
   @Enum(() => LanguageCode)
-  languageCode: LanguageCode;
+  languageCode!: LanguageCode;
 }

@@ -9,13 +9,13 @@ import type {
 
 export class AbstractDto {
   @ApiProperty()
-  id: Uuid;
+  id!: Uuid;
 
   @ApiProperty()
-  createdAt: Date;
+  createdAt!: Date;
 
   @ApiProperty()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   translations?: AbstractTranslationDto[];
 
@@ -32,7 +32,7 @@ export class AbstractDto {
     const languageCode = ContextProvider.getLanguage();
 
     if (languageCode && entity.translations) {
-      const translationEntity = entity.translations.find(
+      const translationEntity = entity.translations.getItems().find(
         (titleTranslation) => titleTranslation.languageCode === languageCode,
       )!;
 
@@ -52,13 +52,13 @@ export class AbstractDto {
 
       Object.assign(this, fields);
     } else {
-      this.translations = entity.translations?.toDtos();
+      this.translations = entity.translations?.getItems().toDtos();
     }
   }
 }
 
 export class AbstractTranslationDto extends AbstractDto {
-  constructor(entity: AbstractTranslationEntity<any>) {
+  constructor(entity: AbstractTranslationEntity<any, any>) {
     super(entity, { excludeFields: true });
   }
 }

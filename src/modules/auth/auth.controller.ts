@@ -1,4 +1,3 @@
-import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 import {
   Body,
   Controller,
@@ -13,7 +12,6 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
 import { ApiFile, Auth, AuthUser } from '../../decorators';
-import { UserNotFoundException } from '../../exceptions';
 import { IFile } from '../../interfaces';
 import { UserDto } from '../user/dtos/user.dto';
 import { UserEntity } from '../user/user.entity';
@@ -37,7 +35,6 @@ export class AuthController {
     type: LoginPayloadDto,
     description: 'User info with access token',
   })
-  @ApiException(() => [UserNotFoundException])
   async userLogin(
     @Body() userLoginDto: UserLoginDto,
   ): Promise<LoginPayloadDto> {

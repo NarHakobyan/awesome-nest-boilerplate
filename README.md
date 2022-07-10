@@ -6,6 +6,7 @@
 
 
 ✅ &nbsp;First-Class Typescript Support<br>
+✅ &nbsp;NestJS REPL<br>
 ✅ &nbsp;Module architecture<br>
 ✅ &nbsp;MikroOrm Integration<br>
 ✅ &nbsp;Easy to use as Monolith<br>

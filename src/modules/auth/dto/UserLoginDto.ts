@@ -1,13 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { EmailField, PasswordField } from '../../../decorators';
 
 export class UserLoginDto {
-  @IsString()
-  @IsEmail()
-  @ApiProperty()
-  readonly email: string;
+  @EmailField()
+  readonly email!: string;
 
-  @IsString()
-  @ApiProperty()
-  readonly password: string;
+  @PasswordField()
+  readonly password!: string;
 }

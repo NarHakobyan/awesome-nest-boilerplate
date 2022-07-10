@@ -9,9 +9,9 @@ import { isString } from 'lodash';
 export function IsPassword(
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return (object, propertyName: string) => {
+  return (object, propertyName) => {
     registerDecorator({
-      propertyName,
+      propertyName: propertyName as string,
       name: 'isPassword',
       target: object.constructor,
       constraints: [],
@@ -39,9 +39,9 @@ export function IsPhoneNumber(
 export function IsTmpKey(
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return (object, propertyName: string) => {
+  return (object, propertyName) => {
     registerDecorator({
-      propertyName,
+      propertyName: propertyName as string,
       name: 'tmpKey',
       target: object.constructor,
       options: validationOptions,

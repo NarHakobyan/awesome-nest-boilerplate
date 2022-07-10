@@ -15,13 +15,13 @@ export class PostTranslationEntity extends AbstractTranslationEntity<
   'post'
 > {
   @Property()
-  title: string;
+  title!: string;
 
   @Property()
-  description: string;
+  description!: string;
 
   @Property({ type: 'uuid' })
-  postId: Uuid;
+  postId!: Uuid;
 
   @ManyToOne(() => PostEntity, {
     mapToPk: true,
@@ -29,5 +29,5 @@ export class PostTranslationEntity extends AbstractTranslationEntity<
     onDelete: 'cascade',
     onUpdateIntegrity: 'cascade',
   })
-  post: PostEntity;
+  post?: PostEntity;
 }

@@ -33,7 +33,7 @@ export class PostService {
     const queryBuilder = this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.translations', 'postTranslation');
-    const [items, pageMetaDto] = await queryBuilder.paginate(
+    const [items, pageMetaDto] = await (<any>queryBuilder).paginate(
       postPageOptionsDto,
     );
 

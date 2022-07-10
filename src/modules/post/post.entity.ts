@@ -23,12 +23,12 @@ export class PostEntity extends AbstractEntity<PostEntity, 'user'> {
   [EntityRepositoryType]?: PostRepository;
 
   @Property({ type: t.uuid })
-  userId: Uuid;
+  userId!: Uuid;
 
   @ManyToOne(() => UserEntity, {
     fieldName: 'userId',
   })
-  user: UserEntity;
+  user?: UserEntity;
 
   @OneToMany(
     () => PostTranslationEntity,
