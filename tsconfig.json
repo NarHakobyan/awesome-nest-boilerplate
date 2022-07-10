@@ -6,6 +6,7 @@
     "noImplicitAny": false,
     "removeComments": true,
     "noLib": false,
+    "importHelpers": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
