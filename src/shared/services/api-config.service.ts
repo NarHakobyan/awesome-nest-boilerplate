@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { isNil } from 'lodash';
 import path from 'path';
+import { Configuration } from '@mikro-orm/core';
 
 @Injectable()
 export class ApiConfigService {
@@ -84,7 +85,7 @@ export class ApiConfigService {
         emit: 'ts',
         generator: TSMigrationGenerator,
       },
-      type: 'postgresql',
+      type: this.getString('DB_TYPE') as keyof typeof Configuration.PLATFORMS,
       name: 'default',
       host: this.getString('DB_HOST'),
       port: this.getNumber('DB_PORT'),

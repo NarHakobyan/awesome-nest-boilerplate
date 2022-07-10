@@ -5,9 +5,10 @@ import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
 
 import { UserSubscriber } from './src/entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from './src/snake-naming.strategy';
+import { Configuration } from '@mikro-orm/core';
 
 const configs: MikroOrmModuleSyncOptions = {
-  type: 'postgresql',
+  type: process.env.DB_TYPE as keyof typeof Configuration.PLATFORMS,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   user: process.env.DB_USERNAME,
