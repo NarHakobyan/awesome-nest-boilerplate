@@ -56,14 +56,14 @@ export class ApiConfigService {
     return this.getString('FALLBACK_LANGUAGE');
   }
 
-  get postgresConfig(): MikroOrmModuleSyncOptions {
+  get mikroOrmConfig(): MikroOrmModuleSyncOptions {
     const entities = [
-      __dirname + '/../../modules/**/*.entity.js',
-      __dirname + '/../../modules/**/*.view-entity.js',
+      path.join(__dirname, '../../modules/**/*.entity.js'),
+      path.join(__dirname, '../../modules/**/*.view-entity.js'),
     ];
     const entitiesTs = [
-      __dirname + '/../../modules/**/*.entity.ts',
-      __dirname + '/../../modules/**/*.view-entity.ts',
+      path.join(__dirname , '../../modules/**/*.entity.ts'),
+      path.join(__dirname , '../../modules/**/*.view-entity.ts'),
     ];
 
     return {
@@ -80,15 +80,14 @@ export class ApiConfigService {
       // metadataProvider: TsMorphMetadataProvider,
       migrations: {
         tableName: 'orm_migrations',
-        path: path.resolve(__dirname + '/../../database/migrations/*.js'),
-        pathTs: path.resolve(__dirname + '/../../database/migrations/*.ts'),
+        path: path.resolve(__dirname, '../../database/migrations/*.js'),
+        pathTs: this.isDevelopment ? path.resolve(__dirname, '../../database/migrations/*.ts'): undefined,
         glob: '!(*.d).{js,ts}',
         transactional: true,
-        disableForeignKeys: true,
+        // disableForeignKeys: true,
         allOrNothing: true,
-        dropTables: true,
-        safe: false,
-        snapshot: true,
+        // dropTables: true,
+        safe: true,
         emit: 'ts',
         generator: TSMigrationGenerator,
       },

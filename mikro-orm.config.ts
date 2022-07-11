@@ -19,7 +19,7 @@ const configs: MikroOrmModuleSyncOptions = {
   entities: ['src/modules/**/*.entity.ts', 'src/modules/**/*.view-entity.ts'],
   migrations: {
     tableName: 'mikro_orm_migrations',
-    path: './src/database/migrations',
+    path: './dist/database/migrations',
     pathTs: './src/database/migrations',
     glob: '!(*.d).{js,ts}',
     transactional: true,
@@ -32,8 +32,8 @@ const configs: MikroOrmModuleSyncOptions = {
     generator: TSMigrationGenerator, // migration generator, e.g. to allow custom formatting
   },
   seeder: {
-    path: './src/database/migrations',
-    pathTs: './src/database/migrations',
+    path: './dist/database/seeds',
+    pathTs: './src/database/seeds',
     defaultSeeder: 'DatabaseSeeder',
     glob: '!(*.d).{js,ts}',
     emit: 'ts',
