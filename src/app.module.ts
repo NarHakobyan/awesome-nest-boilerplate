@@ -1,7 +1,8 @@
 import './boilerplate.polyfill';
 
-import { MikroOrmModule, InjectEntityManager, InjectMikroORM } from '@mikro-orm/nestjs';
-import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MikroORM } from '@mikro-orm/core';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { I18nModule } from 'nestjs-i18n';
@@ -13,7 +14,6 @@ import { HealthCheckerModule } from './modules/health-checker/health-checker.mod
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
-import { EntityManager, MikroORM } from '@mikro-orm/core';
 
 @Module({
   imports: [
@@ -51,10 +51,9 @@ import { EntityManager, MikroORM } from '@mikro-orm/core';
 })
 export class AppModule {
   logger = new Logger(AppModule.name);
-  constructor(
-    private readonly orm: MikroORM,
-  ) {
-    this.runMigrations();
+
+  constructor(private readonly orm: MikroORM) {
+    void this.runMigrations();
   }
 
   async runMigrations() {
@@ -62,7 +61,9 @@ export class AppModule {
 
     const pendingMigrations = await migrator.getPendingMigrations();
 
-    this.logger.log(`Pending migrations: ${pendingMigrations.map(m => m.name).join(', ')}`);
+    this.logger.log(
+      `Pending migrations: ${pendingMigrations.map((m) => m.name).join(', ')}`,
+    );
 
     await migrator.up();
   }
