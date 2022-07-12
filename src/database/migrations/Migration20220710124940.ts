@@ -2,6 +2,7 @@ import { Migration } from '@mikro-orm/migrations';
 
 export class Migration20220710124940 extends Migration {
   async up(): Promise<void> {
+    this.addSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
     this.addSql(`
       create table "users"
       (

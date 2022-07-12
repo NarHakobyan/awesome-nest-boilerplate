@@ -1,10 +1,10 @@
+import type { Configuration } from '@mikro-orm/core';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { isNil } from 'lodash';
 import path from 'path';
-import { Configuration } from '@mikro-orm/core';
 
 @Injectable()
 export class ApiConfigService {
@@ -61,9 +61,10 @@ export class ApiConfigService {
       path.join(__dirname, '../../modules/**/*.entity.js'),
       path.join(__dirname, '../../modules/**/*.view-entity.js'),
     ];
+    const migrationsPath = path.join(__dirname, '../../database/migrations');
     const entitiesTs = [
-      path.join(__dirname , '../../modules/**/*.entity.ts'),
-      path.join(__dirname , '../../modules/**/*.view-entity.ts'),
+      path.join(__dirname, '../../modules/**/*.entity.ts'),
+      path.join(__dirname, '../../modules/**/*.view-entity.ts'),
     ];
 
     return {
@@ -80,8 +81,7 @@ export class ApiConfigService {
       // metadataProvider: TsMorphMetadataProvider,
       migrations: {
         tableName: 'orm_migrations',
-        path: path.resolve(__dirname, '../../database/migrations/*.js'),
-        pathTs: this.isDevelopment ? path.resolve(__dirname, '../../database/migrations/*.ts'): undefined,
+        path: migrationsPath,
         glob: '!(*.d).{js,ts}',
         transactional: true,
         // disableForeignKeys: true,

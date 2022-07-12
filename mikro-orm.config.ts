@@ -1,11 +1,10 @@
 import './src/boilerplate.polyfill';
 
-import { TSMigrationGenerator } from '@mikro-orm/migrations';
-import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
-
 // import { UserSubscriber } from './src/entity-subscribers/user-subscriber';
 // import { SnakeNamingStrategy } from './src/snake-naming.strategy';
-import { Configuration } from '@mikro-orm/core';
+import type { Configuration } from '@mikro-orm/core';
+import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
 
 const configs: MikroOrmModuleSyncOptions = {
   type: process.env.DB_TYPE as keyof typeof Configuration.PLATFORMS,
