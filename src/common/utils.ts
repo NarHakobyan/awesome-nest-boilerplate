@@ -1,7 +1,5 @@
 import bcrypt from 'bcrypt';
 
-import type { Optional } from '../types';
-
 /**
  * generate hash from password or string
  * @param {string} password
@@ -18,8 +16,8 @@ export function generateHash(password: string): string {
  * @returns {Promise<boolean>}
  */
 export function validateHash(
-  password: Optional<string>,
-  hash: Optional<string>,
+  password: string | undefined,
+  hash: string | undefined,
 ): Promise<boolean> {
   if (!password || !hash) {
     return Promise.resolve(false);

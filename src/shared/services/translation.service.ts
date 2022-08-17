@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { isArray, isString, map } from 'lodash';
+import type { TranslateOptions } from 'nestjs-i18n';
 import { I18nService } from 'nestjs-i18n';
-import type { translateOptions } from 'nestjs-i18n/dist/services/i18n.service';
 
 import { AbstractDto } from '../../common/dto/abstract.dto';
 import { STATIC_TRANSLATION_DECORATOR_KEY } from '../../decorators';
@@ -12,7 +12,7 @@ import { ContextProvider } from '../../providers';
 export class TranslationService {
   constructor(private readonly i18n: I18nService) {}
 
-  async translate(key: string, options?: translateOptions): Promise<string> {
+  async translate(key: string, options?: TranslateOptions): Promise<string> {
     return this.i18n.translate(`${key}`, {
       ...options,
       lang: ContextProvider.getLanguage(),

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { plainToClass } from 'class-transformer';
-import type { FindConditions } from 'typeorm';
+import type { FindOptionsWhere } from 'typeorm';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 import type { PageDto } from '../../common/dto/page.dto';
@@ -9,7 +9,6 @@ import { FileNotImageException, UserNotFoundException } from '../../exceptions';
 import { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
-import type { Optional } from '../../types';
 import { UserRegisterDto } from '../auth/dto/UserRegisterDto';
 import { CreateSettingsCommand } from './commands/create-settings.command';
 import { CreateSettingsDto } from './dtos/create-settings.dto';
@@ -31,13 +30,13 @@ export class UserService {
   /**
    * Find single user
    */
-  findOne(findData: FindConditions<UserEntity>): Promise<Optional<UserEntity>> {
-    return this.userRepository.findOne(findData);
+  findOne(findData: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy(findData);
   }
 
   async findByUsernameOrEmail(
     options: Partial<{ username: string; email: string }>,
-  ): Promise<Optional<UserEntity>> {
+  ): Promise<UserEntity | null> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect<UserEntity, 'user'>('user.settings', 'settings');

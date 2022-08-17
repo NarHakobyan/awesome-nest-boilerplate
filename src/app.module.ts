@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { I18nJsonParser, I18nModule } from 'nestjs-i18n';
+import { I18nModule } from 'nestjs-i18n';
 import path from 'path';
 
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
@@ -33,13 +33,12 @@ import { SharedModule } from './shared/shared.module';
     I18nModule.forRootAsync({
       useFactory: (configService: ApiConfigService) => ({
         fallbackLanguage: configService.fallbackLanguage,
-        parserOptions: {
+        loaderOptions: {
           path: path.join(__dirname, '/i18n/'),
           watch: configService.isDevelopment,
         },
       }),
       imports: [SharedModule],
-      parser: I18nJsonParser,
       inject: [ApiConfigService],
     }),
     HealthCheckerModule,
