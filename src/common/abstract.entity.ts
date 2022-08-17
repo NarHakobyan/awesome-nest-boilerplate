@@ -1,4 +1,4 @@
-import type { Collection } from '@mikro-orm/core';
+import type { Collection, EntityDTO } from '@mikro-orm/core';
 import {
   BaseEntity,
   Entity,
@@ -7,6 +7,7 @@ import {
   PrimaryKey,
   Property,
   t,
+  wrap,
 } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 
@@ -40,17 +41,17 @@ export abstract class AbstractEntity<
   // private dtoClass: Constructor<DTO, [AbstractEntity, O?]>;
   private dtoClass?: any;
 
-  // toDto(options?: O): DTO {
-  //   const dtoClass = this.dtoClass;
-  //
-  //   if (!dtoClass) {
-  //     throw new Error(
-  //       `You need to use @UseDto on class (${this.constructor.name}) be able to call toDto function`,
-  //     );
-  //   }
-  //
-  //   return new this.dtoClass(this, options);
-  // }
+  toDto<O>(options?: O): DTO {
+    const dtoClass = this.dtoClass;
+
+    if (!dtoClass) {
+      throw new Error(
+        `You need to use @UseDto on class (${this.constructor.name}) be able to call toDto function`,
+      );
+    }
+
+    return new this.dtoClass(this, options);
+  }
 }
 
 export class AbstractTranslationEntity<

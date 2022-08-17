@@ -31,7 +31,7 @@
   - [`.eslintrc.js`](#eslintrcjs)
   - [`docker-compose.yml`](#docker-composeyml)
   - [`Dockerfile`](#dockerfile)
-  - [`mikro-orm.config.ts`](#ormconfigts)
+  - [`ormconfig.ts`](#ormconfigts)
 
 ## `.github/workflows`
 
@@ -159,6 +159,6 @@ Docker compose configuration file, See [the docker docs](https://docs.docker.com
 
 basic Dockerfile configuration to build the app, See [the docker docs](https://docs.docker.com/engine/reference/builder/) for more.
 
-## `mikro-orm.config.ts`
+## `ormconfig.ts`
 
 Typeorm configuration file which is used for migrations and seeds.

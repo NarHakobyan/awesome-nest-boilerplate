@@ -31,6 +31,8 @@ export class CreatePostHandler
 
     await this.postRepository.flush();
 
+    const dto = postEntity.toObject();
+
     // FIXME: Create generic function for translation creation
     for (const createTranslationDto of createPostDto.title) {
       const languageCode = createTranslationDto.languageCode;

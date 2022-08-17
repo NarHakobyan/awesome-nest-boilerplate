@@ -25,7 +25,7 @@ export class CreateSettingsHandler
 
     userSettingsEntity.userId = userId;
 
-    await this.userSettingsRepository.persistAndFlush(userSettingsEntity);
+    await this.userSettingsRepository.flush();
 
     return userSettingsEntity;
   }

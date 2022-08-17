@@ -56,6 +56,10 @@ export class UserService {
   ): Promise<UserEntity> {
     const user = this.userRepository.create(userRegisterDto);
 
+    this.userRepository.persist(user);
+
+    await this.userRepository.flush();
+
     if (file && !this.validatorService.isImage(file.mimetype)) {
       throw new FileNotImageException();
     }

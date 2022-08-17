@@ -19,6 +19,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@moneteam/nestjs/recommended',
+    'plugin:promise/recommended',
   ],
   plugins: [
     '@typescript-eslint',
@@ -28,9 +29,10 @@ module.exports = {
     'unicorn',
     'sonarjs',
     '@moneteam/nestjs',
+    'promise',
   ],
   rules: {
-    'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2, bracketSpacing: true }],
+    'prettier/prettier': ['error', {singleQuote: true, trailingComma: 'all', tabWidth: 2, bracketSpacing: true}],
     /**
      * plugin:import
      */
@@ -86,13 +88,13 @@ module.exports = {
     /**
      * plugin:typescript-eslint
      */
-    "no-unused-vars": "off",
+    'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
-      { argsIgnorePattern: '^_' },
+      {argsIgnorePattern: '^_'},
     ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
-    '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
+    '@typescript-eslint/array-type': ['error', {default: 'array-simple'}],
     '@typescript-eslint/ban-types': [
       'error',
       {
@@ -165,7 +167,7 @@ module.exports = {
     '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
     '@typescript-eslint/consistent-type-imports': [
       'error',
-      { prefer: 'type-imports' },
+      {prefer: 'type-imports'},
     ],
     '@typescript-eslint/no-misused-new': 'error',
     '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -241,13 +243,13 @@ module.exports = {
     'no-await-in-loop': 'error',
     'padding-line-between-statements': [
       'error',
-      { blankLine: 'always', prev: '*', next: 'return' },
-      { blankLine: 'always', prev: '*', next: 'try' },
-      { blankLine: 'always', prev: 'try', next: '*' },
-      { blankLine: 'always', prev: '*', next: 'block-like' },
-      { blankLine: 'always', prev: 'block-like', next: '*' },
-      { blankLine: 'always', prev: '*', next: 'throw' },
-      { blankLine: 'always', prev: 'var', next: '*' },
+      {blankLine: 'always', prev: '*', next: 'return'},
+      {blankLine: 'always', prev: '*', next: 'try'},
+      {blankLine: 'always', prev: 'try', next: '*'},
+      {blankLine: 'always', prev: '*', next: 'block-like'},
+      {blankLine: 'always', prev: 'block-like', next: '*'},
+      {blankLine: 'always', prev: '*', next: 'throw'},
+      {blankLine: 'always', prev: 'var', next: '*'},
     ],
     'arrow-body-style': 'error',
     'arrow-parens': ['error', 'always'],
