@@ -11,8 +11,8 @@ export class GetPostQuery implements ICommand {
 export class GetPostHandler implements IQueryHandler<GetPostQuery> {
   constructor(private postRepository: PostRepository) {}
 
-  async execute(query: GetPostQuery) {
-    return this.postRepository.findBy({
+  execute(query: GetPostQuery) {
+    return this.postRepository.findOne({
       userId: query.userId as never,
     });
   }
