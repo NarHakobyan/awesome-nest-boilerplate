@@ -116,7 +116,7 @@ export function ApiFile(
   const apiFileInterceptors = filesArray.map((file) =>
     file.isArray
       ? UseInterceptors(FilesInterceptor(file.name))
-      : UseInterceptors(FileInterceptor(file.name))
+      : UseInterceptors(FileInterceptor(file.name)),
   );
 
   return applyDecorators(
