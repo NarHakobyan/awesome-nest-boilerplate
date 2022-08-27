@@ -1,17 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { getRepository } from "typeorm"
 import type {
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { registerDecorator, ValidatorConstraint } from 'class-validator';
-import type { EntitySchema, FindConditions, ObjectType } from 'typeorm';
+import { registerDecorator } from 'class-validator';
+import type { EntitySchema, FindOptionsWhere, ObjectType } from 'typeorm';
+import { getRepository } from 'typeorm';
 
-@Injectable()
-@ValidatorConstraint({ name: 'unique', async: true })
+/**
+ * @deprecated Don't use this validator until it's fixed in NestJS
+ */
 export class UniqueValidator implements ValidatorConstraintInterface {
-
   public async validate<E>(
     value: string,
     args: IUniqueValidationArguments<E>,
@@ -20,12 +19,7 @@ export class UniqueValidator implements ValidatorConstraintInterface {
 
     return (
       (await getRepository(entityClass).count({
-        where:
-          typeof findCondition === 'function'
-            ? findCondition(args)
-            : {
-                [findCondition || args.property]: value,
-              },
+        where: findCondition(args),
       })) <= 0
     );
   }
@@ -40,7 +34,7 @@ export class UniqueValidator implements ValidatorConstraintInterface {
 
 type UniqueValidationConstraints<E> = [
   ObjectType<E> | EntitySchema<E> | string,
-  ((validationArguments: ValidationArguments) => FindConditions<E>) | keyof E,
+  (validationArguments: ValidationArguments) => FindOptionsWhere<E>,
 ];
 interface IUniqueValidationArguments<E> extends ValidationArguments {
   constraints: UniqueValidationConstraints<E>;
