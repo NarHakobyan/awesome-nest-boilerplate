@@ -3,22 +3,26 @@ import type {
   ValidationOptions,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { registerDecorator } from 'class-validator';
+import { registerDecorator, ValidatorConstraint } from 'class-validator';
 import type { EntitySchema, FindOptionsWhere, ObjectType } from 'typeorm';
-import { getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 
 /**
  * @deprecated Don't use this validator until it's fixed in NestJS
  */
+@ValidatorConstraint({ name: 'unique', async: true })
 export class UniqueValidator implements ValidatorConstraintInterface {
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+
   public async validate<E>(
     value: string,
     args: IUniqueValidationArguments<E>,
   ): Promise<boolean> {
-    const [entityClass, findCondition = args.property] = args.constraints;
+    const [entityClass, findCondition] = args.constraints;
 
     return (
-      (await getRepository(entityClass).count({
+      (await this.dataSource.getRepository(entityClass).count({
         where: findCondition(args),
       })) <= 0
     );

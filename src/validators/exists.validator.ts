@@ -19,7 +19,7 @@ export class ExistsValidator implements ValidatorConstraintInterface {
     value: string,
     args: IExistsValidationArguments<E>,
   ): Promise<boolean> {
-    const [entityClass, findCondition = args.property] = args.constraints;
+    const [entityClass, findCondition] = args.constraints;
 
     return (
       (await this.dataSource.getRepository(entityClass).count({

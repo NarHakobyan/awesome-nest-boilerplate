@@ -80,3 +80,4 @@ db-data
 # Vuepress
 .temp
 .cache
+.DS_Store

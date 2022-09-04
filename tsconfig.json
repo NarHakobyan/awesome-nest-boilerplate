@@ -4,6 +4,7 @@
     "module": "commonjs",
     "declaration": false,
     "noImplicitAny": false,
+    "skipLibCheck": true,
     "removeComments": true,
     "noLib": false,
     "allowSyntheticDefaultImports": true,

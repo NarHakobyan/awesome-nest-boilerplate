@@ -8,26 +8,8 @@ services:
     build: .
     ports:
       - "$PORT:$PORT"
-    depends_on:
-      - postgres
-      - redis
     links:
       - postgres
-
-  redis:
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
-
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    environment:
-      - REDIS_HOSTS=local:redis:6379
-    ports:
-      - "8081:8081"
-    depends_on:
-      - redis
-
   postgres:
     image: postgres
     container_name: postgres
@@ -39,14 +21,11 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /data/postgres:/data/postgres
+      - postgres:/data/postgres
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
     env_file:
       - .env
-    networks:
-      - postgres
   pgadmin:
-    links:
-      - postgres:postgres
     container_name: pgadmin
     image: dpage/pgadmin4
     ports:
@@ -55,76 +34,9 @@ services:
       - /data/pgadmin:/root/.pgadmin
     env_file:
       - .env
-    networks:
+    links:
       - postgres
 
-  es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.0
-    container_name: es01
-    environment:
-      - node.name=es01
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data01:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-    networks:
-      - elastic
-  es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.0
-    container_name: es02
-    environment:
-      - node.name=es02
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data02:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-  es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.0
-    container_name: es03
-    environment:
-      - node.name=es03
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data03:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-
 volumes:
-  data01:
-    driver: local
-  data02:
-    driver: local
-  data03:
-    driver: local
-
-networks:
   postgres:
-    driver: bridge
-  elastic:
-    driver: bridge
+    driver: local
