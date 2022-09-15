@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 import type { PageDto } from '../../common/dto/page.dto';
@@ -10,13 +12,13 @@ import type { PostDto } from './dtos/post.dto';
 import type { PostPageOptionsDto } from './dtos/post-page-options.dto';
 import type { UpdatePostDto } from './dtos/update-post.dto';
 import { PostNotFoundException } from './exceptions/post-not-found.exception';
-import type { PostEntity } from './post.entity';
-import { PostRepository } from './post.repository';
+import { PostEntity } from './post.entity';
 
 @Injectable()
 export class PostService {
   constructor(
-    private postRepository: PostRepository,
+    @InjectRepository(PostEntity)
+    private postRepository: Repository<PostEntity>,
     private validatorService: ValidatorService,
     private commandBus: CommandBus,
   ) {}

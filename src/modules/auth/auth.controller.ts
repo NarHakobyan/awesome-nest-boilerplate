@@ -54,7 +54,7 @@ export class AuthController {
   @ApiFile({ name: 'avatar' })
   async userRegister(
     @Body() userRegisterDto: UserRegisterDto,
-    @UploadedFile() file: IFile,
+    @UploadedFile() file?: IFile,
   ): Promise<UserDto> {
     const createdUser = await this.userService.createUser(
       userRegisterDto,

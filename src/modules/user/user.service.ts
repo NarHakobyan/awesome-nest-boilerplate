@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import type { FindOptionsWhere } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
 
 import type { PageDto } from '../../common/dto/page.dto';
@@ -14,14 +16,14 @@ import { CreateSettingsCommand } from './commands/create-settings.command';
 import { CreateSettingsDto } from './dtos/create-settings.dto';
 import type { UserDto } from './dtos/user.dto';
 import type { UsersPageOptionsDto } from './dtos/users-page-options.dto';
-import type { UserEntity } from './user.entity';
-import { UserRepository } from './user.repository';
+import { UserEntity } from './user.entity';
 import type { UserSettingsEntity } from './user-settings.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    private userRepository: UserRepository,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
     private validatorService: ValidatorService,
     private awsS3Service: AwsS3Service,
     private commandBus: CommandBus,
@@ -59,7 +61,7 @@ export class UserService {
   @Transactional()
   async createUser(
     userRegisterDto: UserRegisterDto,
-    file: IFile,
+    file?: IFile,
   ): Promise<UserEntity> {
     const user = this.userRepository.create(userRegisterDto);
 

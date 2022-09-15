@@ -1,9 +1,10 @@
 import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import type { CreateSettingsDto } from '../dtos/create-settings.dto';
-import type { UserSettingsEntity } from '../user-settings.entity';
-import { UserSettingsRepository } from '../user-settings.repository';
+import { UserSettingsEntity } from '../user-settings.entity';
 
 export class CreateSettingsCommand implements ICommand {
   constructor(
@@ -16,9 +17,12 @@ export class CreateSettingsCommand implements ICommand {
 export class CreateSettingsHandler
   implements ICommandHandler<CreateSettingsCommand, UserSettingsEntity>
 {
-  constructor(private userSettingsRepository: UserSettingsRepository) {}
+  constructor(
+    @InjectRepository(UserSettingsEntity)
+    private userSettingsRepository: Repository<UserSettingsEntity>,
+  ) {}
 
-  async execute(command: CreateSettingsCommand) {
+  execute(command: CreateSettingsCommand) {
     const { userId, createSettingsDto } = command;
     const userSettingsEntity =
       this.userSettingsRepository.create(createSettingsDto);
