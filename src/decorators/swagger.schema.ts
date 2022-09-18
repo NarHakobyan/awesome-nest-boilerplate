@@ -74,7 +74,7 @@ function ApiFileDecorator(
     const properties: Record<string, SchemaObject | ReferenceObject> = {};
 
     for (const file of files) {
-      if (file?.isArray) {
+      if (file.isArray) {
         properties[file.name] = {
           type: 'array',
           items: fileSchema,

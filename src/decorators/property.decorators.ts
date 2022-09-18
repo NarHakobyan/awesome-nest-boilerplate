@@ -20,9 +20,9 @@ export function ApiUUIDProperty(
     Partial<{ each: boolean }> = {},
 ): PropertyDecorator {
   return ApiProperty({
-    type: options?.each ? [String] : String,
+    type: options.each ? [String] : String,
     format: 'uuid',
-    isArray: options?.each,
+    isArray: options.each,
     ...options,
   });
 }

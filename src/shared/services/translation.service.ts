@@ -23,7 +23,7 @@ export class TranslationService {
     await Promise.all(
       map(dto, async (value, key) => {
         if (isString(value)) {
-          const translateDec: ITranslationDecoratorInterface =
+          const translateDec: ITranslationDecoratorInterface | undefined =
             Reflect.getMetadata(STATIC_TRANSLATION_DECORATOR_KEY, dto, key);
 
           if (translateDec) {
@@ -37,8 +37,6 @@ export class TranslationService {
 
         if (value instanceof AbstractDto) {
           return this.translateNecessaryKeys(value);
-
-          return;
         }
 
         if (isArray(value)) {

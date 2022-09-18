@@ -1,3 +1,4 @@
+import { InjectDataSource } from '@nestjs/typeorm';
 import type {
   ValidationArguments,
   ValidationOptions,
@@ -6,7 +7,6 @@ import type {
 import { registerDecorator, ValidatorConstraint } from 'class-validator';
 import type { EntitySchema, FindOptionsWhere, ObjectType } from 'typeorm';
 import { DataSource } from 'typeorm';
-import { InjectDataSource } from '@nestjs/typeorm';
 
 /**
  * @deprecated Don't use this validator until it's fixed in NestJS
