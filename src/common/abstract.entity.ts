@@ -45,7 +45,7 @@ export abstract class AbstractEntity<
 
   translations?: AbstractTranslationEntity[];
 
-  private dtoClass: Constructor<DTO, [AbstractEntity, O?]>;
+  private dtoClass?: Constructor<DTO, [AbstractEntity, O?]>;
 
   toDto(options?: O): DTO {
     const dtoClass = this.dtoClass;
@@ -56,7 +56,7 @@ export abstract class AbstractEntity<
       );
     }
 
-    return new this.dtoClass(this, options);
+    return new dtoClass(this, options);
   }
 }
 

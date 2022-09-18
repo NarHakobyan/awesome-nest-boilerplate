@@ -116,23 +116,23 @@ export function StringField(
 ): PropertyDecorator {
   const decorators = [IsNotEmpty(), IsString(), Trim()];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiProperty({ type: String, ...options }));
   }
 
-  if (options?.minLength) {
+  if (options.minLength) {
     decorators.push(MinLength(options.minLength));
   }
 
-  if (options?.maxLength) {
+  if (options.maxLength) {
     decorators.push(MaxLength(options.maxLength));
   }
 
-  if (options?.toLowerCase) {
+  if (options.toLowerCase) {
     decorators.push(ToLowerCase());
   }
 
-  if (options?.toUpperCase) {
+  if (options.toUpperCase) {
     decorators.push(ToUpperCase());
   }
 
@@ -175,7 +175,7 @@ export function BooleanField(
 ): PropertyDecorator {
   const decorators = [IsBoolean(), ToBoolean()];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiProperty({ type: Boolean, ...options }));
   }
 
@@ -205,7 +205,7 @@ export function TranslationsField(
     Type(() => options.type as FunctionConstructor),
   ];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiProperty({ isArray: true, ...options }));
   }
 
@@ -228,7 +228,7 @@ export function TmpKeyField(
 ): PropertyDecorator {
   const decorators = [IsTmpKey()];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiProperty({ type: String, ...options }));
   }
 
@@ -257,7 +257,7 @@ export function EnumField<TEnum>(
   const enumValue = getEnum() as any;
   const decorators = [IsEnum(enumValue as object, { each: options.each })];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiEnumProperty(getEnum, options));
   }
 
@@ -287,7 +287,7 @@ export function EmailField(
     StringField({ toLowerCase: true, ...options }),
   ];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiProperty({ type: String, ...options }));
   }
 
@@ -309,7 +309,7 @@ export function PhoneField(
 ): PropertyDecorator {
   const decorators = [IsPhoneNumber(), PhoneNumberSerializer()];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiProperty({ type: String, ...options }));
   }
 
@@ -330,13 +330,13 @@ export function UUIDField(
   options: Omit<ApiPropertyOptions, 'type' | 'format'> &
     Partial<{ each: boolean; swagger: boolean }> = {},
 ): PropertyDecorator {
-  const decorators = [IsUUID('4', { each: options?.each })];
+  const decorators = [IsUUID('4', { each: options.each })];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiUUIDProperty(options));
   }
 
-  if (options?.each) {
+  if (options.each) {
     decorators.push(ArrayNotEmpty(), ToArray());
   }
 
@@ -373,7 +373,7 @@ export function DateField(
 ): PropertyDecorator {
   const decorators = [Type(() => Date), IsDate()];
 
-  if (options?.swagger !== false) {
+  if (options.swagger !== false) {
     decorators.push(ApiProperty(options));
   }
 
