@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 
 import type { CreatePostDto } from '../dtos/create-post.dto';
 import { PostEntity } from '../post.entity';
-import type { PostTranslationEntity } from '../post-translation.entity';
+import { PostTranslationEntity } from '../post-translation.entity';
 
 export class CreatePostCommand implements ICommand {
   constructor(
@@ -22,7 +22,7 @@ export class CreatePostHandler
   constructor(
     @InjectRepository(PostEntity)
     private postRepository: Repository<PostEntity>,
-    @InjectRepository(PostEntity)
+    @InjectRepository(PostTranslationEntity)
     private postTranslationRepository: Repository<PostTranslationEntity>,
   ) {}
 
