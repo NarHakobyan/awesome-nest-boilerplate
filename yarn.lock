@@ -10141,16 +10141,6 @@ vue@^3.2.37:
     "@vue/server-renderer" "3.2.37"
     "@vue/shared" "3.2.37"
 
-vuepress-vite@2.0.0-beta.50-pre.1:
-  version "2.0.0-beta.50-pre.1"
-  resolved "https://registry.yarnpkg.com/vuepress-vite/-/vuepress-vite-2.0.0-beta.50-pre.1.tgz#019ec29fb39b1b92f0cf0d405326412659ec43f4"
-  integrity sha512-l5rRMWrpE3cVHv0csCHgUFvL7mVQnbRKzZ5CuBrynVSmBRbzSNSW1I+KjUKyYDAF/fKUAsnPa6g/RoowQfy+ww==
-  dependencies:
-    "@vuepress/bundler-vite" "2.0.0-beta.50-pre.1"
-    "@vuepress/cli" "2.0.0-beta.50-pre.1"
-    "@vuepress/core" "2.0.0-beta.50-pre.1"
-    "@vuepress/theme-default" "2.0.0-beta.50-pre.1"
-
 vuepress@^2.0.0-beta.35:
   version "2.0.0-beta.50-pre.1"
   resolved "https://registry.yarnpkg.com/vuepress/-/vuepress-2.0.0-beta.50-pre.1.tgz#26eec90444bb37590f29d10dd5923e75c476189f"
