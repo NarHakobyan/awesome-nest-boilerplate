@@ -70,11 +70,8 @@ DB_PORT=3306
 DB_USERNAME=mysql
 DB_PASSWORD=mysql
 DB_DATABASE=nest_boilerplate
-MYSQL_DATABASE=nest_boilerplate
-MYSQL_USER=mysql
-MYSQL_PASSWORD=mysql
-MYSQL_ROOT_PASSWORD=mysql
-MYSQL_ALLOW_EMPTY_PASSWORD=yes
+DB_ROOT_PASSWORD=mysql
+DB_ALLOW_EMPTY_PASSWORD=yes
 ```
 2. Change the DB in TypeORM to MySQL. You can do that by heading over to the file `ormconfig.ts`.
 ```
