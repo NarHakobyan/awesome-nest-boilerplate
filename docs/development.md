@@ -64,6 +64,7 @@ If you need to use MySQL / MariaDB instead of PostgreSQL, follow the steps below
 1. Make the following entries in the #DB section in `.env` file
 
 ```env
+#== DB
 DB_TYPE=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
