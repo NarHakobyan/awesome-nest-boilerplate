@@ -1,0 +1,51 @@
+version: "3"
+services:
+  app:
+    env_file:
+      - .env
+    container_name: awesome_nest_boilerplate
+    restart: always
+    build: .
+    ports:
+      - "$PORT:$PORT"
+    links:
+      - mysql
+    environment:
+      DB_HOST: mysql
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    environment:
+      ## Note: all of these environment variables can also be loaded from .env
+      
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: '${DB_USERNAME}'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+      # Good for testing, but not production
+      MYSQL_ALLOW_EMPTY_PASSWORD: '${DB_ALLOW_EMPTY_PASSWORD}'
+    
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      # default is:
+      #- '3306:3306'
+      - '${DB_PORT}:${DB_PORT}'
+    expose:
+      # Opens port 3306 on the container
+      # default is: 
+      #- '3306'
+      - '${DB_PORT}'
+      # Where our data will be persisted
+    volumes:
+      - mysql:/data/mysql
+      # - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    env_file:
+      - .env
+
+volumes:
+  mysql:
+    driver: local
