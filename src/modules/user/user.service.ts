@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import type { FindOptionsWhere } from 'typeorm';
 import { Repository } from 'typeorm';
-import { Transactional } from 'typeorm-transactional-cls-hooked';
+import { Transactional } from 'typeorm-transactional';
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';

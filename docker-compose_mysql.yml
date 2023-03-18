@@ -18,7 +18,7 @@ services:
     restart: always
     environment:
       ## Note: all of these environment variables can also be loaded from .env
-      
+
       MYSQL_DATABASE: '${DB_DATABASE}'
       # So you don't have to use root, but you can if you like
       MYSQL_USER: '${DB_USERNAME}'
@@ -28,7 +28,7 @@ services:
       MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
       # Good for testing, but not production
       MYSQL_ALLOW_EMPTY_PASSWORD: '${DB_ALLOW_EMPTY_PASSWORD}'
-    
+
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       # default is:
@@ -36,13 +36,12 @@ services:
       - '${DB_PORT}:${DB_PORT}'
     expose:
       # Opens port 3306 on the container
-      # default is: 
+      # default is:
       #- '3306'
       - '${DB_PORT}'
       # Where our data will be persisted
     volumes:
       - mysql:/data/mysql
-      # - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
     env_file:
       - .env
 

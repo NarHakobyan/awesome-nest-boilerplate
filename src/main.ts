@@ -13,10 +13,7 @@ import { middleware as expressCtx } from 'express-ctx';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import {
-  initializeTransactionalContext,
-  patchTypeORMRepositoryWithBaseRepository,
-} from 'typeorm-transactional-cls-hooked';
+import { initializeTransactionalContext } from 'typeorm-transactional';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
@@ -29,7 +26,6 @@ import { SharedModule } from './shared/shared.module';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   initializeTransactionalContext();
-  patchTypeORMRepositoryWithBaseRepository();
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(),

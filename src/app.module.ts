@@ -3,7 +3,7 @@ import './boilerplate.polyfill';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { I18nModule } from 'nestjs-i18n';
+import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import path from 'path';
 
 import { AuthModule } from './modules/auth/auth.module';
@@ -35,6 +35,10 @@ import { SharedModule } from './shared/shared.module';
           path: path.join(__dirname, '/i18n/'),
           watch: configService.isDevelopment,
         },
+        resolvers: [
+          { use: QueryResolver, options: ['lang'] },
+          AcceptLanguageResolver,
+        ],
       }),
       imports: [SharedModule],
       inject: [ApiConfigService],

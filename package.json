@@ -36,6 +36,7 @@
     "release": "release-it"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.294.0",
     "@nestjs/common": "^9.3.10",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.3.10",
@@ -83,6 +84,7 @@
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
     "@types/jsonwebtoken": "^9.0.1",
+    "@types/lodash": "^4.14.191",
     "@types/mime-types": "^2.1.1",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.3",
