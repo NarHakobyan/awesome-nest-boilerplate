@@ -1,4 +1,4 @@
-FROM node:lts AS dist
+FROM node:lts-alpine AS dist
 COPY package.json yarn.lock ./
 
 RUN yarn install
@@ -7,12 +7,12 @@ COPY . ./
 
 RUN yarn build:prod
 
-FROM node:lts AS node_modules
+FROM node:lts-alpine AS node_modules
 COPY package.json yarn.lock ./
 
 RUN yarn install --prod
 
-FROM node:lts
+FROM node:lts-alpine
 
 ARG PORT=3000
 
