@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import path from 'path';
+import { DataSource } from 'typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
 
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
@@ -27,6 +29,12 @@ import { SharedModule } from './shared/shared.module';
       useFactory: (configService: ApiConfigService) =>
         configService.postgresConfig,
       inject: [ApiConfigService],
+      dataSourceFactory: async (options) => {
+        if (!options) {
+          throw new Error('Invalid options passed');
+        }
+        return addTransactionalDataSource(new DataSource(options));
+      }
     }),
     I18nModule.forRootAsync({
       useFactory: (configService: ApiConfigService) => ({
