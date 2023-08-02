@@ -1,77 +1,31 @@
-/* eslint-disable @typescript-eslint/naming-convention,sonarjs/cognitive-complexity */
 import 'source-map-support/register';
 
 import { compact, map } from 'lodash';
 import type { ObjectLiteral } from 'typeorm';
-import { Brackets, QueryBuilder, SelectQueryBuilder } from 'typeorm';
-import type { Driver } from 'typeorm/driver/Driver';
-import { DriverUtils } from 'typeorm/driver/DriverUtils';
-import type { Alias } from 'typeorm/query-builder/Alias';
+import { Brackets, SelectQueryBuilder } from 'typeorm';
 
 import type { AbstractEntity } from './common/abstract.entity';
 import type { AbstractDto } from './common/dto/abstract.dto';
+import type { CreateTranslationDto } from './common/dto/create-translation.dto';
 import { PageDto } from './common/dto/page.dto';
 import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
-import { VIRTUAL_COLUMN_KEY } from './decorators';
+import type { LanguageCode } from './constants/language-code';
 import type { KeyOfType } from './types';
-
-function groupRows<T>(
-  rawResults: T[],
-  alias: Alias,
-  driver: Driver,
-): Map<string, T[]> {
-  const raws = new Map();
-  const keys: string[] = [];
-
-  if (alias.metadata.tableType === 'view') {
-    keys.push(
-      ...alias.metadata.columns.map((column) =>
-        DriverUtils.buildAlias(driver, alias.name, column.databaseName),
-      ),
-    );
-  } else {
-    keys.push(
-      ...alias.metadata.primaryColumns.map((column) =>
-        DriverUtils.buildAlias(driver, alias.name, column.databaseName),
-      ),
-    );
-  }
-
-  for (const rawResult of rawResults) {
-    const id = keys
-      .map((key) => {
-        const keyValue = rawResult[key];
-
-        if (Buffer.isBuffer(keyValue)) {
-          return keyValue.toString('hex');
-        }
-
-        if (typeof keyValue === 'object') {
-          return JSON.stringify(keyValue);
-        }
-
-        return keyValue;
-      })
-      .join('_'); // todo: check partial
-
-    const items = raws.get(id);
-
-    if (!items) {
-      raws.set(id, [rawResult]);
-    } else {
-      items.push(rawResult);
-    }
-  }
-
-  return raws;
-}
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-redundant-type-constituents
+  export type Todo = any & { _todoBrand: undefined };
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface Array<T> {
     toDtos<Dto extends AbstractDto>(this: T[], options?: unknown): Dto[];
+
+    getByLanguage(
+      this: CreateTranslationDto[],
+      languageCode: LanguageCode,
+    ): string;
 
     toPageDto<Dto extends AbstractDto>(
       this: T[],
@@ -83,16 +37,20 @@ declare global {
 }
 
 declare module 'typeorm' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface QueryBuilder<Entity> {
-    searchByString(q: string, columnNames: string[]): this;
-  }
-
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface SelectQueryBuilder<Entity> {
+    searchByString(
+      q: string,
+      columnNames: string[],
+      options?: {
+        formStart: boolean;
+      },
+    ): this;
+
     paginate(
       this: SelectQueryBuilder<Entity>,
       pageOptionsDto: PageOptionsDto,
-      options?: Partial<{ takeAll: boolean }>,
+      options?: Partial<{ takeAll: boolean; skipCount: boolean }>,
     ): Promise<[Entity[], PageMetaDto]>;
 
     leftJoinAndSelect<AliasEntity extends AbstractEntity, A extends string>(
@@ -150,6 +108,12 @@ Array.prototype.toDtos = function <
   );
 };
 
+Array.prototype.getByLanguage = function (languageCode: LanguageCode): string {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  return this.find((translation) => languageCode === translation.languageCode)!
+    .text;
+};
+
 Array.prototype.toPageDto = function (
   pageMetaDto: PageMetaDto,
   options?: unknown,
@@ -157,7 +121,11 @@ Array.prototype.toPageDto = function (
   return new PageDto(this.toDtos(options), pageMetaDto);
 };
 
-QueryBuilder.prototype.searchByString = function (q, columnNames) {
+SelectQueryBuilder.prototype.searchByString = function (
+  q,
+  columnNames,
+  options,
+) {
   if (!q) {
     return this;
   }
@@ -170,64 +138,32 @@ QueryBuilder.prototype.searchByString = function (q, columnNames) {
     }),
   );
 
-  this.setParameter('q', `%${q}%`);
+  if (options?.formStart) {
+    this.setParameter('q', `${q}%`);
+  } else {
+    this.setParameter('q', `%${q}%`);
+  }
 
   return this;
 };
 
 SelectQueryBuilder.prototype.paginate = async function (
   pageOptionsDto: PageOptionsDto,
-  options?: Partial<{ takeAll: boolean }>,
+  options?: Partial<{
+    skipCount: boolean;
+    takeAll: boolean;
+  }>,
 ) {
   if (!options?.takeAll) {
     this.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
   }
 
-  const itemCount = await this.getCount();
+  const entities = await this.getMany();
 
-  const { entities, raw } = await this.getRawAndEntities();
+  let itemCount = -1;
 
-  const alias = this.expressionMap.mainAlias!;
-  const group = groupRows(raw, alias, this.connection.driver);
-
-  const keys = alias.metadata.primaryColumns.map((column) =>
-    DriverUtils.buildAlias(
-      this.connection.driver,
-      alias.name,
-      column.databaseName,
-    ),
-  );
-
-  for (const rawValue of raw) {
-    const id = keys
-      .map((key) => {
-        const keyValue = rawValue[key];
-
-        if (Buffer.isBuffer(keyValue)) {
-          return keyValue.toString('hex');
-        }
-
-        if (typeof keyValue === 'object') {
-          return JSON.stringify(keyValue);
-        }
-
-        return keyValue;
-      })
-      .join('_');
-
-    const entity = entities.find((item) => item.id === id) as AbstractEntity;
-    const metaInfo: Record<string, string> =
-      Reflect.getMetadata(VIRTUAL_COLUMN_KEY, entity) ?? {};
-
-    for (const [propertyKey, name] of Object.entries<string>(metaInfo)) {
-      const items = group.get(id);
-
-      if (items) {
-        for (const item of items) {
-          entity[propertyKey] ??= item[name];
-        }
-      }
-    }
+  if (!options?.skipCount) {
+    itemCount = await this.getCount();
   }
 
   const pageMetaDto = new PageMetaDto({

@@ -1,41 +1,16 @@
-import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, VirtualColumn } from 'typeorm';
 
-import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constants';
-import { UseDto, VirtualColumn } from '../../decorators';
+import { UseDto } from '../../decorators';
 import { PostEntity } from '../post/post.entity';
 import type { UserDtoOptions } from './dtos/user.dto';
 import { UserDto } from './dtos/user.dto';
-import type { IUserSettingsEntity } from './user-settings.entity';
 import { UserSettingsEntity } from './user-settings.entity';
-
-export interface IUserEntity extends IAbstractEntity<UserDto> {
-  firstName?: string;
-
-  lastName?: string;
-
-  role: RoleType;
-
-  email?: string;
-
-  password?: string;
-
-  phone?: string;
-
-  avatar?: string;
-
-  fullName?: string;
-
-  settings?: IUserSettingsEntity;
-}
 
 @Entity({ name: 'users' })
 @UseDto(UserDto)
-export class UserEntity
-  extends AbstractEntity<UserDto, UserDtoOptions>
-  implements IUserEntity
-{
+export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
   @Column({ nullable: true })
   firstName?: string;
 
@@ -57,7 +32,10 @@ export class UserEntity
   @Column({ nullable: true })
   avatar?: string;
 
-  @VirtualColumn()
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
+  })
   fullName?: string;
 
   @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
