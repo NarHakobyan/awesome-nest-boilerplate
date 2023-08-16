@@ -1,4 +1,4 @@
-# Awesome NestJS Boilerplate v9
+# Awesome NestJS Boilerplate v10
 
 [![Awesome NestJS](https://img.shields.io/badge/Awesome-NestJS-blue.svg?longCache=true&style=flat-square)](https://github.com/juliandavidmr/awesome-nestjs)
 
@@ -74,7 +74,7 @@ And you will see the generated file in `dist` that ready to be served.
   <dt><b>Swagger Api Documentation</b></dt>
   <dd>Already integrated API documentation. To see all available endpoints visit http://localhost:3000/documentation</dd>
 
-  <dt><b>Linter</b></dt>  
+  <dt><b>Linter</b></dt>
   <dd>eslint + prettier = ❤️</dd>
 </dl>
 

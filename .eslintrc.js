@@ -208,7 +208,6 @@ module.exports = {
     '@typescript-eslint/unified-signatures': 'error',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/no-duplicate-imports': ['error'],
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-unused-expressions': ['error'],
     /**
