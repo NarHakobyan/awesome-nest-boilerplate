@@ -28,7 +28,7 @@ export function validateHash(
 
 export function getVariableName<TResult>(getVar: () => TResult): string {
   const m = /\(\)=>(.*)/.exec(
-    getVar.toString().replace(/(\r\n|\n|\r|\s)/gm, ''),
+    getVar.toString().replaceAll(/(\r\n|\n|\r|\s)/gm, ''),
   );
 
   if (!m) {
@@ -41,5 +41,5 @@ export function getVariableName<TResult>(getVar: () => TResult): string {
 
   const memberParts = fullMemberName.split('.');
 
-  return memberParts[memberParts.length - 1];
+  return memberParts.at(-1);
 }

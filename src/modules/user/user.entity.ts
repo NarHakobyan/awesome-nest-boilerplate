@@ -4,8 +4,7 @@ import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constants';
 import { UseDto } from '../../decorators';
 import { PostEntity } from '../post/post.entity';
-import type { UserDtoOptions } from './dtos/user.dto';
-import { UserDto } from './dtos/user.dto';
+import { UserDto, type UserDtoOptions } from './dtos/user.dto';
 import { UserSettingsEntity } from './user-settings.entity';
 
 @Entity({ name: 'users' })

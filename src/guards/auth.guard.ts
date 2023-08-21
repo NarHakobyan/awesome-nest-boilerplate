@@ -1,5 +1,8 @@
-import type { IAuthGuard, Type } from '@nestjs/passport';
-import { AuthGuard as NestAuthGuard } from '@nestjs/passport';
+import {
+  AuthGuard as NestAuthGuard,
+  type IAuthGuard,
+  type Type,
+} from '@nestjs/passport';
 
 export function AuthGuard(
   options?: Partial<{ public: boolean }>,

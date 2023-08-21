@@ -1,5 +1,4 @@
-import type { ValidationOptions } from 'class-validator';
-import { registerDecorator } from 'class-validator';
+import { registerDecorator, type ValidationOptions } from 'class-validator';
 
 export function SameAs(
   property: string,

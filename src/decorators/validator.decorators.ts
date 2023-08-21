@@ -1,8 +1,8 @@
-import type { ValidationOptions } from 'class-validator';
 import {
   IsPhoneNumber as isPhoneNumber,
   registerDecorator,
   ValidateIf,
+  type ValidationOptions,
 } from 'class-validator';
 import { isString } from 'lodash';
 

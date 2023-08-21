@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/no-null */
 import { applyDecorators } from '@nestjs/common';
-import type { ApiPropertyOptions } from '@nestjs/swagger';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, type ApiPropertyOptions } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,

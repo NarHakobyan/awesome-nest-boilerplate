@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { type TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
@@ -45,7 +45,7 @@ export class ApiConfigService {
   private getString(key: string): string {
     const value = this.get(key);
 
-    return value.replace(/\\n/g, '\n');
+    return value.replaceAll('\\n', '\n');
   }
 
   get nodeEnv(): string {

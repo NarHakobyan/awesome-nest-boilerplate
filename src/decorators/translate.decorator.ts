@@ -1,4 +1,4 @@
-import type { ITranslationDecoratorInterface } from '../interfaces';
+import { type ITranslationDecoratorInterface } from '../interfaces';
 
 export const STATIC_TRANSLATION_DECORATOR_KEY = 'custom:static-translate';
 export const DYNAMIC_TRANSLATION_DECORATOR_KEY = 'custom:dynamic-translate';

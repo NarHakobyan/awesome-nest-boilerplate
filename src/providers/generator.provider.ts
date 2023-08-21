@@ -60,7 +60,7 @@ export class GeneratorProvider {
   static generateRandomString(length: number): string {
     return Math.random()
       .toString(36)
-      .replace(/[^\dA-Za-z]+/g, '')
+      .replaceAll(/[^\dA-Za-z]+/g, '')
       .slice(0, Math.max(0, length));
   }
 }

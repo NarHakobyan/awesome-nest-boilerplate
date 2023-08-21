@@ -1,12 +1,17 @@
 import { InjectDataSource } from '@nestjs/typeorm';
-import type {
-  ValidationArguments,
-  ValidationOptions,
-  ValidatorConstraintInterface,
+import {
+  registerDecorator,
+  type ValidationArguments,
+  type ValidationOptions,
+  ValidatorConstraint,
+  type ValidatorConstraintInterface,
 } from 'class-validator';
-import { registerDecorator, ValidatorConstraint } from 'class-validator';
-import type { EntitySchema, FindOptionsWhere, ObjectType } from 'typeorm';
-import { DataSource } from 'typeorm';
+import {
+  DataSource,
+  type EntitySchema,
+  type FindOptionsWhere,
+  type ObjectType,
+} from 'typeorm';
 
 /**
  * @deprecated Don't use this validator until it's fixed in NestJS

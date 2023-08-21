@@ -2,7 +2,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import mime from 'mime-types';
 
-import type { IFile } from '../../interfaces';
+import { type IFile } from '../../interfaces';
 import { ApiConfigService } from './api-config.service';
 import { GeneratorService } from './generator.service';
 
