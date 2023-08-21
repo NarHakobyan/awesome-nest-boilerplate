@@ -21,6 +21,8 @@ module.exports = {
     'plugin:unicorn/recommended',
     'plugin:import/recommended',
     'plugin:sonarjs/recommended',
+    'plugin:promise/recommended',
+    'plugin:n/recommended',
   ],
   plugins: [
     '@typescript-eslint',
@@ -29,26 +31,40 @@ module.exports = {
     'import',
     'unicorn',
     'sonarjs',
+    'promise',
+    'canonical',
+    'n',
   ],
   rules: {
-    "unicorn/filename-case": [
-      "error",
-      {
-        "cases": {
-          "kebabCase": true,
-          "pascalCase": true
-        }
-      }
-    ],
-    'unicorn/prefer-top-level-await': 'off',
+    'n/no-extraneous-import': 'off',
+    'n/no-missing-import': 'off',
+    'canonical/filename-match-exported': 'error',
+    'canonical/no-unused-exports': ['error', {tsConfigPath: './tsconfig.eslint.json'}],
+    // 'canonical/id-match': [
+    //   'error',
+    //   '(^[A-Za-z]+(?:[A-Z][a-z]*)*\\d*$)|(^[A-Z]+(_[A-Z]+)*(_\\d$)*$)|(^(_|\\$)$)',
+    //   {
+    //     'ignoreDestructuring': true,
+    //     'ignoreNamedImports': true,
+    //     'onlyDeclarations': true,
+    //     'properties': true,
+    //   },
+    // ],
+    'canonical/no-restricted-strings': 'error',
+    'canonical/no-use-extend-native': 'error',
+    'canonical/prefer-inline-type-import': 'error',
     'unicorn/prevent-abbreviations': 'off',
+    'unicorn/no-abusive-eslint-disable': 'off',
     'unicorn/no-null': 'off',
     'unicorn/no-static-only-class': 'off',
     'unicorn/prefer-module': 'off',
-    'unicorn/prefer-node-protocol': 'off',
+    'unicorn/expiring-todo-comments': 'off',
     'sonarjs/no-duplicate-string': 'off',
-    'import/no-unresolved': ['error', {ignore: ['^@hrdrone\/*']}],
+    'import/no-unresolved': ['error', {ignore: ['^@hr-drone\/*']}],
+    'import/no-duplicates': ['error', {'prefer-inline': true}],
+    'import/consistent-type-specifier-style': ['error', 'prefer-inline'],
     'prettier/prettier': ['error', {singleQuote: true, trailingComma: 'all', tabWidth: 2, bracketSpacing: true}],
+    'import/newline-after-import': 'error',
     /**
      * plugin:simple-import-sort
      */
@@ -60,9 +76,10 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
-      {argsIgnorePattern: '^_', 'vars': 'all', 'args': 'after-used'},
+      {argsIgnorePattern: '^_'},
     ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
+    'max-params': ['error', 7],
     '@typescript-eslint/array-type': ['error', {default: 'array-simple'}],
     '@typescript-eslint/ban-types': [
       'error',
@@ -140,13 +157,9 @@ module.exports = {
     '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
     '@typescript-eslint/consistent-type-imports': [
       'error',
-      {prefer: 'type-imports'},
+      {prefer: 'type-imports', fixStyle: 'inline-type-imports'},
     ],
     '@typescript-eslint/no-misused-new': 'error',
-    '@typescript-eslint/no-unsafe-assignment': 'off',
-    '@typescript-eslint/no-unsafe-call': 'off',
-    '@typescript-eslint/no-unsafe-member-access': 'off',
-    '@typescript-eslint/no-unsafe-return': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
     '@typescript-eslint/no-require-imports': 'error',
     'keyword-spacing': 'off',
@@ -154,7 +167,6 @@ module.exports = {
     '@typescript-eslint/no-namespace': 'error',
     '@typescript-eslint/no-this-alias': 'error',
     '@typescript-eslint/no-use-before-define': 'error',
-    '@typescript-eslint/no-use-before-declare': 'off',
     '@typescript-eslint/no-var-requires': 'error',
     '@typescript-eslint/prefer-for-of': 'error',
     '@typescript-eslint/prefer-function-type': 'error',
@@ -252,7 +264,7 @@ module.exports = {
     'eqeqeq': ['error', 'smart'],
     'guard-for-in': 'error',
     'id-match': 'error',
-    'max-classes-per-file': ['error', 2],
+    'max-classes-per-file': 'off',
     'max-len': [
       'error',
       {
@@ -297,7 +309,6 @@ module.exports = {
     ],
     'no-debugger': 'error',
     'no-duplicate-case': 'error',
-    'no-duplicate-imports': 'off',
     'no-empty': 'error',
     'no-eval': 'error',
     'no-extra-bind': 'error',
@@ -322,7 +333,6 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'no-undef-init': 'error',
     'no-unsafe-finally': 'error',
-    'no-unused-expressions': 'off',
     'no-unused-labels': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',
