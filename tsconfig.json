@@ -4,20 +4,24 @@
     "module": "commonjs",
     "declaration": false,
     "noImplicitAny": false,
-    "skipLibCheck": true,
     "removeComments": true,
     "noLib": false,
+    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "target": "ES2017",
+    "target": "ES2022",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src",
     "incremental": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "strict": true
   },
   "include": [
     "src/**/*"

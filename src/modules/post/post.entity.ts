@@ -10,18 +10,18 @@ import { PostTranslationEntity } from './post-translation.entity';
 @UseDto(PostDto)
 export class PostEntity extends AbstractEntity<PostDto> {
   @Column({ type: 'uuid' })
-  userId: Uuid;
+  userId!: Uuid;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.posts, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  user: UserEntity;
+  user!: UserEntity;
 
   @OneToMany(
     () => PostTranslationEntity,
     (postTranslationEntity) => postTranslationEntity.post,
   )
-  translations: PostTranslationEntity[];
+  declare translations?: PostTranslationEntity[];
 }

@@ -25,6 +25,7 @@ import {
 } from 'class-validator';
 
 import { supportedLanguageCount } from '../constants';
+import { type Constructor } from '../types';
 import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators';
 import {
   PhoneNumberSerializer,
@@ -35,6 +36,7 @@ import {
 } from './transform.decorators';
 import {
   IsNullable,
+  IsPassword,
   IsPhoneNumber,
   IsTmpKey as IsTemporaryKey,
   IsUndefinable,
@@ -167,9 +169,7 @@ export function PasswordField(
   options: Omit<ApiPropertyOptions, 'type' | 'minLength'> &
     IStringFieldOptions = {},
 ): PropertyDecorator {
-  const decorators = [
-    StringField({ ...options, minLength: 6 }) /*IsPassword()*/,
-  ];
+  const decorators = [StringField({ ...options, minLength: 6 }), IsPassword()];
 
   if (options.nullable) {
     decorators.push(IsNullable());
@@ -317,16 +317,12 @@ export function EnumField<TEnum extends object>(
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function ClassField<TClass extends object>(
+export function ClassField<TClass extends Constructor>(
   getClass: () => TClass,
   options: Omit<ApiPropertyOptions, 'type'> & IClassFieldOptions = {},
 ): PropertyDecorator {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const classValue = getClass() as any;
-
-  if (!classValue) {
-    throw new Error('ClassField: recursive class definition');
-  }
+  const classValue = getClass();
 
   const decorators = [
     Type(() => classValue),
