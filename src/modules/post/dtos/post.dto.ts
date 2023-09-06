@@ -18,7 +18,7 @@ export class PostDto extends AbstractDto {
   info: string;
 
   @ApiPropertyOptional({ type: PostTranslationDto, isArray: true })
-  translations?: PostTranslationDto[];
+  declare translations?: PostTranslationDto[];
 
   constructor(postEntity: PostEntity) {
     super(postEntity);

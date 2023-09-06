@@ -25,17 +25,17 @@ export abstract class AbstractEntity<
   O = never,
 > {
   @PrimaryGeneratedColumn('uuid')
-  id: Uuid;
+  id!: Uuid;
 
   @CreateDateColumn({
     type: 'timestamp',
   })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
   })
-  updatedAt: Date;
+  updatedAt!: Date;
 
   translations?: AbstractTranslationEntity[];
 
@@ -59,5 +59,5 @@ export class AbstractTranslationEntity<
   O = never,
 > extends AbstractEntity<DTO, O> {
   @Column({ type: 'enum', enum: LanguageCode })
-  languageCode: LanguageCode;
+  languageCode!: LanguageCode;
 }

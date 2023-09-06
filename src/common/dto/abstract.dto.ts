@@ -1,18 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger';
-
-import { DYNAMIC_TRANSLATION_DECORATOR_KEY } from '../../decorators';
+import {
+  DateField,
+  DYNAMIC_TRANSLATION_DECORATOR_KEY,
+  UUIDField,
+} from '../../decorators';
 import { ContextProvider } from '../../providers';
 import { type AbstractEntity } from '../abstract.entity';
 
 export class AbstractDto {
-  @ApiProperty()
-  id: Uuid;
+  @UUIDField()
+  id!: Uuid;
 
-  @ApiProperty()
-  createdAt: Date;
+  @DateField()
+  createdAt!: Date;
 
-  @ApiProperty()
-  updatedAt: Date;
+  @DateField()
+  updatedAt!: Date;
 
   translations?: AbstractTranslationDto[];
 
@@ -33,6 +35,7 @@ export class AbstractDto {
       const fields: Record<string, string> = {};
 
       for (const key of Object.keys(translationEntity)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const metadata = Reflect.getMetadata(
           DYNAMIC_TRANSLATION_DECORATOR_KEY,
           this,
@@ -40,6 +43,7 @@ export class AbstractDto {
         );
 
         if (metadata) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           fields[key] = translationEntity[key];
         }
       }

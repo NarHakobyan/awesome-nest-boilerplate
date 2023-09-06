@@ -1,13 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-
+import { ClassField } from '../../../decorators';
 import { UserDto } from '../../user/dtos/user.dto';
-import { TokenPayloadDto } from './TokenPayloadDto';
+import { TokenPayloadDto } from './token-payload.dto';
 
 export class LoginPayloadDto {
-  @ApiProperty({ type: UserDto })
+  @ClassField(() => UserDto)
   user: UserDto;
 
-  @ApiProperty({ type: TokenPayloadDto })
+  @ClassField(() => TokenPayloadDto)
   token: TokenPayloadDto;
 
   constructor(user: UserDto, token: TokenPayloadDto) {
