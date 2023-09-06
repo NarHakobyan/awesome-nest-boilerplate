@@ -8,7 +8,7 @@ import { PostService } from './post.service';
 import { PostTranslationEntity } from './post-translation.entity';
 import { GetPostHandler } from './queries/get-post.query';
 
-export const handlers = [CreatePostHandler, GetPostHandler];
+const handlers = [CreatePostHandler, GetPostHandler];
 
 @Module({
   imports: [TypeOrmModule.forFeature([PostEntity, PostTranslationEntity])],
