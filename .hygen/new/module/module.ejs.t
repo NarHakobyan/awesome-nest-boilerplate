@@ -29,7 +29,7 @@ import { <%= TranslationRepositoryName %> } from './<%= translationRepositoryFil
 import { <%= ServiceName %> } from './<%= serviceFileName %>';
 import { <%= GetHandlerName %> } from './queries/<%= getQueryFileName %>';
 
-export const handlers = [
+const handlers = [
 <%= CreateHandlerName %>,
 <%= GetHandlerName %>,
 ];
