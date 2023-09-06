@@ -7,7 +7,7 @@ import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { UserSettingsEntity } from './user-settings.entity';
 
-export const handlers = [CreateSettingsHandler];
+const handlers = [CreateSettingsHandler];
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, UserSettingsEntity])],

@@ -368,7 +368,7 @@ export function EnumFieldOptional<TEnum extends object>(
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function ClassFieldOptional<TClass extends object>(
+export function ClassFieldOptional<TClass extends Constructor>(
   getClass: () => TClass,
   options: Omit<ApiPropertyOptions, 'type' | 'required'> &
     IClassFieldOptions = {},
