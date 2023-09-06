@@ -17,7 +17,7 @@ export function generateHash(password: string): string {
  */
 export function validateHash(
   password: string | undefined,
-  hash: string | undefined,
+  hash: string | undefined | null,
 ): Promise<boolean> {
   if (!password || !hash) {
     return Promise.resolve(false);
@@ -26,7 +26,9 @@ export function validateHash(
   return bcrypt.compare(password, hash);
 }
 
-export function getVariableName<TResult>(getVar: () => TResult): string {
+export function getVariableName<TResult>(
+  getVar: () => TResult,
+): string | undefined {
   const m = /\(\)=>(.*)/.exec(
     getVar.toString().replaceAll(/(\r\n|\n|\r|\s)/gm, ''),
   );

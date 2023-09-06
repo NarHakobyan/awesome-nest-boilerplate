@@ -67,6 +67,7 @@
     "rxjs": "^7.8.1",
     "source-map-support": "^0.5.21",
     "swagger-ui-express": "^5.0.0",
+    "tslib": "^2.6.2",
     "typeorm": "^0.3.17",
     "typeorm-transactional": "~0.4.1",
     "uuid": "^9.0.0"

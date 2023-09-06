@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { NumberField, StringField } from '../../../decorators';
 
 export class TokenPayloadDto {
-  @ApiProperty()
+  @NumberField()
   expiresIn: number;
 
-  @ApiProperty()
+  @StringField()
   accessToken: string;
 
   constructor(data: { expiresIn: number; accessToken: string }) {
