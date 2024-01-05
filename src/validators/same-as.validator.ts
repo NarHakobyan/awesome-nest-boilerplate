@@ -4,11 +4,11 @@ export function SameAs(
   property: string,
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return function (object, propertyName: string) {
+  return function (object, propertyName: string | symbol) {
     registerDecorator({
       name: 'sameAs',
       target: object.constructor,
-      propertyName,
+      propertyName: propertyName as string,
       options: validationOptions,
       constraints: [property],
       validator: {

@@ -81,3 +81,7 @@ db-data
 .temp
 .cache
 .DS_Store
+
+
+# Local History
+.history
