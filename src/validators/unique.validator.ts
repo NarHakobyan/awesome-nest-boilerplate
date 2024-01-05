@@ -21,7 +21,7 @@ export class UniqueValidator implements ValidatorConstraintInterface {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   public async validate<E>(
-    value: string,
+    _value: string,
     args: IUniqueValidationArguments<E>,
   ): Promise<boolean> {
     const [entityClass, findCondition] = args.constraints;
@@ -53,10 +53,10 @@ export function Unique<E>(
   constraints: Partial<UniqueValidationConstraints<E>>,
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return function (object, propertyName: string) {
+  return function (object, propertyName: string | symbol) {
     registerDecorator({
       target: object.constructor,
-      propertyName,
+      propertyName: propertyName as string,
       options: validationOptions,
       constraints,
       validator: UniqueValidator,

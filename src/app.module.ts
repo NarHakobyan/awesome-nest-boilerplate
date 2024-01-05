@@ -4,7 +4,9 @@ import path from 'node:path';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClsModule } from 'nestjs-cls';
 import {
   AcceptLanguageResolver,
   HeaderResolver,
@@ -26,6 +28,19 @@ import { SharedModule } from './shared/shared.module';
     AuthModule,
     UserModule,
     PostModule,
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+      },
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [SharedModule],
+      useFactory: (configService: ApiConfigService) => ({
+        throttlers: [configService.throttlerConfigs],
+      }),
+      inject: [ApiConfigService],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
