@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { type ThrottlerOptions } from '@nestjs/throttler';
 import { type TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
+import { default as parse, type Units } from 'parse-duration';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
@@ -32,6 +34,17 @@ export class ApiConfigService {
     }
   }
 
+  private getDuration(key: string, format?: Units): number {
+    const value = this.getString(key);
+    const duration = parse(value, format);
+
+    if (duration === undefined) {
+      throw new Error(`${key} environment variable is not a valid duration`);
+    }
+
+    return duration;
+  }
+
   private getBoolean(key: string): boolean {
     const value = this.get(key);
 
@@ -56,38 +69,20 @@ export class ApiConfigService {
     return this.getString('FALLBACK_LANGUAGE');
   }
 
+  get throttlerConfigs(): ThrottlerOptions {
+    return {
+      ttl: this.getDuration('THROTTLER_TTL', 'second'),
+      limit: this.getNumber('THROTTLER_LIMIT'),
+      // storage: new ThrottlerStorageRedisService(new Redis(this.redis)),
+    };
+  }
+
   get postgresConfig(): TypeOrmModuleOptions {
-    let entities = [
+    const entities = [
       __dirname + '/../../modules/**/*.entity{.ts,.js}',
       __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
     ];
-    let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
-
-    if (module.hot) {
-      const entityContext = require.context(
-        './../../modules',
-        true,
-        /\.entity\.ts$/,
-      );
-      entities = entityContext.keys().map((id) => {
-        const entityModule = entityContext<Record<string, unknown>>(id);
-        const [entity] = Object.values(entityModule);
-
-        return entity as string;
-      });
-      const migrationContext = require.context(
-        './../../database/migrations',
-        false,
-        /\.ts$/,
-      );
-
-      migrations = migrationContext.keys().map((id) => {
-        const migrationModule = migrationContext<Record<string, unknown>>(id);
-        const [migration] = Object.values(migrationModule);
-
-        return migration as string;
-      });
-    }
+    const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 
     return {
       entities,
