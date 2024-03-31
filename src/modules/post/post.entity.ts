@@ -1,27 +1,27 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-
 import { AbstractEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
 import { UserEntity } from '../user/user.entity';
 import { PostDto } from './dtos/post.dto';
 import { PostTranslationEntity } from './post-translation.entity';
+import { Collection, Entity, ManyToOne, OneToMany, Property } from '@mikro-orm/core';
 
-@Entity({ name: 'posts' })
+@Entity({ tableName: 'posts' })
 @UseDto(PostDto)
 export class PostEntity extends AbstractEntity<PostDto> {
-  @Column({ type: 'uuid' })
+  @Property({ type: 'uuid', fieldName: 'user_id', persist: false })
   userId!: Uuid;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.posts, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+  @ManyToOne(() => UserEntity, {
+    referenceColumnName: 'id',
+    joinColumn: 'user_id',
+    deleteRule: 'cascade',
+    updateRule: 'cascade',
   })
-  @JoinColumn({ name: 'user_id' })
-  user!: UserEntity;
+  user?: UserEntity;
 
   @OneToMany(
     () => PostTranslationEntity,
     (postTranslationEntity) => postTranslationEntity.post,
   )
-  declare translations?: PostTranslationEntity[];
+  translations = new Collection<PostTranslationEntity>(this);
 }

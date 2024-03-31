@@ -1,10 +1,11 @@
 {
   "language": "ts",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
   "compilerOptions": {
+    "tsConfigPath": "./tsconfig.build.json",
+    "typeCheck": true,
     "plugins": [
-      "@nestjs/swagger/plugin"
+      "@nestjs/swagger"
     ],
     "assets": [
       {

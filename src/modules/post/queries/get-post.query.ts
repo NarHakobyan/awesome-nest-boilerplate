@@ -1,6 +1,6 @@
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
 import { type ICommand, type IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { PostEntity } from '../post.entity';
 
@@ -12,12 +12,12 @@ export class GetPostQuery implements ICommand {
 export class GetPostHandler implements IQueryHandler<GetPostQuery> {
   constructor(
     @InjectRepository(PostEntity)
-    private postRepository: Repository<PostEntity>,
+    private postRepository: EntityRepository<PostEntity>,
   ) {}
 
   async execute(query: GetPostQuery) {
-    return this.postRepository.findBy({
-      userId: query.userId as never,
+    return this.postRepository.findOne({
+      userId: query.userId,
     });
   }
 }

@@ -2,10 +2,10 @@ import './boilerplate.polyfill';
 
 import path from 'node:path';
 
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
 import {
   AcceptLanguageResolver,
@@ -13,10 +13,9 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { DataSource } from 'typeorm';
-import { addTransactionalDataSource } from 'typeorm-transactional';
 
 import { AuthModule } from './modules/auth/auth.module';
+import { ChatbotModule } from './modules/chatbot/chatbot.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 import { PostModule } from './modules/post/post.module';
 import { UserModule } from './modules/user/user.module';
@@ -27,6 +26,7 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     AuthModule,
     UserModule,
+    ChatbotModule,
     PostModule,
     ClsModule.forRoot({
       global: true,
@@ -45,20 +45,10 @@ import { SharedModule } from './shared/shared.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRootAsync({
+    MikroOrmModule.forRootAsync({
       imports: [SharedModule],
-      useFactory: (configService: ApiConfigService) =>
-        configService.postgresConfig,
+      useFactory: (configService: ApiConfigService) => configService.mikroOrm,
       inject: [ApiConfigService],
-      dataSourceFactory: (options) => {
-        if (!options) {
-          throw new Error('Invalid options passed');
-        }
-
-        return Promise.resolve(
-          addTransactionalDataSource(new DataSource(options)),
-        );
-      },
     }),
     I18nModule.forRootAsync({
       useFactory: (configService: ApiConfigService) => ({

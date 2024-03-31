@@ -1,10 +1,10 @@
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
 import {
   CommandHandler,
   type ICommand,
   type ICommandHandler,
 } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { type CreateSettingsDto } from '../dtos/create-settings.dto';
 import { UserSettingsEntity } from '../user-settings.entity';
@@ -22,16 +22,18 @@ export class CreateSettingsHandler
 {
   constructor(
     @InjectRepository(UserSettingsEntity)
-    private userSettingsRepository: Repository<UserSettingsEntity>,
+    private userSettingsRepository: EntityRepository<UserSettingsEntity>,
   ) {}
 
-  execute(command: CreateSettingsCommand) {
+  async execute(command: CreateSettingsCommand) {
     const { userId, createSettingsDto } = command;
     const userSettingsEntity =
       this.userSettingsRepository.create(createSettingsDto);
 
     userSettingsEntity.userId = userId;
 
-    return this.userSettingsRepository.save(userSettingsEntity);
+    await this.userSettingsRepository.insert(userSettingsEntity);
+
+    return userSettingsEntity;
   }
 }

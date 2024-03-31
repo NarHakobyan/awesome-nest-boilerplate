@@ -1,19 +1,11 @@
-import { DefaultNamingStrategy, type NamingStrategyInterface } from 'typeorm';
-import { snakeCase } from 'typeorm/util/StringUtils';
+import { type NamingStrategy } from '@mikro-orm/core';
 
-export class SnakeNamingStrategy
-  extends DefaultNamingStrategy
-  implements NamingStrategyInterface
-{
+export class SnakeNamingStrategy implements NamingStrategy {
   tableName(className: string, customName: string | undefined): string {
     return customName ?? snakeCase(className);
   }
 
-  columnName(
-    propertyName: string,
-    customName: string | undefined,
-    embeddedPrefixes: string[],
-  ): string {
+  propertyToColumnName(propertyName: string, object?: boolean): string {
     return (
       snakeCase(embeddedPrefixes.join('_')) +
       (customName ?? snakeCase(propertyName))

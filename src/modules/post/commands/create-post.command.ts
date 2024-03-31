@@ -1,13 +1,11 @@
-import {
-  CommandHandler,
-  type ICommand,
-  type ICommandHandler,
-} from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Collection } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
+import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler } from '@nestjs/cqrs';
 import { find } from 'lodash';
-import { Repository } from 'typeorm';
 
-import { type CreatePostDto } from '../dtos/create-post.dto';
+import type { CreatePostDto } from '../dtos/create-post.dto';
 import { PostEntity } from '../post.entity';
 import { PostTranslationEntity } from '../post-translation.entity';
 
@@ -24,9 +22,9 @@ export class CreatePostHandler
 {
   constructor(
     @InjectRepository(PostEntity)
-    private postRepository: Repository<PostEntity>,
+    private postRepository: EntityRepository<PostEntity>,
     @InjectRepository(PostTranslationEntity)
-    private postTranslationRepository: Repository<PostTranslationEntity>,
+    private postTranslationRepository: EntityRepository<PostTranslationEntity>,
   ) {}
 
   async execute(command: CreatePostCommand) {
@@ -34,7 +32,7 @@ export class CreatePostHandler
     const postEntity = this.postRepository.create({ userId });
     const translations: PostTranslationEntity[] = [];
 
-    await this.postRepository.save(postEntity);
+    await this.postRepository.insert(postEntity);
 
     // FIXME: Create generic function for translation creation
     for (const createTranslationDto of createPostDto.title) {
@@ -51,9 +49,9 @@ export class CreatePostHandler
       translations.push(translationEntity);
     }
 
-    await this.postTranslationRepository.save(translations);
+    await this.postTranslationRepository.insertMany(translations);
 
-    postEntity.translations = translations;
+    postEntity.translations = new Collection(postEntity, translations);
 
     return postEntity;
   }

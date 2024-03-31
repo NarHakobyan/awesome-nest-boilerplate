@@ -4,7 +4,7 @@ import {
   UUIDField,
 } from '../../decorators';
 import { ContextProvider } from '../../providers';
-import { type AbstractEntity } from '../abstract.entity';
+import type { AbstractEntity } from '../abstract.entity';
 
 export class AbstractDto {
   @UUIDField()
@@ -21,8 +21,8 @@ export class AbstractDto {
   constructor(entity: AbstractEntity, options?: { excludeFields?: boolean }) {
     if (!options?.excludeFields) {
       this.id = entity.id;
-      this.createdAt = entity.createdAt;
-      this.updatedAt = entity.updatedAt;
+      this.createdAt = entity.createdAt!;
+      this.updatedAt = entity.updatedAt!;
     }
 
     const languageCode = ContextProvider.getLanguage();
@@ -50,7 +50,7 @@ export class AbstractDto {
 
       Object.assign(this, fields);
     } else {
-      this.translations = entity.translations?.toDtos();
+      this.translations = entity.translations?.toArray().toDtos();
     }
   }
 }

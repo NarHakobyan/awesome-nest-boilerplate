@@ -1,16 +1,9 @@
-import {
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import type { Collection } from '@mikro-orm/core';
+import { Enum, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 
 import { LanguageCode } from '../constants';
-import { type Constructor } from '../types';
-import {
-  type AbstractDto,
-  type AbstractTranslationDto,
-} from './dto/abstract.dto';
+import type { Constructor } from '../types';
+import type { AbstractDto, AbstractTranslationDto } from './dto/abstract.dto';
 
 /**
  * Abstract Entity
@@ -22,24 +15,25 @@ import {
  */
 export abstract class AbstractEntity<
   DTO extends AbstractDto = AbstractDto,
-  O = never,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  O = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Optional = any,
 > {
-  @PrimaryGeneratedColumn('uuid')
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | Optional;
+
+  @PrimaryKey({ type: 'uuid' })
   id!: Uuid;
 
-  @CreateDateColumn({
-    type: 'timestamp',
-  })
-  createdAt!: Date;
+  @Property()
+  createdAt = new Date();
 
-  @UpdateDateColumn({
-    type: 'timestamp',
-  })
-  updatedAt!: Date;
+  @Property({ onUpdate: () => new Date() })
+  updatedAt = new Date();
 
-  translations?: AbstractTranslationEntity[];
+  translations?: Collection<AbstractTranslationEntity>;
 
-  private dtoClass?: Constructor<DTO, [AbstractEntity, O?]>;
+  private dtoClass?: Constructor<DTO, [AbstractEntity, O?, Optional?]>;
 
   toDto(options?: O): DTO {
     const dtoClass = this.dtoClass;
@@ -58,6 +52,6 @@ export class AbstractTranslationEntity<
   DTO extends AbstractTranslationDto = AbstractTranslationDto,
   O = never,
 > extends AbstractEntity<DTO, O> {
-  @Column({ type: 'enum', enum: LanguageCode })
+  @Enum(() => LanguageCode)
   languageCode!: LanguageCode;
 }

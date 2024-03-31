@@ -14,6 +14,10 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "sourceMap": true,
+    "isolatedModules": true,
+    "noEmitHelpers": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
     "outDir": "./dist",
     "baseUrl": "./src",
     "incremental": true,
@@ -21,7 +25,10 @@
     "skipLibCheck": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "strict": true
+    "strict": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
     "src/**/*"
