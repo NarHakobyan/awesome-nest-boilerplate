@@ -9,15 +9,15 @@ import {
 
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constants';
-import { UseDto } from '../../decorators/use-dto.decorator.ts';
 import { PostEntity } from '../post/post.entity';
 import type { UserDtoOptions } from './dtos/user.dto';
 import { UserDto } from './dtos/user.dto';
 import { UserSettingsEntity } from './user-settings.entity';
 
 @Entity({ tableName: 'users' })
-@UseDto(UserDto)
 export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
+  dtoClass = () => UserDto as any;
+
   @Property({ nullable: true, type: 'varchar' })
   firstName!: string | null;
 

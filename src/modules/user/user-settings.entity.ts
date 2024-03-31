@@ -1,17 +1,17 @@
 import { Entity, OneToOne, Property } from '@mikro-orm/core';
 
 import { AbstractEntity } from '../../common/abstract.entity';
-import { UseDto } from '../../decorators/use-dto.decorator.ts';
 import type { UserDtoOptions } from './dtos/user.dto';
 import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './user.entity';
 
 @Entity({ tableName: 'user_settings' })
-@UseDto(UserDto)
 export class UserSettingsEntity extends AbstractEntity<
   UserDto,
   UserDtoOptions
 > {
+  dtoClass = () => UserDto as any;
+
   @Property({ default: false })
   isEmailVerified = false;
 

@@ -1,6 +1,5 @@
 import { Collection } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
 import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 import { find } from 'lodash';
@@ -8,6 +7,7 @@ import { find } from 'lodash';
 import type { CreatePostDto } from '../dtos/create-post.dto';
 import { PostEntity } from '../post.entity';
 import { PostTranslationEntity } from '../post-translation.entity';
+import { ExtendedEntityRepository } from '../../../common/extended-entity-repository.ts';
 
 export class CreatePostCommand implements ICommand {
   constructor(
@@ -22,9 +22,9 @@ export class CreatePostHandler
 {
   constructor(
     @InjectRepository(PostEntity)
-    private postRepository: EntityRepository<PostEntity>,
+    private postRepository: ExtendedEntityRepository<PostEntity>,
     @InjectRepository(PostTranslationEntity)
-    private postTranslationRepository: EntityRepository<PostTranslationEntity>,
+    private postTranslationRepository: ExtendedEntityRepository<PostTranslationEntity>,
   ) {}
 
   async execute(command: CreatePostCommand) {

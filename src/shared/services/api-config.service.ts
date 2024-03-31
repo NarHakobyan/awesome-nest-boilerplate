@@ -10,6 +10,7 @@ import type { ThrottlerOptions } from '@nestjs/throttler';
 import { isNil } from 'lodash';
 import type { Units } from 'parse-duration';
 import { default as parse } from 'parse-duration';
+import { ExtendedEntityRepository } from '../../common/extended-entity-repository.ts';
 
 @Injectable()
 export class ApiConfigService {
@@ -84,6 +85,8 @@ export class ApiConfigService {
     return {
       entities: ['./dist/modules/**/*.entity.js'],
       entitiesTs: ['./src/modules/**/*.entity.ts'],
+      entityRepository: ExtendedEntityRepository,
+      // subscribers: [UserSubscriber],
       migrations: {
         transactional: true,
         path: './dist/database/migrations',

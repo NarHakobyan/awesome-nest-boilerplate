@@ -1,4 +1,3 @@
-import { MikroORM } from '@mikro-orm/core';
 import {
   ClassSerializerInterceptor,
   HttpStatus,
@@ -60,12 +59,6 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   );
 
   const configService = app.select(SharedModule).get(ApiConfigService);
-
-  const orm = app.get(MikroORM);
-  const migrator = orm.getMigrator();
-
-  // Run migrations automatically
-  await migrator.up(); // This will apply all pending migrations
 
   // only start nats if it is enabled
   if (configService.natsEnabled) {

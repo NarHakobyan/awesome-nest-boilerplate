@@ -38,10 +38,10 @@ export abstract class AbstractEntity<
 
   translations?: Collection<AbstractTranslationEntity>;
 
-  private dtoClass?: Constructor<DTO, [AbstractEntity, O?, Optional?]>;
+  abstract dtoClass?: () => Constructor<DTO, [AbstractEntity, O?, Optional?]>;
 
   toDto(options?: O): DTO {
-    const dtoClass = this.dtoClass;
+    const dtoClass = this.dtoClass?.();
 
     if (!dtoClass) {
       throw new Error(
@@ -53,10 +53,15 @@ export abstract class AbstractEntity<
   }
 }
 
-export class AbstractTranslationEntity<
+export abstract class AbstractTranslationEntity<
   DTO extends AbstractTranslationDto = AbstractTranslationDto,
-  O = never,
-> extends AbstractEntity<DTO, O> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  O = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Optional = any,
+> extends AbstractEntity<DTO, O, Optional> {
+  abstract dtoClass?: () => Constructor<DTO, [AbstractEntity, O?, Optional?]>;
+
   @Enum(() => LanguageCode)
   languageCode!: LanguageCode;
 }

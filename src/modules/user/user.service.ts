@@ -1,6 +1,5 @@
 import type { FilterQuery } from '@mikro-orm/core/typings';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { plainToClass } from 'class-transformer';
@@ -16,12 +15,13 @@ import { CreateSettingsDto } from './dtos/create-settings.dto';
 import type { UserDto } from './dtos/user.dto';
 import { UserEntity } from './user.entity';
 import type { UserSettingsEntity } from './user-settings.entity';
+import { ExtendedEntityRepository } from '../../common/extended-entity-repository.ts';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: EntityRepository<UserEntity>,
+    private userRepository: ExtendedEntityRepository<UserEntity>,
     private validatorService: ValidatorService,
     private awsS3Service: AwsS3Service,
     private commandBus: CommandBus,
@@ -74,7 +74,7 @@ export class UserService {
       user.avatar = await this.awsS3Service.uploadImage(file);
     }
 
-    await this.userRepository.insert(user);
+    await this.userRepository.persistAndFlush(user);
 
     user.settings = await this.createSettings(
       user.id,
