@@ -1,4 +1,4 @@
-import { ClassField, StringField } from '../../../decorators';
+import { ClassField, StringField } from '../../../decorators/field.decorators';
 
 export class MessageDto {
   @StringField()

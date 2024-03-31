@@ -9,9 +9,10 @@ import {
 
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constants';
-import { UseDto } from '../../decorators';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
 import { PostEntity } from '../post/post.entity';
-import { UserDto, type UserDtoOptions } from './dtos/user.dto';
+import type { UserDtoOptions } from './dtos/user.dto';
+import { UserDto } from './dtos/user.dto';
 import { UserSettingsEntity } from './user-settings.entity';
 
 @Entity({ tableName: 'users' })
@@ -23,7 +24,11 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
   @Property({ nullable: true, type: 'varchar' })
   lastName!: string | null;
 
-  @Enum({ type: 'enum', default: RoleType.USER })
+  @Enum({
+    items: () => RoleType,
+    default: RoleType.USER,
+    nativeEnumName: 'user_role_type',
+  })
   role: RoleType = RoleType.USER;
 
   @Property({ unique: true, nullable: true, type: 'varchar' })

@@ -2,12 +2,13 @@ import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
-import { Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { TranslationService } from '../../shared/services/translation.service';
 import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
+import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
 
 @Controller('users')
 @ApiTags('users')

@@ -1,4 +1,4 @@
-import { StringField } from '../../../decorators';
+import { StringField } from '../../../decorators/field.decorators.ts';
 
 export class MessageDto {
   @StringField()
@@ -11,5 +11,4 @@ export class MessageDto {
     this.text = message;
     this.sender = sender;
   }
-
 }

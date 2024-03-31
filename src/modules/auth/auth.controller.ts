@@ -11,7 +11,9 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
-import { ApiFile, Auth, AuthUser } from '../../decorators';
+import { AuthUser } from '../../decorators/auth-user.decorator';
+import { Auth } from '../../decorators/http.decorators.ts';
+import { ApiFile } from '../../decorators/swagger.schema.ts';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { IFile } from '../../interfaces/IFile';
 import { UserDto } from '../user/dtos/user.dto';

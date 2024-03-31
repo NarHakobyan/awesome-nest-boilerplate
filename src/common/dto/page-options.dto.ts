@@ -3,7 +3,7 @@ import {
   EnumFieldOptional,
   NumberFieldOptional,
   StringFieldOptional,
-} from '../../decorators';
+} from '../../decorators/field.decorators';
 
 export class PageOptionsDto {
   @EnumFieldOptional(() => Order, {

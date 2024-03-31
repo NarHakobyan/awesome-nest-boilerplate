@@ -22,13 +22,13 @@ export abstract class AbstractEntity<
 > {
   [OptionalProps]?: 'createdAt' | 'updatedAt' | Optional;
 
-  @PrimaryKey({ type: 'uuid' })
+  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id!: Uuid;
 
-  @Property()
+  @Property({ type: 'timestamp', defaultRaw: 'now()' })
   createdAt = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ type: 'timestamp', defaultRaw: 'now()', onUpdate: () => new Date() })
   updatedAt = new Date();
 
   translations?: Collection<AbstractTranslationEntity>;

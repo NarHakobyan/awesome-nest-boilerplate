@@ -1,3 +1,4 @@
+import { MikroORM } from '@mikro-orm/core';
 import {
   ClassSerializerInterceptor,
   HttpStatus,
@@ -6,10 +7,8 @@ import {
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
-import {
-  ExpressAdapter,
-  type NestExpressApplication,
-} from '@nestjs/platform-express';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import compression from 'compression';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -29,7 +28,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     new ExpressAdapter(),
     { cors: true },
   );
-  app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+  app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc..)
   app.use(helmet());
   // app.setGlobalPrefix('/api'); use api as global prefix if you don't have subdomain
   app.use(compression());
@@ -62,6 +61,12 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   const configService = app.select(SharedModule).get(ApiConfigService);
 
+  const orm = app.get(MikroORM);
+  const migrator = orm.getMigrator();
+
+  // Run migrations automatically
+  await migrator.up(); // This will apply all pending migrations
+
   // only start nats if it is enabled
   if (configService.natsEnabled) {
     const natsConfig = configService.natsConfig;
@@ -93,4 +98,5 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   return app;
 }
 
+// eslint-disable-next-line unicorn/prefer-top-level-await
 void bootstrap();

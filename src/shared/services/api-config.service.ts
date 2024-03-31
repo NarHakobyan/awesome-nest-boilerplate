@@ -1,5 +1,5 @@
 import { EntityGenerator } from '@mikro-orm/entity-generator';
-import { Migrator } from '@mikro-orm/migrations';
+import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
 import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { PopulateHint, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
@@ -86,9 +86,11 @@ export class ApiConfigService {
       entitiesTs: ['./src/modules/**/*.entity.ts'],
       migrations: {
         transactional: true,
-        path: './dist/database/migrations/*.js',
-        pathTs: './src/database/migrations/*.ts',
+        path: './dist/database/migrations',
+        pathTs: './src/database/migrations',
+        glob: '!(*.d).{js,ts}',
         dropTables: this.isTest,
+        generator: TSMigrationGenerator,
       },
       driver: PostgreSqlDriver,
       name: 'default',

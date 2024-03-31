@@ -1,4 +1,4 @@
-import { EmailField, StringField } from '../../../decorators';
+import { EmailField, StringField } from '../../../decorators/field.decorators.ts';
 
 export class UserLoginDto {
   @EmailField()

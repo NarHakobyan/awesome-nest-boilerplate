@@ -1,9 +1,9 @@
 import { AbstractEntity } from '../../common/abstract.entity';
-import { UseDto } from '../../decorators';
 import { UserEntity } from '../user/user.entity';
 import { PostDto } from './dtos/post.dto';
 import { PostTranslationEntity } from './post-translation.entity';
 import { Collection, Entity, ManyToOne, OneToMany, Property } from '@mikro-orm/core';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
 
 @Entity({ tableName: 'posts' })
 @UseDto(PostDto)

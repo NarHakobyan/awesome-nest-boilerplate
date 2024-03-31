@@ -1,8 +1,5 @@
-import {
-  DateField,
-  DYNAMIC_TRANSLATION_DECORATOR_KEY,
-  UUIDField,
-} from '../../decorators';
+import { DateField, UUIDField } from '../../decorators/field.decorators';
+import { DYNAMIC_TRANSLATION_DECORATOR_KEY } from '../../decorators/translate.decorator';
 import { ContextProvider } from '../../providers';
 import type { AbstractEntity } from '../abstract.entity';
 

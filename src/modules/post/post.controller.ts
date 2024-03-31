@@ -16,12 +16,13 @@ import {
 } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
-import { Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UserEntity } from '../user/user.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PostDto } from './dtos/post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { PostService } from './post.service';
+import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
 
 @Controller('posts')
 @ApiTags('posts')

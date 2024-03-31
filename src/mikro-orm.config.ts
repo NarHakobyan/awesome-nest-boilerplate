@@ -1,10 +1,9 @@
-import dotenv from 'dotenv';
-
+import { EntityGenerator } from '@mikro-orm/entity-generator';
+import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
 import { Options, PopulateHint, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
-import { EntityGenerator } from '@mikro-orm/entity-generator';
-import { Migrator } from '@mikro-orm/migrations';
 import { SeedManager } from '@mikro-orm/seeder';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -16,6 +15,14 @@ const config: Options = {
   autoJoinOneToOneOwner: false,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
+  migrations: {
+    transactional: true,
+    path: './dist/database/migrations',
+    pathTs: './src/database/migrations',
+    glob: '!(*.d).{js,ts}',
+    dropTables: this.isTest,
+    generator: TSMigrationGenerator,
+  },
   dbName: process.env.DB_DATABASE,
   // folder-based discovery setup, using common filename suffix
   entities: ['./dist/modules/**/*.entity.js'],

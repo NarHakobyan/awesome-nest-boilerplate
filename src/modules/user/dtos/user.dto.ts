@@ -6,7 +6,7 @@ import {
   EnumFieldOptional,
   PhoneFieldOptional,
   StringFieldOptional,
-} from '../../../decorators';
+} from '../../../decorators/field.decorators';
 import { type UserEntity } from '../user.entity';
 
 // TODO, remove this class and use constructor's second argument's type
