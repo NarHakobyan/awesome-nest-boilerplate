@@ -17,6 +17,7 @@ const config: Options = {
   password: process.env.DB_PASSWORD,
   migrations: {
     transactional: true,
+    snapshot: false,
     path: './dist/database/migrations',
     pathTs: './src/database/migrations',
     glob: '!(*.d).{js,ts}',

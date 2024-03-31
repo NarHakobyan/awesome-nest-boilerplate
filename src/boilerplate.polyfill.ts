@@ -7,7 +7,7 @@ import type { AbstractDto } from './common/dto/abstract.dto';
 import type { CreateTranslationDto } from './common/dto/create-translation.dto';
 import { PageDto } from './common/dto/page.dto';
 import type { PageMetaDto } from './common/dto/page-meta.dto';
-import type { LanguageCode } from './constants/language-code';
+import type { LanguageCode } from './constants';
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };

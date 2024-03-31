@@ -1,7 +1,7 @@
 import type { Collection } from '@mikro-orm/core';
 import { Enum, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 
-import { LanguageCode } from '../constants';
+import { LanguageCode } from '../constants/language-code.ts';
 import type { Constructor } from '../types';
 import type { AbstractDto, AbstractTranslationDto } from './dto/abstract.dto';
 
@@ -25,10 +25,15 @@ export abstract class AbstractEntity<
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id!: Uuid;
 
-  @Property({ type: 'timestamp', defaultRaw: 'now()' })
+  @Property({ type: 'timestamp', columnType: 'timestamp', defaultRaw: 'now()' })
   createdAt = new Date();
 
-  @Property({ type: 'timestamp', defaultRaw: 'now()', onUpdate: () => new Date() })
+  @Property({
+    type: 'timestamp',
+    columnType: 'timestamp',
+    defaultRaw: 'now()',
+    onUpdate: () => new Date(),
+  })
   updatedAt = new Date();
 
   translations?: Collection<AbstractTranslationEntity>;
