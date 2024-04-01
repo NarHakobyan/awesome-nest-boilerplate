@@ -4,6 +4,8 @@ import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { plainToClass } from 'class-transformer';
 
+import { PageDto } from '../../common/dto/page.dto.ts';
+import { ExtendedEntityRepository } from '../../common/extended-entity-repository.ts';
 import { RoleType } from '../../constants';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
 import type { IFile } from '../../interfaces/IFile';
@@ -13,9 +15,9 @@ import type { UserRegisterDto } from '../auth/dto/user-register.dto';
 import { CreateSettingsCommand } from './commands/create-settings.command';
 import { CreateSettingsDto } from './dtos/create-settings.dto';
 import type { UserDto } from './dtos/user.dto';
+import { UsersPageOptionsDto } from './dtos/users-page-options.dto.ts';
 import { UserEntity } from './user.entity';
 import type { UserSettingsEntity } from './user-settings.entity';
-import { ExtendedEntityRepository } from '../../common/extended-entity-repository.ts';
 
 @Injectable()
 export class UserService {
@@ -38,15 +40,15 @@ export class UserService {
     options: Partial<{ username: string; email: string }>,
   ): Promise<UserEntity | null> {
     const queryBuilder = this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.settings', 'settings');
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.settings', 'settings');
 
     if (options.email) {
-      queryBuilder.orWhere('user.email = ?', [options.email]);
+      queryBuilder.orWhere('u.email = ?', [options.email]);
     }
 
     if (options.username) {
-      queryBuilder.orWhere('user.username = ?', [options.username]);
+      queryBuilder.orWhere('u.username = ?', [options.username]);
     }
 
     return queryBuilder.getSingleResult();
@@ -87,19 +89,19 @@ export class UserService {
     return user;
   }
 
-  // async getUsers(
-  //   pageOptionsDto: UsersPageOptionsDto,
-  // ): Promise<PageDto<UserDto>> {
-  //   const queryBuilder = this.userRepository.createQueryBuilder('user');
-  //   const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
-  //
-  //   return items.toPageDto(pageMetaDto);
-  // }
+  async getUsers(
+    pageOptionsDto: UsersPageOptionsDto,
+  ): Promise<PageDto<UserDto>> {
+    const queryBuilder = this.userRepository.createQueryBuilder('u');
+    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
+
+    return items.toPageDto(pageMetaDto);
+  }
 
   async getUser(userId: Uuid): Promise<UserDto> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
+    const queryBuilder = this.userRepository.createQueryBuilder('u');
 
-    queryBuilder.where('user.id = ?', [userId]);
+    queryBuilder.where('u.id = ?', [userId]);
 
     const userEntity = await queryBuilder.getSingleResult();
 

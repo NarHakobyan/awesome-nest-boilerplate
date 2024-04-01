@@ -15,7 +15,7 @@ import { PostTranslationEntity } from './post-translation.entity';
 @Entity({ tableName: 'posts' })
 @UseDto(() => PostDto)
 export class PostEntity extends AbstractEntity<PostDto> {
-  @Property({ type: 'uuid', fieldName: 'user_id', persist: false })
+  @Property({ type: 'uuid', persist: false })
   userId!: Uuid;
 
   @ManyToOne(() => UserEntity, {

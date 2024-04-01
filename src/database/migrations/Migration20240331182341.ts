@@ -2,7 +2,7 @@ import { Migration } from '@mikro-orm/migrations';
 
 export class Migration20240331182341 extends Migration {
 
-  async up(): Promise<void> {
+  up(): void {
     this.addSql(`
       create table "posts"
       (
@@ -35,7 +35,7 @@ export class Migration20240331182341 extends Migration {
         add constraint "post_translations_post_id_foreign" foreign key ("post_id") references "posts" ("id") on update cascade on delete cascade;`);
   }
 
-  async down(): Promise<void> {
+  down(): void {
     this.addSql(
       'alter table "post_translations" drop constraint "post_translations_post_id_foreign";',
     );

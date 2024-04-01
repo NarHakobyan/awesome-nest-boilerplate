@@ -1,12 +1,15 @@
+/* eslint-disable canonical/no-use-extend-native */
 import 'source-map-support/register';
 
+import { QueryBuilder } from '@mikro-orm/postgresql';
 import { compact, map } from 'lodash';
 
 import type { AbstractEntity } from './common/abstract.entity';
 import type { AbstractDto } from './common/dto/abstract.dto';
 import type { CreateTranslationDto } from './common/dto/create-translation.dto';
 import { PageDto } from './common/dto/page.dto';
-import type { PageMetaDto } from './common/dto/page-meta.dto';
+import { PageMetaDto } from './common/dto/page-meta.dto';
+import type { PageOptionsDto } from './common/dto/page-options.dto.ts';
 import type { LanguageCode } from './constants';
 
 declare global {
@@ -32,68 +35,68 @@ declare global {
   }
 }
 
-// declare module 'typeorm' {
-//   // eslint-disable-next-line @typescript-eslint/naming-convention
-//   interface SelectQueryBuilder<Entity> {
-//     searchByString(
-//       q: string,
-//       columnNames: string[],
-//       options?: {
-//         formStart: boolean;
-//       },
-//     ): this;
-//
-//     paginate(
-//       this: SelectQueryBuilder<Entity>,
-//       pageOptionsDto: PageOptionsDto,
-//       options?: Partial<{ takeAll: boolean; skipCount: boolean }>,
-//     ): Promise<[Entity[], PageMetaDto]>;
-//
-//     leftJoinAndSelect<AliasEntity extends AbstractEntity, A extends string>(
-//       this: SelectQueryBuilder<Entity>,
-//       property: `${A}.${Exclude<
-//         KeyOfType<AliasEntity, AbstractEntity>,
-//         symbol
-//       >}`,
-//       alias: string,
-//       condition?: string,
-//       parameters?: ObjectLiteral,
-//     ): this;
-//
-//     leftJoin<AliasEntity extends AbstractEntity, A extends string>(
-//       this: SelectQueryBuilder<Entity>,
-//       property: `${A}.${Exclude<
-//         KeyOfType<AliasEntity, AbstractEntity>,
-//         symbol
-//       >}`,
-//       alias: string,
-//       condition?: string,
-//       parameters?: ObjectLiteral,
-//     ): this;
-//
-//     innerJoinAndSelect<AliasEntity extends AbstractEntity, A extends string>(
-//       this: SelectQueryBuilder<Entity>,
-//       property: `${A}.${Exclude<
-//         KeyOfType<AliasEntity, AbstractEntity>,
-//         symbol
-//       >}`,
-//       alias: string,
-//       condition?: string,
-//       parameters?: ObjectLiteral,
-//     ): this;
-//
-//     innerJoin<AliasEntity extends AbstractEntity, A extends string>(
-//       this: SelectQueryBuilder<Entity>,
-//       property: `${A}.${Exclude<
-//         KeyOfType<AliasEntity, AbstractEntity>,
-//         symbol
-//       >}`,
-//       alias: string,
-//       condition?: string,
-//       parameters?: ObjectLiteral,
-//     ): this;
-//   }
-// }
+declare module '@mikro-orm/postgresql' {
+  // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/ban-types
+  interface QueryBuilder<T extends object> {
+    searchByString(
+      q: string,
+      columnNames: string[],
+      options?: {
+        formStart: boolean;
+      },
+    ): this;
+
+    paginate(
+      this: QueryBuilder<T>,
+      pageOptionsDto: PageOptionsDto,
+      options?: Partial<{ takeAll: boolean; skipCount: boolean }>,
+    ): Promise<[T[], PageMetaDto]>;
+
+    // leftJoinAndSelect<AliasEntity extends AbstractEntity, A extends string>(
+    //   this: QueryBuilder<T>,
+    //   property: `${A}.${Exclude<
+    //     KeyOfType<AliasEntity, AbstractEntity>,
+    //     symbol
+    //   >}`,
+    //   alias: string,
+    //   condition?: string,
+    //   parameters?: ObjectLiteral,
+    // ): this;
+    //
+    // leftJoin<AliasEntity extends AbstractEntity, A extends string>(
+    //   this: QueryBuilder<T>,
+    //   property: `${A}.${Exclude<
+    //     KeyOfType<AliasEntity, AbstractEntity>,
+    //     symbol
+    //   >}`,
+    //   alias: string,
+    //   condition?: string,
+    //   parameters?: ObjectLiteral,
+    // ): this;
+    //
+    // innerJoinAndSelect<AliasEntity extends AbstractEntity, A extends string>(
+    //   this: QueryBuilder<T>,
+    //   property: `${A}.${Exclude<
+    //     KeyOfType<AliasEntity, AbstractEntity>,
+    //     symbol
+    //   >}`,
+    //   alias: string,
+    //   condition?: string,
+    //   parameters?: ObjectLiteral,
+    // ): this;
+    //
+    // innerJoin<AliasEntity extends AbstractEntity, A extends string>(
+    //   this: QueryBuilder<T>,
+    //   property: `${A}.${Exclude<
+    //     KeyOfType<AliasEntity, AbstractEntity>,
+    //     symbol
+    //   >}`,
+    //   alias: string,
+    //   condition?: string,
+    //   parameters?: ObjectLiteral,
+    // ): this;
+  }
+}
 
 Array.prototype.toDtos = function <
   Entity extends AbstractEntity<Dto>,
@@ -117,7 +120,7 @@ Array.prototype.toPageDto = function (
   return new PageDto(this.toDtos(options), pageMetaDto);
 };
 
-// SelectQueryBuilder.prototype.searchByString = function (
+// (QueryBuilder as any).prototype.searchByString = function (
 //   q,
 //   columnNames,
 //   options,
@@ -142,30 +145,26 @@ Array.prototype.toPageDto = function (
 //
 //   return this;
 // };
-//
-// SelectQueryBuilder.prototype.paginate = async function (
-//   pageOptionsDto: PageOptionsDto,
-//   options?: Partial<{
-//     skipCount: boolean;
-//     takeAll: boolean;
-//   }>,
-// ) {
-//   if (!options?.takeAll) {
-//     this.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
-//   }
-//
-//   const entities = await this.getMany();
-//
-//   let itemCount = -1;
-//
-//   if (!options?.skipCount) {
-//     itemCount = await this.getCount();
-//   }
-//
-//   const pageMetaDto = new PageMetaDto({
-//     itemCount,
-//     pageOptionsDto,
-//   });
-//
-//   return [entities, pageMetaDto];
-// };
+
+QueryBuilder.prototype.paginate = async function (
+  pageOptionsDto: PageOptionsDto,
+  options?: Partial<{
+    skipCount: boolean;
+    takeAll: boolean;
+  }>,
+) {
+  const qb = this.clone();
+
+  if (!options?.takeAll) {
+    qb.limit(pageOptionsDto.take, pageOptionsDto.skip);
+  }
+
+  const [entities, itemCount] = await qb.getResultAndCount();
+
+  const pageMetaDto = new PageMetaDto({
+    itemCount,
+    pageOptionsDto,
+  });
+
+  return [entities, pageMetaDto];
+};

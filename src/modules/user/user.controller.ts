@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Query, ValidationPipe } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
@@ -9,6 +9,9 @@ import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
 import { AuthUser } from '../../decorators/auth-user.decorator.ts';
+import { ApiPageOkResponse } from '../../decorators/api-page-ok-response.decorator.ts';
+import { PageDto } from '../../common/dto/page.dto.ts';
+import { UsersPageOptionsDto } from './dtos/users-page-options.dto.ts';
 
 @Controller('users')
 @ApiTags('users')
@@ -32,19 +35,19 @@ export class UserController {
     };
   }
 
-  // @Get()
-  // @Auth([RoleType.USER])
-  // @HttpCode(HttpStatus.OK)
-  // @ApiPageOkResponse({
-  //   description: 'Get users list',
-  //   type: PageDto,
-  // })
-  // getUsers(
-  //   @Query(new ValidationPipe({ transform: true }))
-  //   pageOptionsDto: UsersPageOptionsDto,
-  // ): Promise<PageDto<UserDto>> {
-  //   return this.userService.getUsers(pageOptionsDto);
-  // }
+  @Get()
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.OK)
+  @ApiPageOkResponse({
+    description: 'Get users list',
+    type: PageDto,
+  })
+  getUsers(
+    @Query(new ValidationPipe({ transform: true }))
+    pageOptionsDto: UsersPageOptionsDto,
+  ): Promise<PageDto<UserDto>> {
+    return this.userService.getUsers(pageOptionsDto);
+  }
 
   @Get(':id')
   @Auth([RoleType.USER])

@@ -1,5 +1,12 @@
-import type { AnyEntity, EntityManager } from '@mikro-orm/postgresql';
+import type {
+  AnyEntity,
+  EntityManager,
+  QueryBuilder,
+} from '@mikro-orm/postgresql';
 import { EntityRepository } from '@mikro-orm/postgresql';
+
+import { PageMetaDto } from './dto/page-meta.dto.ts';
+import type { PageOptionsDto } from './dto/page-options.dto.ts';
 
 export class ExtendedEntityRepository<
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -23,5 +30,28 @@ export class ExtendedEntityRepository<
 
   async flush(): Promise<void> {
     return this.em.flush();
+  }
+
+  async paginate(
+    queryBuilder: QueryBuilder<T>,
+    pageOptionsDto: PageOptionsDto,
+    options?: Partial<{
+      takeAll: boolean;
+    }>,
+  ): Promise<[T[], PageMetaDto]> {
+    const qb = queryBuilder.clone();
+
+    if (!options?.takeAll) {
+      qb.limit(pageOptionsDto.take, pageOptionsDto.skip);
+    }
+
+    const [entities, itemCount] = await qb.getResultAndCount();
+
+    const pageMetaDto = new PageMetaDto({
+      itemCount,
+      pageOptionsDto,
+    });
+
+    return [entities, pageMetaDto];
   }
 }

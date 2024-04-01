@@ -27,8 +27,8 @@ export class TranslationService {
             Reflect.getMetadata(STATIC_TRANSLATION_DECORATOR_KEY, dto, key);
 
           if (translateDec) {
-            return this.translate(
-              `${translateDec.translationKey ?? key}.${value}`,
+            dto[key] = await this.translate(
+              `${translateDec.prefix ? translateDec.prefix + '.' : ''}${value}`,
             );
           }
 

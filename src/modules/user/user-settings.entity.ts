@@ -18,7 +18,7 @@ export class UserSettingsEntity extends AbstractEntity<
   @Property({ default: false })
   isPhoneVerified = false;
 
-  @Property({ type: 'uuid', fieldName: 'user_id', persist: false })
+  @Property({ type: 'uuid', persist: false })
   userId!: string;
 
   @OneToOne(() => UserEntity, {

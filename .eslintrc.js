@@ -64,7 +64,7 @@ module.exports = {
     'sonarjs/no-duplicate-string': 'off',
     'import/no-unresolved': ['error', {ignore: ['^@hr-drone\/*', '^firebase-admin/.+']}],
     'import/no-duplicates': ['error'],
-    'import/consistent-type-specifier-style': ["error", "prefer-top-level"],
+    'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     'prettier/prettier': ['error', {singleQuote: true, trailingComma: 'all', tabWidth: 2, bracketSpacing: true}],
     'import/newline-after-import': 'error',
     /**

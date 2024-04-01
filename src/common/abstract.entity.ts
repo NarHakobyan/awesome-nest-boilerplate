@@ -41,7 +41,7 @@ export abstract class AbstractEntity<
   dtoClass?: () => Constructor<DTO, [AbstractEntity, O?, Optional?]>;
 
   toDto(options?: O): DTO {
-    const dtoClass = this.dtoClass?.();
+    const dtoClass = Object.getPrototypeOf(this).dtoClass?.();
 
     if (!dtoClass) {
       throw new Error(

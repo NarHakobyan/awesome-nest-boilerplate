@@ -61,14 +61,14 @@ import { SharedModule } from './shared/shared.module';
         fallbackLanguage: configService.fallbackLanguage,
         loaderOptions: {
           path: path.join(__dirname, '/i18n/'),
-          watch: configService.isDevelopment,
         },
-        resolvers: [
-          { use: QueryResolver, options: ['lang'] },
-          AcceptLanguageResolver,
-          new HeaderResolver(['x-lang']),
-        ],
+        typesOutputPath: path.join(__dirname, './generated/i18n.generated.ts'),
       }),
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
       imports: [SharedModule],
       inject: [ApiConfigService],
     }),
