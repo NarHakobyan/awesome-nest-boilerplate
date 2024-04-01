@@ -20,7 +20,7 @@ import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { TranslationService } from './shared/services/translation.service';
 import { SharedModule } from './shared/shared.module';
-import { QueryFailedFilter } from './filters/query-failed.filter.ts';
+import { UniqueConstraintViolationFilter } from './filters/unique-constraint-violation.filter.ts';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -39,7 +39,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   app.useGlobalFilters(
     new HttpExceptionFilter(reflector),
-    new QueryFailedFilter(reflector),
+    new UniqueConstraintViolationFilter(reflector),
   );
 
   app.useGlobalInterceptors(

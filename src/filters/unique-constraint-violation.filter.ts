@@ -7,7 +7,7 @@ import { Reflector } from '@nestjs/core';
 import type { Response } from 'express';
 
 @Catch(UniqueConstraintViolationException)
-export class QueryFailedFilter
+export class UniqueConstraintViolationFilter
   implements ExceptionFilter<UniqueConstraintViolationException>
 {
   constructor(public reflector: Reflector) {}
