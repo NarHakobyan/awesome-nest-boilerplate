@@ -23,6 +23,7 @@ export class PostEntity extends AbstractEntity<PostDto> {
     joinColumn: 'user_id',
     deleteRule: 'cascade',
     updateRule: 'cascade',
+    nullable: false,
   })
   user?: UserEntity;
 

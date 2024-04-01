@@ -9,7 +9,7 @@ export class Migration20240331182341 extends Migration {
         "id"         uuid      not null default uuid_generate_v4(),
         "created_at" timestamp not null default now(),
         "updated_at" timestamp not null default now(),
-        "user_id"    uuid      null,
+        "user_id"    uuid      not null,
         constraint "posts_pkey" primary key ("id")
       );`);
 
@@ -22,7 +22,7 @@ export class Migration20240331182341 extends Migration {
         "language_code" text check ("language_code" in ('en_US', 'ru_RU')) not null,
         "title"         varchar(255)                                       not null,
         "description"   varchar(255)                                       not null,
-        "post_id"       uuid                                               null,
+        "post_id"       uuid                                               not null,
         constraint "post_translations_pkey" primary key ("id")
       );`);
 

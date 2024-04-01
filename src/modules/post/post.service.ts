@@ -3,9 +3,12 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
+import { PageDto } from '../../common/dto/page.dto.ts';
 import { CreatePostCommand } from './commands/create-post.command';
-import { type CreatePostDto } from './dtos/create-post.dto';
-import { type UpdatePostDto } from './dtos/update-post.dto';
+import type { CreatePostDto } from './dtos/create-post.dto';
+import { PostDto } from './dtos/post.dto.ts';
+import { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
+import type { UpdatePostDto } from './dtos/update-post.dto';
 import { PostNotFoundException } from './exceptions/post-not-found.exception';
 import { PostEntity } from './post.entity';
 
@@ -24,17 +27,17 @@ export class PostService {
     );
   }
 
-  // async getAllPost(
-  //   postPageOptionsDto: PostPageOptionsDto,
-  // ): Promise<PageDto<PostDto>> {
-  //   const queryBuilder = this.postRepository
-  //     .createQueryBuilder('post')
-  //     .leftJoinAndSelect('post.translations', 'postTranslation');
-  //   const [items, pageMetaDto] =
-  //     await queryBuilder.paginate(postPageOptionsDto);
-  //
-  //   return items.toPageDto(pageMetaDto);
-  // }
+  async getAllPost(
+    postPageOptionsDto: PostPageOptionsDto,
+  ): Promise<PageDto<PostDto>> {
+    const queryBuilder = this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.translations', 'postTranslation');
+    const [items, pageMetaDto] =
+      await queryBuilder.paginate(postPageOptionsDto);
+
+    return items.toPageDto(pageMetaDto);
+  }
 
   async getSinglePost(id: Uuid): Promise<PostEntity> {
     const queryBuilder = this.postRepository

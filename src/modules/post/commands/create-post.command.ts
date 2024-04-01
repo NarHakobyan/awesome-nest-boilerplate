@@ -29,16 +29,16 @@ export class CreatePostHandler
 
   async execute(command: CreatePostCommand) {
     const { userId, createPostDto } = command;
-    const postEntity = this.postRepository.create({ userId });
+    const postEntity = this.postRepository.create({ user: userId });
     const translations: PostTranslationEntity[] = [];
 
-    await this.postRepository.insert(postEntity);
+    await this.postRepository.persistAndFlush(postEntity);
 
     // FIXME: Create generic function for translation creation
     for (const createTranslationDto of createPostDto.title) {
       const languageCode = createTranslationDto.languageCode;
       const translationEntity = this.postTranslationRepository.create({
-        postId: postEntity.id,
+        post: postEntity.id,
         languageCode,
         title: createTranslationDto.text,
         description: find(createPostDto.description, {

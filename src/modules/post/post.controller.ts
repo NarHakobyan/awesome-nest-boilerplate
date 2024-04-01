@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
@@ -15,14 +16,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { PageDto } from '../../common/dto/page.dto.ts';
 import { RoleType } from '../../constants';
+import { ApiPageOkResponse } from '../../decorators/api-page-ok-response.decorator.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
+import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service.ts';
 import { UserEntity } from '../user/user.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PostDto } from './dtos/post.dto';
+import { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { PostService } from './post.service';
-import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
-import { AuthUser } from '../../decorators/auth-user.decorator.ts';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -45,15 +50,15 @@ export class PostController {
     return postEntity.toDto();
   }
 
-  // @Get()
-  // @Auth([RoleType.USER])
-  // @UseLanguageInterceptor()
-  // @ApiPageOkResponse({ type: PostDto })
-  // async getPosts(
-  //   @Query() postsPageOptionsDto: PostPageOptionsDto,
-  // ): Promise<PageDto<PostDto>> {
-  //   return this.postService.getAllPost(postsPageOptionsDto);
-  // }
+  @Get()
+  @Auth([RoleType.USER])
+  @UseLanguageInterceptor()
+  @ApiPageOkResponse({ type: PostDto })
+  async getPosts(
+    @Query() postsPageOptionsDto: PostPageOptionsDto,
+  ): Promise<PageDto<PostDto>> {
+    return this.postService.getAllPost(postsPageOptionsDto);
+  }
 
   @Get(':id')
   @Auth([])
