@@ -1,7 +1,7 @@
 import type { Collection } from '@mikro-orm/core';
 import { Enum, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 
-import { LanguageCode } from '../constants/language-code.ts';
+import { LanguageCode } from '../constants';
 import type { Constructor } from '../types';
 import type { AbstractDto, AbstractTranslationDto } from './dto/abstract.dto';
 
@@ -38,7 +38,7 @@ export abstract class AbstractEntity<
 
   translations?: Collection<AbstractTranslationEntity>;
 
-  abstract dtoClass?: () => Constructor<DTO, [AbstractEntity, O?, Optional?]>;
+  dtoClass?: () => Constructor<DTO, [AbstractEntity, O?, Optional?]>;
 
   toDto(options?: O): DTO {
     const dtoClass = this.dtoClass?.();
@@ -60,8 +60,6 @@ export abstract class AbstractTranslationEntity<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Optional = any,
 > extends AbstractEntity<DTO, O, Optional> {
-  abstract dtoClass?: () => Constructor<DTO, [AbstractEntity, O?, Optional?]>;
-
   @Enum(() => LanguageCode)
   languageCode!: LanguageCode;
 }

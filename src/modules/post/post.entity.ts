@@ -7,15 +7,14 @@ import {
 } from '@mikro-orm/core';
 
 import { AbstractEntity } from '../../common/abstract.entity';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
 import { UserEntity } from '../user/user.entity';
 import { PostDto } from './dtos/post.dto';
 import { PostTranslationEntity } from './post-translation.entity';
 
 @Entity({ tableName: 'posts' })
+@UseDto(() => PostDto)
 export class PostEntity extends AbstractEntity<PostDto> {
-  // FIXME fix type
-  dtoClass = () => PostDto as any;
-
   @Property({ type: 'uuid', fieldName: 'user_id', persist: false })
   userId!: Uuid;
 
