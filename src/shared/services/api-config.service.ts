@@ -128,6 +128,14 @@ export class ApiConfigService {
     };
   }
 
+  get googleCalendarConfig() {
+    return {
+      clientId: this.getString('GOOGLE_CALENDAR_CLIENT_ID'),
+      clientSecret: this.getString('GOOGLE_CALENDAR_CLIENT_SECRET'),
+      redirectUri: this.getString('GOOGLE_CALENDAR_REDIRECT_URI'),
+    };
+  }
+
   get awsS3Config() {
     return {
       bucketRegion: this.getString('AWS_S3_BUCKET_REGION'),

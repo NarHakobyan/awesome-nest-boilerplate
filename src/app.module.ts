@@ -12,6 +12,7 @@ import type {
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { addTransactionalDataSource } from 'mikroorm-transactional';
 import { ClsModule } from 'nestjs-cls';
 import {
   AcceptLanguageResolver,
@@ -81,6 +82,8 @@ export class AppModule implements NestModule, OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     await this.orm.getMigrator().up();
+
+    addTransactionalDataSource(this.orm);
   }
 
   // for some reason the auth middlewares in profile and article modules are fired before the request context one,

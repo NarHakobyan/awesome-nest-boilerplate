@@ -2,6 +2,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { Transactional } from 'mikroorm-transactional';
 
 import { PageDto } from '../../common/dto/page.dto.ts';
 import { CreatePostCommand } from './commands/create-post.command';
@@ -20,7 +21,7 @@ export class PostService {
     private commandBus: CommandBus,
   ) {}
 
-  // @Transactional()
+  @Transactional()
   createPost(userId: Uuid, createPostDto: CreatePostDto): Promise<PostEntity> {
     return this.commandBus.execute<CreatePostCommand, PostEntity>(
       new CreatePostCommand(userId, createPostDto),

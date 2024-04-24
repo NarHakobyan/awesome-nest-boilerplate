@@ -11,15 +11,15 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 
-import { ChatbotService } from './chatbot.service';
+import { ConciergeService } from './concierge.service.ts';
 import { NewMessageDto } from './dtos/new-message.dto';
 
 @Controller('messages')
 @ApiTags('messages')
 export class ChatbotController {
-  constructor(public chatbotService: ChatbotService) {}
+  constructor(public conciergeService: ConciergeService) {}
 
-  @Post()
+  @Post('assistant')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     type: NewMessageDto,
@@ -28,6 +28,6 @@ export class ChatbotController {
   @Header('content-type', 'text/event-stream')
   @Sse()
   userLogin(@Body() newMessageDto: NewMessageDto): Observable<MessageEvent> {
-    return this.chatbotService.assistant(newMessageDto);
+    return this.conciergeService.assistant(newMessageDto);
   }
 }

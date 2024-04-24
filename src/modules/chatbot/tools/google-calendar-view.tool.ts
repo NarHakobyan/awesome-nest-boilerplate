@@ -1,27 +1,32 @@
-import { type CallbackManagerForToolRun } from '@langchain/core/callbacks/manager';
-import { type BaseLanguageModel } from '@langchain/core/language_models/base';
+import type { CallbackManagerForToolRun } from '@langchain/core/callbacks/manager';
+import type { BaseLanguageModel } from '@langchain/core/language_models/base';
+import type { BaseLLM } from '@langchain/core/language_models/llms';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { PromptTemplate } from '@langchain/core/prompts';
-import { Tool, type ToolParams } from '@langchain/core/tools';
+import type { ToolParams } from '@langchain/core/tools';
+import { Tool } from '@langchain/core/tools';
 import { google } from 'googleapis';
 
 const getTimezoneOffsetInHours = () => {
   const offsetInMinutes = new Date().getTimezoneOffset();
 
-  return -offsetInMinutes / 60;
+  const offset = -offsetInMinutes / 60;
+
+  return offset > 0
+    ? `+${offset}`
+    : `${offset}`;
 };
 
-export class GoogleCalendarTool extends Tool {
-  private accessToken: string;
+export class GoogleCalendarViewTool extends Tool {
+  private readonly accessToken: string;
 
-  private clientId =
-    '426455962417-i0nusoc3hfa0vke86tslhn6a7cmac722.apps.googleusercontent.com';
+  private readonly clientId: string;
 
-  private clientSecret = 'c4VhGkHIqUrwEmDFOH0gDdz3';
+  private readonly clientSecret: string;
 
-  private redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
+  private readonly redirectUri: string;
 
-  private refreshToken: string;
+  private readonly refreshToken: string;
 
   model: BaseLanguageModel;
 
@@ -50,21 +55,27 @@ OUTPUT:
 
   constructor(
     config: ToolParams & {
+      clientId: string;
+      clientSecret: string;
+      redirectUri: string;
       accessToken: string;
       refreshToken: string;
-      model: BaseLanguageModel;
+      model: BaseLLM;
     },
   ) {
     super(config);
+    this.clientId = config.clientId;
+    this.clientSecret = config.clientSecret;
+    this.redirectUri = config.redirectUri;
     this.accessToken = config.accessToken;
     this.refreshToken = config.refreshToken;
     this.model = config.model;
   }
 
   async _call(query: string, runManager?: CallbackManagerForToolRun) {
-    const calendar = this.createCalendar();
-
+    const calendar = this.getCalendar();
     const model = this.model;
+
     const prompt = new PromptTemplate({
       template: `
 Date format: YYYY-MM-DDThh:mm:ss+00:00
@@ -126,7 +137,7 @@ event_summary:
         ...loaded,
       });
 
-      const curatedItems = response.data?.items
+      const curatedItems = response.data.items
         ? response.data.items.map(
             ({
               status,
@@ -134,8 +145,7 @@ event_summary:
               description,
               start,
               end,
-            }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            any) => ({
+            }) => ({
               status,
               summary,
               description,
@@ -155,20 +165,28 @@ event_summary:
     }
   }
 
-  private createCalendar() {
+  private getCalendar() {
     const oauth2Client = new google.auth.OAuth2({
       clientId: this.clientId,
       clientSecret: this.clientSecret,
       redirectUri: this.redirectUri,
+      credentials: {
+        access_token: this.accessToken,
+        refresh_token: this.refreshToken,
+      },
     });
-    oauth2Client.setCredentials({
-      access_token: this.accessToken,
-      refresh_token: this.refreshToken,
-    });
+    // oauth2Client.setCredentials({
+    //   access_token: this.accessToken,
+    //   refresh_token: this.refreshToken,
+    // });
 
     return google.calendar({
       version: 'v3',
       auth: oauth2Client,
     });
+  }
+
+  getModel() {
+    return this.model;
   }
 }

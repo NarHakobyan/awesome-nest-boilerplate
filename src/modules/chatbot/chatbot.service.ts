@@ -1,7 +1,5 @@
-import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
 import { HNSWLib } from '@langchain/community/vectorstores/hnswlib';
 import { Document } from '@langchain/core/documents';
-import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { ChatPromptTemplate, PromptTemplate } from '@langchain/core/prompts';
 import {
@@ -10,135 +8,12 @@ import {
   RunnablePassthrough,
   RunnableSequence,
 } from '@langchain/core/runnables';
-import { DynamicTool } from '@langchain/core/tools';
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
-import type { MessageEvent } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import { AgentExecutor, createOpenAIFunctionsAgent } from 'langchain/agents';
-import { pull } from 'langchain/hub';
 import { formatDocumentsAsString } from 'langchain/util/document';
-import { DateTime } from 'luxon';
-import type { Observable } from 'rxjs';
-import { from, map, switchMap } from 'rxjs';
-
-import { OpenaiService } from '../../packages/langchain/openai.service';
-import type { NewMessageDto } from './dtos/new-message.dto';
-import { GoogleCalendarTool } from './tools/google-calendar.tool';
 
 @Injectable()
 export class ChatbotService {
-  searchTool: TavilySearchResults;
-
-  constructor(private openaiService: OpenaiService) {
-    this.searchTool = new TavilySearchResults({
-      apiKey: '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',
-    });
-
-    // this.assistant({
-    //   text: 'What is the weather in Yerevan?',
-    //   messages: [],
-    // }).subscribe(console.log);
-  }
-
-  assistant(newMessageDto: NewMessageDto): Observable<MessageEvent> {
-    return from(this.createAgent()).pipe(
-      switchMap((executor) =>
-        executor.streamEvents(
-          {
-            input: newMessageDto.text,
-            now_datetime: DateTime.now().toFormat('dd-MM-yyyy HH:mm'),
-            chat_history: newMessageDto.messages.map((message) => {
-              switch (message.sender) {
-                case 'AI': {
-                  return new AIMessage(message.text);
-                }
-
-                case 'USER': {
-                  return new HumanMessage(message.text);
-                }
-              }
-            }),
-          },
-          {
-            version: 'v1',
-          },
-        ),
-      ),
-      map((streamEvent) => ({
-        data: streamEvent,
-        type: 'message',
-      })),
-    );
-  }
-
-  private async createAgent() {
-    const llm = this.openaiService.createChat();
-
-    //     const template = `You are a helpful assistant. Help the user answer any questions.
-    //
-    // You have access to the following tools:
-    //
-    // {tools}
-    //
-    // In order to use a tool, you can use <tool></tool> and <tool_input></tool_input> tags. \
-    // You will then get back a response in the form <observation></observation>
-    // For example, if you have a tool called 'search' that could run a google search, in order to search for the weather in SF you would respond:
-    //
-    // <tool>search</tool><tool_input>weather in SF</tool_input>
-    // <observation>64 degrees</observation>
-    //
-    // When you are done, respond with a final answer between <final_answer></final_answer>. For example:
-    //
-    // <final_answer>The weather in SF is 64 degrees</final_answer>
-    //
-    // Begin!
-    //
-    // Question: {input}`;
-
-    const prompt = await pull<ChatPromptTemplate>(
-      'narek/openai-functions-agent',
-    );
-
-    const tools = [
-      this.searchTool,
-      new GoogleCalendarTool({
-        model: new ChatOpenAI(),
-        accessToken:
-          'ya29.a0AfB_byCxyXD_Vg37ufp4O4azZAYFSXq94ICgJKhnhbGOYewOfDXSz3pn_NuLSsnMIpeVjvakiOxnFk98W_g9lEbZYApg_yBm_I8hb_td70iITLEfqEdiXQE50gye5UAnoV2eEVdcIuJ1DxWk9aRs2QwEEyjiy6IOdRM5aCgYKATQSARISFQHGX2MiD2YubYlrFDaZ9S8FAdGxNg0171',
-        refreshToken:
-          '1//04Ldz-0r0Ga6ICgYIARAAGAQSNwF-L9IraeHZGKU8S1MYVUDbEkYG72IDbRbpYl1W8LQU_f2rUbyktHVbTuZYtoGYoZcked9Zywo',
-      }),
-      new DynamicTool({
-        name: 'PerfectLive',
-        description:
-          'call this to get info about the project perfect.live. input should be an empty string.',
-        func: async () =>
-          'Perfect live is personal assistant app, that helps you to manage your daily tasks and events. if you find any bugs or have any suggestions, please let Narek and not Anna :D know.',
-      }),
-      // new DynamicStructuredTool({
-      //   name: 'random-number-generator',
-      //   description: 'generates a random number between two input numbers',
-      //   schema: z.object({
-      //     low: z.number().describe('The lower bound of the generated number'),
-      //     high: z.number().describe('The upper bound of the generated number'),
-      //   }),
-      //   func: async ({ low, high }) =>
-      //     (Math.random() * (high - low) + low).toString(), // Outputs still must be strings
-      // }),
-    ];
-
-    const agent = await createOpenAIFunctionsAgent({
-      llm,
-      tools,
-      prompt,
-    });
-
-    return AgentExecutor.fromAgentAndTools({
-      agent,
-      tools,
-    });
-  }
-
   async createChatOpenAI() {
     const vectorStore = await HNSWLib.fromDocuments(
       [

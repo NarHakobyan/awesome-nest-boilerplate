@@ -12,6 +12,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
+import { initializeTransactionalContext } from 'mikroorm-transactional';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { UniqueConstraintViolationFilter } from './filters/unique-constraint-violation.filter.ts';
@@ -22,6 +23,8 @@ import { TranslationService } from './shared/services/translation.service';
 import { SharedModule } from './shared/shared.module';
 
 async function bootstrap(): Promise<NestExpressApplication> {
+  initializeTransactionalContext();
+
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(),

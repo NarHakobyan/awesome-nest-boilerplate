@@ -3,8 +3,9 @@ import { Module } from '@nestjs/common';
 import { LangchainModule } from '../../packages/langchain/langchain.module';
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import { SharedModule } from '../../shared/shared.module';
-import { ChatbotService } from './chatbot.service';
 import { ChatbotController } from './chatbot.controller';
+import { ChatbotService } from './chatbot.service';
+import { ConciergeService } from './concierge.service.ts';
 
 const handlers = [];
 
@@ -21,7 +22,7 @@ const handlers = [];
     }),
   ],
   controllers: [ChatbotController],
-  exports: [ChatbotService],
-  providers: [ChatbotService, ...handlers],
+  exports: [ChatbotService, ConciergeService],
+  providers: [ChatbotService, ConciergeService, ...handlers],
 })
 export class ChatbotModule {}
