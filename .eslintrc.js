@@ -33,9 +33,11 @@ module.exports = {
     'sonarjs',
     'promise',
     'canonical',
+    'no-secrets',
     'n',
   ],
   rules: {
+    "no-secrets/no-secrets": "error",
     'n/no-extraneous-import': 'off',
     'n/no-missing-import': 'off',
     'canonical/filename-match-exported': 'error',
