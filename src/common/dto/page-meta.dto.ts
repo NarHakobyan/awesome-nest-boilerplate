@@ -1,5 +1,5 @@
-import { BooleanField, NumberField } from '../../decorators';
-import { type PageOptionsDto } from './page-options.dto';
+import { BooleanField, NumberField } from '../../decorators/field.decorators';
+import type { PageOptionsDto } from './page-options.dto';
 
 interface IPageMetaDtoParameters {
   pageOptionsDto: PageOptionsDto;

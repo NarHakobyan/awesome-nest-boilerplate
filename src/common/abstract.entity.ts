@@ -1,16 +1,9 @@
-import {
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import type { Collection } from '@mikro-orm/core';
+import { Enum, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 
 import { LanguageCode } from '../constants';
-import { type Constructor } from '../types';
-import {
-  type AbstractDto,
-  type AbstractTranslationDto,
-} from './dto/abstract.dto';
+import type { Constructor } from '../types';
+import type { AbstractDto, AbstractTranslationDto } from './dto/abstract.dto';
 
 /**
  * Abstract Entity
@@ -22,27 +15,33 @@ import {
  */
 export abstract class AbstractEntity<
   DTO extends AbstractDto = AbstractDto,
-  O = never,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  O = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Optional = any,
 > {
-  @PrimaryGeneratedColumn('uuid')
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | Optional;
+
+  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id!: Uuid;
 
-  @CreateDateColumn({
+  @Property({ type: 'timestamp', columnType: 'timestamp', defaultRaw: 'now()' })
+  createdAt = new Date();
+
+  @Property({
     type: 'timestamp',
+    columnType: 'timestamp',
+    defaultRaw: 'now()',
+    onUpdate: () => new Date(),
   })
-  createdAt!: Date;
+  updatedAt = new Date();
 
-  @UpdateDateColumn({
-    type: 'timestamp',
-  })
-  updatedAt!: Date;
+  translations?: Collection<AbstractTranslationEntity>;
 
-  translations?: AbstractTranslationEntity[];
-
-  private dtoClass?: Constructor<DTO, [AbstractEntity, O?]>;
+  dtoClass?: () => Constructor<DTO, [AbstractEntity, O?, Optional?]>;
 
   toDto(options?: O): DTO {
-    const dtoClass = this.dtoClass;
+    const dtoClass = Object.getPrototypeOf(this).dtoClass?.();
 
     if (!dtoClass) {
       throw new Error(
@@ -54,10 +53,13 @@ export abstract class AbstractEntity<
   }
 }
 
-export class AbstractTranslationEntity<
+export abstract class AbstractTranslationEntity<
   DTO extends AbstractTranslationDto = AbstractTranslationDto,
-  O = never,
-> extends AbstractEntity<DTO, O> {
-  @Column({ type: 'enum', enum: LanguageCode })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  O = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Optional = any,
+> extends AbstractEntity<DTO, O, Optional> {
+  @Enum(() => LanguageCode)
   languageCode!: LanguageCode;
 }

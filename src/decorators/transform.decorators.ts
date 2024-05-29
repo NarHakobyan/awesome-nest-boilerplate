@@ -153,5 +153,5 @@ export function S3UrlParser(): PropertyDecorator {
 }
 
 export function PhoneNumberSerializer(): PropertyDecorator {
-  return Transform((params) => parsePhoneNumber(params.value as string).number);
+  return Transform((params) => params.value ? parsePhoneNumber(params.value as string).number: undefined);
 }

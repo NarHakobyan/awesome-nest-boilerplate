@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ClassField } from '../../decorators';
+import { ClassField } from '../../decorators/field.decorators';
 import { PageMetaDto } from './page-meta.dto';
 
 export class PageDto<T> {

@@ -1,22 +1,17 @@
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Query,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Query, ValidationPipe } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
-import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { TranslationService } from '../../shared/services/translation.service';
 import { UserDto } from './dtos/user.dto';
-import { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
+import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
+import { ApiPageOkResponse } from '../../decorators/api-page-ok-response.decorator.ts';
+import { PageDto } from '../../common/dto/page.dto.ts';
+import { UsersPageOptionsDto } from './dtos/users-page-options.dto.ts';
 
 @Controller('users')
 @ApiTags('users')

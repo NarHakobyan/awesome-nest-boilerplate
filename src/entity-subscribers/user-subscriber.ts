@@ -1,30 +1,39 @@
-import {
-  type EntitySubscriberInterface,
+import type {
+  EventArgs,
   EventSubscriber,
-  type InsertEvent,
-  type UpdateEvent,
-} from 'typeorm';
+  FlushEventArgs,
+} from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
 
 import { generateHash } from '../common/utils';
 import { UserEntity } from '../modules/user/user.entity';
 
-@EventSubscriber()
-export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
-  listenTo(): typeof UserEntity {
-    return UserEntity;
+@Injectable()
+export class UserSubscriber implements EventSubscriber<UserEntity> {
+  constructor(em: EntityManager) {
+    em.getEventManager().registerSubscriber(this);
   }
 
-  beforeInsert(event: InsertEvent<UserEntity>): void {
-    if (event.entity.password) {
-      event.entity.password = generateHash(event.entity.password);
+  getSubscribedEntities() {
+    return [UserEntity];
+  }
+
+  onFlush(args: FlushEventArgs): void {
+    for (const changeSet of args.uow.getChangeSets()) {
+      const changedPassword = changeSet.payload.password;
+
+      if (changedPassword) {
+        changeSet.entity.password = generateHash(changedPassword);
+        args.uow.recomputeSingleChangeSet(changeSet.entity);
+      }
     }
   }
 
-  beforeUpdate(event: UpdateEvent<UserEntity>): void {
-    // FIXME check event.databaseEntity.password
-    const entity = event.entity as UserEntity;
+  beforeUpdate(event: EventArgs<UserEntity>): void {
+    const entity = event.entity;
 
-    if (entity.password !== event.databaseEntity.password) {
+    if (entity.password !== event.changeSet?.entity.password) {
       entity.password = generateHash(entity.password!);
     }
   }

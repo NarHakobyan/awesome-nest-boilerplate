@@ -1,29 +1,32 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, OneToOne, Property } from '@mikro-orm/core';
 
 import { AbstractEntity } from '../../common/abstract.entity';
-import { UseDto } from '../../decorators';
-import { UserDto, type UserDtoOptions } from './dtos/user.dto';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
+import type { UserDtoOptions } from './dtos/user.dto';
+import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'user_settings' })
-@UseDto(UserDto)
+@Entity({ tableName: 'user_settings' })
+@UseDto(() => UserDto)
 export class UserSettingsEntity extends AbstractEntity<
   UserDto,
   UserDtoOptions
 > {
-  @Column({ default: false })
-  isEmailVerified?: boolean;
+  @Property({ default: false })
+  isEmailVerified = false;
 
-  @Column({ default: false })
-  isPhoneVerified?: boolean;
+  @Property({ default: false })
+  isPhoneVerified = false;
 
-  @Column({ type: 'uuid' })
-  userId?: string;
+  @Property({ type: 'uuid', persist: false })
+  userId!: string;
 
-  @OneToOne(() => UserEntity, (user) => user.settings, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+  @OneToOne(() => UserEntity, {
+    mapToPk: true,
+    joinColumn: 'user_id',
+    columnType: 'uuid',
+    deleteRule: 'cascade',
+    updateRule: 'cascade',
   })
-  @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
 }

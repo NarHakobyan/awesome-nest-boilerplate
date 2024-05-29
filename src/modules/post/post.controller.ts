@@ -16,14 +16,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { type PageDto } from '../../common/dto/page.dto';
+import { PageDto } from '../../common/dto/page.dto.ts';
 import { RoleType } from '../../constants';
-import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
-import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
+import { ApiPageOkResponse } from '../../decorators/api-page-ok-response.decorator.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
+import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service.ts';
 import { UserEntity } from '../user/user.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PostDto } from './dtos/post.dto';
-import { PostPageOptionsDto } from './dtos/post-page-options.dto';
+import { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { PostService } from './post.service';
 

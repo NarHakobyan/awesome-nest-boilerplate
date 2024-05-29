@@ -1,12 +1,16 @@
+import { EntityGenerator } from '@mikro-orm/entity-generator';
+import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
+import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
+import { PopulateHint, PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+import { SeedManager } from '@mikro-orm/seeder';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { type ThrottlerOptions } from '@nestjs/throttler';
-import { type TypeOrmModuleOptions } from '@nestjs/typeorm';
+import type { ThrottlerOptions } from '@nestjs/throttler';
 import { isNil } from 'lodash';
-import { default as parse, type Units } from 'parse-duration';
-
-import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
-import { SnakeNamingStrategy } from '../../snake-naming.strategy';
+import type { Units } from 'parse-duration';
+import { default as parse } from 'parse-duration';
+import { ExtendedEntityRepository } from '../../common/extended-entity-repository.ts';
 
 @Injectable()
 export class ApiConfigService {
@@ -77,29 +81,58 @@ export class ApiConfigService {
     };
   }
 
-  get postgresConfig(): TypeOrmModuleOptions {
-    const entities = [
-      __dirname + '/../../modules/**/*.entity{.ts,.js}',
-      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
-    ];
-    const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
-
+  get mikroOrm(): MikroOrmModuleSyncOptions {
     return {
-      entities,
-      migrations,
-      keepConnectionAlive: !this.isTest,
-      dropSchema: this.isTest,
-      type: 'postgres',
+      entities: ['./dist/modules/**/*.entity.js'],
+      entitiesTs: ['./src/modules/**/*.entity.ts'],
+      entityRepository: ExtendedEntityRepository,
+      // subscribers: [UserSubscriber],
+      migrations: {
+        transactional: true,
+        path: './dist/database/migrations',
+        pathTs: './src/database/migrations',
+        glob: '!(*.d).{js,ts}',
+        dropTables: this.isTest,
+        generator: TSMigrationGenerator,
+      },
+      driver: PostgreSqlDriver,
       name: 'default',
       host: this.getString('DB_HOST'),
       port: this.getNumber('DB_PORT'),
-      username: this.getString('DB_USERNAME'),
+      user: this.getString('DB_USERNAME'),
       password: this.getString('DB_PASSWORD'),
-      database: this.getString('DB_DATABASE'),
-      subscribers: [UserSubscriber],
-      migrationsRun: true,
-      logging: this.getBoolean('ENABLE_ORM_LOGS'),
-      namingStrategy: new SnakeNamingStrategy(),
+      dbName: this.getString('DB_DATABASE'),
+      // subscribers: [UserSubscriber],
+      debug: true,
+      autoJoinOneToOneOwner: false,
+      autoJoinRefsForFilters: false,
+      forceUndefined: true,
+      ignoreUndefinedInQuery: true,
+      extensions: [Migrator, EntityGenerator, SeedManager],
+      metadataProvider: TsMorphMetadataProvider,
+      populateWhere: PopulateHint.INFER, // revert to v4 behaviour
+      validate: true,
+      strict: true,
+      seeder: {
+        path: './dist/seeders',
+        pathTs: './src/seeders',
+        defaultSeeder: 'DatabaseSeeder',
+      },
+      discovery: {
+        warnWhenNoEntities: true,
+        checkDuplicateTableNames: true,
+        checkDuplicateFieldNames: true,
+        alwaysAnalyseProperties: true,
+      },
+      // namingStrategy: new SnakeNamingStrategy(),
+    };
+  }
+
+  get googleCalendarConfig() {
+    return {
+      clientId: this.getString('GOOGLE_CALENDAR_CLIENT_ID'),
+      clientSecret: this.getString('GOOGLE_CALENDAR_CLIENT_SECRET'),
+      redirectUri: this.getString('GOOGLE_CALENDAR_REDIRECT_URI'),
     };
   }
 
@@ -113,6 +146,12 @@ export class ApiConfigService {
 
   get documentationEnabled(): boolean {
     return this.getBoolean('ENABLE_DOCUMENTATION');
+  }
+
+  get openAI() {
+    return {
+      apiKey: this.getString('OPENAI_API_KEY'),
+    };
   }
 
   get natsEnabled(): boolean {

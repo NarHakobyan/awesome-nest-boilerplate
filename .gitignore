@@ -61,8 +61,6 @@ typings/
 
 # next.js build output
 .next
-### Example user template template
-### Example user template
 
 # IntelliJ project files
 .idea
@@ -75,7 +73,7 @@ mongo
 
 # Docker compose ganarated files
 db-data
-
+temp
 
 # Vuepress
 .temp

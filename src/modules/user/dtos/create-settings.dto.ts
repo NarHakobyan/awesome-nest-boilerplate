@@ -1,4 +1,4 @@
-import { BooleanFieldOptional } from '../../../decorators';
+import { BooleanFieldOptional } from '../../../decorators/field.decorators';
 
 export class CreateSettingsDto {
   @BooleanFieldOptional()

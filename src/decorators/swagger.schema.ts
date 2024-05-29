@@ -20,7 +20,7 @@ import {
 import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-keys.util';
 import _ from 'lodash';
 
-import { type IApiFile } from '../interfaces';
+import { type IApiFile } from '../interfaces/IApiFile';
 
 function explore(instance: Object, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(

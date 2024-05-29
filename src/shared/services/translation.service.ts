@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { isArray, isString, map } from 'lodash';
-import { I18nService, type TranslateOptions } from 'nestjs-i18n';
+import type { TranslateOptions } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 import { AbstractDto } from '../../common/dto/abstract.dto';
-import { STATIC_TRANSLATION_DECORATOR_KEY } from '../../decorators';
-import { type ITranslationDecoratorInterface } from '../../interfaces';
+import { STATIC_TRANSLATION_DECORATOR_KEY } from '../../decorators/translate.decorator.ts';
+import type { ITranslationDecoratorInterface } from '../../interfaces/ITranslationDecoratorInterface';
 import { ContextProvider } from '../../providers';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class TranslationService {
   constructor(private readonly i18n: I18nService) {}
 
   async translate(key: string, options?: TranslateOptions): Promise<string> {
-    return this.i18n.translate(`${key}`, {
+    return this.i18n.translate(key, {
       ...options,
       lang: ContextProvider.getLanguage(),
     });
@@ -26,8 +27,8 @@ export class TranslationService {
             Reflect.getMetadata(STATIC_TRANSLATION_DECORATOR_KEY, dto, key);
 
           if (translateDec) {
-            return this.translate(
-              `${translateDec.translationKey ?? key}.${value}`,
+            dto[key] = await this.translate(
+              `${translateDec.prefix ? translateDec.prefix + '.' : ''}${value}`,
             );
           }
 

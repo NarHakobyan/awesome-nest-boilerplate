@@ -3,7 +3,7 @@ import {
   PasswordField,
   PhoneFieldOptional,
   StringField,
-} from '../../../decorators';
+} from '../../../decorators/field.decorators.ts';
 
 export class UserRegisterDto {
   @StringField()
