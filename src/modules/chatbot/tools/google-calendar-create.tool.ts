@@ -5,13 +5,14 @@ import { StringOutputParser } from '@langchain/core/output_parsers';
 import { PromptTemplate } from '@langchain/core/prompts';
 import type { ToolParams } from '@langchain/core/tools';
 import { Tool } from '@langchain/core/tools';
-import { google } from 'googleapis';
+import { google, calendar_v3 } from 'googleapis';
 
 interface CreateEventParams {
   eventSummary: string;
   eventStartTime: string;
   eventEndTime: string;
   userTimezone: string;
+  attendees?: string[];
   eventLocation?: string;
   eventDescription?: string;
 }
@@ -43,7 +44,7 @@ export class GoogleCalendarCreateTool extends Tool {
 
 INPUT example:
 "action": "google_calendar_create",
-"action_input": "create a new meeting with John Doe tomorrow at 4pm"
+"action_input": "create a new meeting with John Doe tomorrow at 4pm and John as an attendee with email john@mail.com"
 
 OUTPUT:
 Output is a confirmation of a created event.
@@ -84,6 +85,7 @@ of the user is -5, take into account the timezone of the user and today's date.
 4. event_location
 5. event_description
 6. user_timezone
+7. attendees
 event_summary:
 {{
     "event_summary": "Joey birthday",
@@ -91,7 +93,8 @@ event_summary:
     "event_end_time": "2023-05-03T20:00:00-05:00",
     "event_location": "",
     "event_description": "",
-    "user_timezone": "America/New_York"
+    "user_timezone": "America/New_York",
+    "attendees": ["joey@mail.com"]
 }}
 
 Date format: YYYY-MM-DDThh:mm:ss+00:00
@@ -105,6 +108,7 @@ of the user is -5, take into account the timezone of the user and today's date.
 4. event_location
 5. event_description
 6. user_timezone
+7. attendees
 event_summary:
 {{
     "event_summary": "Meeting with Joey",
@@ -156,6 +160,7 @@ event_summary:
         eventLocation,
         eventDescription,
         userTimezone,
+        attendees,
       ] = Object.values<string>(loaded);
 
       if (!eventSummary || !eventStartTime || !eventEndTime || !userTimezone) {
@@ -169,6 +174,7 @@ event_summary:
         userTimezone,
         eventLocation,
         eventDescription,
+        attendees: attendees as string[] | undefined,
       });
 
       if (!(event as { error: string }).error) {
@@ -206,7 +212,7 @@ event_summary:
 
   private async createEvent(param: CreateEventParams) {
     const calendar = this.getCalendar();
-    const event = {
+    const event: calendar_v3.Schema$Event = {
       summary: param.eventSummary,
       location: param.eventLocation,
       description: param.eventDescription,
@@ -218,6 +224,7 @@ event_summary:
         dateTime: param.eventEndTime,
         timeZone: param.userTimezone,
       },
+      attendees: param.attendees?.map((email) => ({ email })),
     };
 
     try {
