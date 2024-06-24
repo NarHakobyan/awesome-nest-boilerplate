@@ -1,15 +1,15 @@
+import type { PipeTransform } from '@nestjs/common';
 import {
   applyDecorators,
   Param,
   ParseUUIDPipe,
-  type PipeTransform,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { type Type } from '@nestjs/common/interfaces';
+import type { Type } from '@nestjs/common/interfaces';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
-import { type RoleType } from '../constants';
+import type { RoleType } from '../constants';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';

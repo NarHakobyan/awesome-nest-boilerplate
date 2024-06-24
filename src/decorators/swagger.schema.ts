@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-unsafe-argument */
-import { type Type } from '@nestjs/common';
+import type { Type } from '@nestjs/common';
 import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import {
   PARAMTYPES_METADATA,
@@ -13,14 +13,14 @@ import {
   ApiExtraModels,
   getSchemaPath,
 } from '@nestjs/swagger';
-import {
-  type ReferenceObject,
-  type SchemaObject,
+import type {
+  ReferenceObject,
+  SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-keys.util';
 import _ from 'lodash';
 
-import { type IApiFile } from '../interfaces';
+import type { IApiFile } from '../interfaces';
 
 function explore(instance: Object, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
@@ -51,6 +51,8 @@ function explore(instance: Object, propertyKey: string | symbol) {
       return value.type;
     }
   }
+
+  return null;
 }
 
 function RegisterModels(): MethodDecorator {

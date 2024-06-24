@@ -16,9 +16,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { type PageDto } from '../../common/dto/page.dto';
+import type { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
-import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
+import { ApiPageResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { UserEntity } from '../user/user.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -51,7 +51,7 @@ export class PostController {
   @Get()
   @Auth([RoleType.USER])
   @UseLanguageInterceptor()
-  @ApiPageOkResponse({ type: PostDto })
+  @ApiPageResponse({ type: PostDto })
   async getPosts(
     @Query() postsPageOptionsDto: PostPageOptionsDto,
   ): Promise<PageDto<PostDto>> {

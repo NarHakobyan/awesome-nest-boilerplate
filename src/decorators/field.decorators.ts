@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-null */
 import { applyDecorators } from '@nestjs/common';
-import { ApiProperty, type ApiPropertyOptions } from '@nestjs/swagger';
+import type { ApiPropertyOptions } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -25,7 +26,7 @@ import {
 } from 'class-validator';
 
 import { supportedLanguageCount } from '../constants';
-import { type Constructor } from '../types';
+import type { Constructor } from '../types';
 import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators';
 import {
   PhoneNumberSerializer,

@@ -39,7 +39,7 @@ export function getVariableName<TResult>(
     );
   }
 
-  const fullMemberName = m[1];
+  const fullMemberName = m[1]!;
 
   const memberParts = fullMemberName.split('.');
 

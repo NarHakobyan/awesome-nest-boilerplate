@@ -4,12 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
-import { type PageDto } from '../../common/dto/page.dto';
+import type { PageDto } from '../../common/dto/page.dto';
 import { CreatePostCommand } from './commands/create-post.command';
 import { CreatePostDto } from './dtos/create-post.dto';
-import { type PostDto } from './dtos/post.dto';
-import { type PostPageOptionsDto } from './dtos/post-page-options.dto';
-import { type UpdatePostDto } from './dtos/update-post.dto';
+import type { PostDto } from './dtos/post.dto';
+import type { PostPageOptionsDto } from './dtos/post-page-options.dto';
+import type { UpdatePostDto } from './dtos/update-post.dto';
 import { PostNotFoundException } from './exceptions/post-not-found.exception';
 import { PostEntity } from './post.entity';
 

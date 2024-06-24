@@ -1,4 +1,5 @@
-import { type ICommand, type IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import type { ICommand, IQueryHandler } from '@nestjs/cqrs';
+import { QueryHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 

@@ -9,6 +9,6 @@ export class PublicStrategy extends PassportStrategy(Strategy, 'public') {
   }
 
   authenticate(): void {
-    return this.success({ [Symbol.for('isPublic')]: true });
+    this.success({ [Symbol.for('isPublic')]: true });
   }
 }

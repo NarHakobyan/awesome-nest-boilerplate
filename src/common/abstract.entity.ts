@@ -6,11 +6,8 @@ import {
 } from 'typeorm';
 
 import { LanguageCode } from '../constants';
-import { type Constructor } from '../types';
-import {
-  type AbstractDto,
-  type AbstractTranslationDto,
-} from './dto/abstract.dto';
+import type { Constructor } from '../types';
+import type { AbstractDto, AbstractTranslationDto } from './dto/abstract.dto';
 
 /**
  * Abstract Entity

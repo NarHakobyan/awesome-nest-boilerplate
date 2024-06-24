@@ -1,16 +1,17 @@
 import 'source-map-support/register';
 
 import { compact, map } from 'lodash';
-import { Brackets, type ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import type { ObjectLiteral } from 'typeorm';
+import { Brackets, SelectQueryBuilder } from 'typeorm';
 
-import { type AbstractEntity } from './common/abstract.entity';
-import { type AbstractDto } from './common/dto/abstract.dto';
-import { type CreateTranslationDto } from './common/dto/create-translation.dto';
+import type { AbstractEntity } from './common/abstract.entity';
+import type { AbstractDto } from './common/dto/abstract.dto';
+import type { CreateTranslationDto } from './common/dto/create-translation.dto';
 import { PageDto } from './common/dto/page.dto';
 import { PageMetaDto } from './common/dto/page-meta.dto';
-import { type PageOptionsDto } from './common/dto/page-options.dto';
-import { type LanguageCode } from './constants/language-code';
-import { type KeyOfType } from './types';
+import type { PageOptionsDto } from './common/dto/page-options.dto';
+import type { LanguageCode } from './constants/language-code';
+import type { KeyOfType } from './types';
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };

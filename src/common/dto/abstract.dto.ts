@@ -4,7 +4,7 @@ import {
   UUIDField,
 } from '../../decorators';
 import { ContextProvider } from '../../providers';
-import { type AbstractEntity } from '../abstract.entity';
+import type { AbstractEntity } from '../abstract.entity';
 
 export class AbstractDto {
   @UUIDField()
@@ -43,8 +43,7 @@ export class AbstractDto {
         );
 
         if (metadata) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          fields[key] = translationEntity[key];
+          fields[key] = (translationEntity as never)[key];
         }
       }
 

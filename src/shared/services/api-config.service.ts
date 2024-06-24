@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { type ThrottlerOptions } from '@nestjs/throttler';
-import { type TypeOrmModuleOptions } from '@nestjs/typeorm';
+import type { ThrottlerOptions } from '@nestjs/throttler';
+import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
-import { default as parse, type Units } from 'parse-duration';
+import type { Units } from 'parse-duration';
+import { default as parse } from 'parse-duration';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';

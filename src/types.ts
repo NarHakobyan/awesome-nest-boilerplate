@@ -7,6 +7,6 @@ export type KeyOfType<Entity, U> = {
   [P in keyof Required<Entity>]: Required<Entity>[P] extends U
     ? P
     : Required<Entity>[P] extends U[]
-    ? P
-    : never;
+      ? P
+      : never;
 }[keyof Entity];

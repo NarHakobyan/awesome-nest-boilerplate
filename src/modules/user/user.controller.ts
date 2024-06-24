@@ -10,7 +10,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
-import { ApiPageOkResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
+import { ApiPageResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { TranslationService } from '../../shared/services/translation.service';
 import { UserDto } from './dtos/user.dto';
@@ -43,7 +43,7 @@ export class UserController {
   @Get()
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
-  @ApiPageOkResponse({
+  @ApiPageResponse({
     description: 'Get users list',
     type: PageDto,
   })

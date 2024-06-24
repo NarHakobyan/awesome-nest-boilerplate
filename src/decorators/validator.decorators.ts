@@ -1,8 +1,8 @@
+import type { ValidationOptions } from 'class-validator';
 import {
   IsPhoneNumber as isPhoneNumber,
   registerDecorator,
   ValidateIf,
-  type ValidationOptions,
 } from 'class-validator';
 import { isString } from 'lodash';
 
@@ -47,7 +47,7 @@ export function IsTmpKey(
       options: validationOptions,
       validator: {
         validate(value: string): boolean {
-          return isString(value) && /^tmp\//.test(value);
+          return isString(value) && value.startsWith('tmp/');
         },
         defaultMessage(): string {
           return 'error.invalidTmpKey';
