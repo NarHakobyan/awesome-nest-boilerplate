@@ -77,11 +77,11 @@ export function ToInt(): PropertyDecorator {
  */
 export function ToArray(): PropertyDecorator {
   return Transform(
-    (params) => {
+    (params): unknown[] => {
       const value = params.value;
 
-      if (isNil(value)) {
-        return [];
+      if (!value) {
+        return value;
       }
 
       return castArray(value);
