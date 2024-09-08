@@ -9,7 +9,7 @@
     "build:prod": "tsc -p tsconfig.build.json",
     "start:dev": "ts-node src/main.ts",
     "start:prod": "node dist/main.js",
-    "typeorm": "typeorm-ts-node-esm",
+    "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "yarn run typeorm migration:generate -d ormconfig",
     "migration:create": "yarn run typeorm migration:create -d ormconfig",
     "new": "hygen new",
@@ -131,5 +131,6 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
