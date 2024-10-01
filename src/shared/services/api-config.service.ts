@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { ThrottlerOptions } from '@nestjs/throttler';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { isNil } from 'lodash';
+import _ from 'lodash';
 import type { Units } from 'parse-duration';
 import { default as parse } from 'parse-duration';
 
@@ -144,7 +144,7 @@ export class ApiConfigService {
   private get(key: string): string {
     const value = this.configService.get<string>(key);
 
-    if (isNil(value)) {
+    if (value == null) {
       throw new Error(key + ' environment variable does not set'); // probably we should call process.exit() too to avoid locking the service
     }
 

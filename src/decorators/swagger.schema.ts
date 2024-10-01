@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-unsafe-argument */
 import type { Type } from '@nestjs/common';
 import { applyDecorators, UseInterceptors } from '@nestjs/common';
-import {
-  PARAMTYPES_METADATA,
-  ROUTE_ARGS_METADATA,
-} from '@nestjs/common/constants';
-import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,
@@ -17,10 +12,11 @@ import type {
   ReferenceObject,
   SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-keys.util';
 import _ from 'lodash';
 
 import type { IApiFile } from '../interfaces';
+const PARAMTYPES_METADATA = "design:paramtypes";
+const ROUTE_ARGS_METADATA = "__routeArguments__";
 
 function explore(instance: Object, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
@@ -47,7 +43,7 @@ function explore(instance: Object, propertyKey: string | symbol) {
   for (const [key, value] of Object.entries(parametersWithType)) {
     const keyPair = key.split(':');
 
-    if (Number(keyPair[0]) === RouteParamtypes.BODY) {
+    if (Number(keyPair[0]) === 3) {
       return value.type;
     }
   }
@@ -125,4 +121,15 @@ export function ApiFile(
     ApiFileDecorator(filesArray, options),
     ...apiFileInterceptors,
   );
+}
+
+function reverseObjectKeys(
+  originalObject: Record<string, any>
+): Record<string, any> {
+  const reversedObject: any = {};
+  const keys = Object.keys(originalObject).reverse();
+  for (const key of keys) {
+    reversedObject[key] = originalObject[key];
+  }
+  return reversedObject;
 }
