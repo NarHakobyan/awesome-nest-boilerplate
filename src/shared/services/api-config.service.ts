@@ -1,8 +1,11 @@
+import { join } from 'node:path';
+import process from 'node:process';
+
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { ThrottlerOptions } from '@nestjs/throttler';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { isNil } from 'lodash';
+import _ from 'lodash';
 import type { Units } from 'parse-duration';
 import { default as parse } from 'parse-duration';
 
@@ -80,10 +83,12 @@ export class ApiConfigService {
 
   get postgresConfig(): TypeOrmModuleOptions {
     const entities = [
-      __dirname + '/../../modules/**/*.entity{.ts,.js}',
-      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
+      join(import.meta.dirname + '/modules/**/*.entity{.ts,.js}'),
+      join(import.meta.dirname + '/modules/**/*.view-entity{.ts,.js}'),
     ];
-    const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
+    const migrations = [
+      join(import.meta.dirname + '/database/migrations/*{.ts,.js}'),
+    ];
 
     return {
       entities,
@@ -144,7 +149,7 @@ export class ApiConfigService {
   private get(key: string): string {
     const value = this.configService.get<string>(key);
 
-    if (isNil(value)) {
+    if (value == null) {
       throw new Error(key + ' environment variable does not set'); // probably we should call process.exit() too to avoid locking the service
     }
 

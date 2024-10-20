@@ -3,12 +3,14 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
+    "builder": "swc",
     "plugins": [
       "@nestjs/swagger/plugin"
     ],
     "assets": [
       {
         "include": "i18n/**/*",
+        "outDir": "dist/i18n",
         "watchAssets": true
       }
     ]

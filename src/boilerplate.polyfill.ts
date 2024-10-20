@@ -1,6 +1,4 @@
-import 'source-map-support/register';
-
-import { compact, map } from 'lodash';
+import _ from 'lodash';
 import type { ObjectLiteral } from 'typeorm';
 import { Brackets, SelectQueryBuilder } from 'typeorm';
 
@@ -103,8 +101,8 @@ Array.prototype.toDtos = function <
   Entity extends AbstractEntity<Dto>,
   Dto extends AbstractDto,
 >(options?: unknown): Dto[] {
-  return compact(
-    map<Entity, Dto>(this as Entity[], (item) => item.toDto(options as never)),
+  return _.compact(
+    _.map<Entity, Dto>(this as Entity[], (item) => item.toDto(options as never)),
   );
 };
 

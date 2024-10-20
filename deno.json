@@ -1,7 +1,9 @@
 {
+  "imports": {
+    "@nestjs/common": "npm:@nestjs/common",
+    "typeorm": "npm:typeorm"
+  },
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Node",
     "declaration": false,
     "noImplicitAny": true,
     "removeComments": true,
@@ -13,14 +15,9 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    // "allowImportingTsExtensions": true,
     "allowUnreachableCode": false,
-    "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
-    "isolatedModules": true,
-//    "exactOptionalPropertyTypes": true,
     "noImplicitThis": true,
-//    "noPropertyAccessFromIndexSignature": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "strictPropertyInitialization": true,
@@ -32,19 +29,28 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "incremental": true,
-    "strict": true,
+    "isolatedModules": true,
     "strictNullChecks": true
   },
-  "ts-node": {
-    "experimentalSpecifierResolution": "node",
-    "transpileOnly": true,
-    "esm": true,
-},
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "tasks": {
+    "start": "deno run --allow-net --allow-read --unstable-sloppy-imports src/main.ts",
+    "watch": "deno run --allow-net --allow-read --unstable-sloppy-imports --watch=src/ src/main.ts",
+    "test": "deno test --allow-net --allow-read"
+  },
+  "fmt": {
+    "options": {
+      "useTabs": false,
+      "lineWidth": 80,
+      "indentWidth": 2,
+      "singleQuote": true,
+      "proseWrap": "preserve"
+    }
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["src/**/*.ts"],
+      "exclude": ["node_modules/"]
+    }
+  }
 }

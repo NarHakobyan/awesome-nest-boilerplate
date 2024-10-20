@@ -64,15 +64,15 @@ import { SharedModule } from './shared/shared.module';
       useFactory: (configService: ApiConfigService) => ({
         fallbackLanguage: configService.fallbackLanguage,
         loaderOptions: {
-          path: path.join(__dirname, '/i18n/'),
+          path: path.join(import.meta.dirname, 'i18n/'),
           watch: configService.isDevelopment,
         },
-        resolvers: [
-          { use: QueryResolver, options: ['lang'] },
-          AcceptLanguageResolver,
-          new HeaderResolver(['x-lang']),
-        ],
       }),
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
       imports: [SharedModule],
       inject: [ApiConfigService],
     }),

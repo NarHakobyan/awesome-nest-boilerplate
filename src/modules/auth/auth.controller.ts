@@ -12,7 +12,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
 import { ApiFile, Auth, AuthUser } from '../../decorators';
-import { IFile } from '../../interfaces';
+import { IFile } from '../../interfaces/IFile';
 import { UserDto } from '../user/dtos/user.dto';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -20,6 +20,7 @@ import { AuthService } from './auth.service';
 import { LoginPayloadDto } from './dto/login-payload.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
+import type { Reference } from '../../types';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -54,7 +55,7 @@ export class AuthController {
   @ApiFile({ name: 'avatar' })
   async userRegister(
     @Body() userRegisterDto: UserRegisterDto,
-    @UploadedFile() file?: IFile,
+    @UploadedFile() file?: Reference<IFile>,
   ): Promise<UserDto> {
     const createdUser = await this.userService.createUser(
       userRegisterDto,
