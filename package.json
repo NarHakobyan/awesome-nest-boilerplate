@@ -4,11 +4,11 @@
   "description": "Awesome NestJS Boilerplate, Typescript, Postgres, TypeORM",
   "author": "Narek Hakobyan <narek.hakobyan.07@gmail.com>",
   "private": true,
-  "type": "module",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build:prod": "tsc -p tsconfig.build.json",
-    "start:dev": "nest start -b swc",
+    "start:dev": "node --loader ts-node/esm src/main.ts",
     "start:prod": "node dist/main.js",
     "start:deno": "deno --watch --allow-read --allow-env --unstable-sloppy-imports --allow-net src/main.ts",
     "typeorm": "typeorm-ts-node-commonjs",

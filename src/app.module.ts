@@ -61,22 +61,18 @@ import { SharedModule } from './shared/shared.module';
       },
     }),
     I18nModule.forRootAsync({
-      useFactory: (configService: ApiConfigService) => {
-    const dirname = typeof Deno === 'undefined' ? __dirname : import.meta!.dirname;
-
-        return ({
-          fallbackLanguage: configService.fallbackLanguage,
-          loaderOptions: {
-            path: path.join(dirname!, '/i18n/'),
-            watch: configService.isDevelopment,
-          },
-          resolvers: [
-            { use: QueryResolver, options: ['lang'] },
-            AcceptLanguageResolver,
-            new HeaderResolver(['x-lang']),
-          ],
-        });
-      },
+      useFactory: (configService: ApiConfigService) => ({
+        fallbackLanguage: configService.fallbackLanguage,
+        loaderOptions: {
+          path: path.join(import.meta.dirname, 'i18n/'),
+          watch: configService.isDevelopment,
+        },
+      }),
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
       imports: [SharedModule],
       inject: [ApiConfigService],
     }),

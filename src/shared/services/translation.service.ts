@@ -41,7 +41,7 @@ export class TranslationService {
 
         if (Array.isArray(value)) {
           return Promise.all(
-            _.map(value, (v) => {
+            _.map(value, (v: any) => {
               if (v instanceof AbstractDto) {
                 return this.translateNecessaryKeys(v);
               }
@@ -50,6 +50,7 @@ export class TranslationService {
             }),
           );
         }
+
         return null;
       }),
     );

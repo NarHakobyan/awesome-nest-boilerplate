@@ -1,3 +1,6 @@
+import { join } from 'node:path';
+import process from 'node:process';
+
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { ThrottlerOptions } from '@nestjs/throttler';
@@ -79,12 +82,13 @@ export class ApiConfigService {
   }
 
   get postgresConfig(): TypeOrmModuleOptions {
-    const dirname = typeof Deno === 'undefined' ? __dirname : import.meta!.dirname;
     const entities = [
-      dirname + '/../../modules/**/*.entity{.ts,.js}',
-      dirname + '/../../modules/**/*.view-entity{.ts,.js}',
+      join(import.meta.dirname + '/modules/**/*.entity{.ts,.js}'),
+      join(import.meta.dirname + '/modules/**/*.view-entity{.ts,.js}'),
     ];
-    const migrations = [dirname + '/../../database/migrations/*{.ts,.js}'];
+    const migrations = [
+      join(import.meta.dirname + '/database/migrations/*{.ts,.js}'),
+    ];
 
     return {
       entities,
