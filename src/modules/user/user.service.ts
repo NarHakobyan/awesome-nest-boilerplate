@@ -8,8 +8,10 @@ import { Transactional } from 'typeorm-transactional';
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
+import type { IFile } from '../../interfaces/IFile';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
+import type { Reference } from '../../types';
 import { UserRegisterDto } from '../auth/dto/user-register.dto';
 import { CreateSettingsCommand } from './commands/create-settings.command';
 import { CreateSettingsDto } from './dtos/create-settings.dto';
@@ -17,8 +19,6 @@ import type { UserDto } from './dtos/user.dto';
 import type { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 import type { UserSettingsEntity } from './user-settings.entity';
-import type { Reference } from '../../types';
-import type { IFile } from '../../interfaces/IFile';
 
 @Injectable()
 export class UserService {
@@ -37,7 +37,7 @@ export class UserService {
     return this.userRepository.findOneBy(findData);
   }
 
-  async findByUsernameOrEmail(
+  findByUsernameOrEmail(
     options: Partial<{ username: string; email: string }>,
   ): Promise<UserEntity | null> {
     const queryBuilder = this.userRepository

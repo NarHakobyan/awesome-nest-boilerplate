@@ -1,6 +1,9 @@
 {
+  "imports": {
+    "@nestjs/common": "npm:@nestjs/common",
+    "typeorm": "npm:typeorm"
+  },
   "compilerOptions": {
-    "module": "commonjs",
     "declaration": false,
     "noImplicitAny": true,
     "removeComments": true,

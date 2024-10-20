@@ -12,6 +12,7 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    // "allowImportingTsExtensions": true,
     "allowUnreachableCode": false,
     "noImplicitReturns": true,
     "isolatedModules": true,

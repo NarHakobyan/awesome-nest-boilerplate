@@ -79,11 +79,12 @@ export class ApiConfigService {
   }
 
   get postgresConfig(): TypeOrmModuleOptions {
+    const dirname = typeof Deno === 'undefined' ? __dirname : import.meta!.dirname;
     const entities = [
-      __dirname + '/../../modules/**/*.entity{.ts,.js}',
-      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
+      dirname + '/../../modules/**/*.entity{.ts,.js}',
+      dirname + '/../../modules/**/*.view-entity{.ts,.js}',
     ];
-    const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
+    const migrations = [dirname + '/../../database/migrations/*{.ts,.js}'];
 
     return {
       entities,
