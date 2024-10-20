@@ -11,9 +11,9 @@
     "start:dev": "node --loader ts-node/esm src/main.ts",
     "start:prod": "node dist/main.js",
     "start:deno": "deno --watch --allow-read --allow-env --unstable-sloppy-imports --allow-net src/main.ts",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "migration:generate": "yarn run typeorm migration:generate -d ormconfig",
-    "migration:create": "yarn run typeorm migration:create -d ormconfig",
+    "typeorm": "typeorm-ts-node-esm",
+    "migration:generate": "yarn run typeorm migration:generate -d ormconfig.ts",
+    "migration:create": "yarn run typeorm migration:create -d ormconfig.ts",
     "new": "hygen new",
     "migration:revert": "yarn run typeorm migration:revert",
     "schema:drop": "yarn run typeorm schema:drop",
@@ -29,7 +29,7 @@
     "docs:dev": "vuepress dev -p 7070",
     "docs:build": "DEPLOY_ENV=gh-pages vuepress build",
     "docs:deploy": "yarn docs:build && gh-pages -d .vuepress/dist",
-    "prepare": "husky install",
+    "prepare": "husky",
     "release": "release-it"
   },
   "dependencies": {
