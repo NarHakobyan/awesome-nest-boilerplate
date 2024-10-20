@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, type Relation } from 'typeorm';
 
 import { AbstractEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
@@ -26,5 +26,5 @@ export class UserSettingsEntity extends AbstractEntity<
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  user?: UserEntity;
+  user?: Relation<UserEntity>;
 }

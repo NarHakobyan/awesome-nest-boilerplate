@@ -8,7 +8,6 @@ import { Transactional } from 'typeorm-transactional';
 
 import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
-import { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
 import { UserRegisterDto } from '../auth/dto/user-register.dto';
@@ -18,6 +17,8 @@ import type { UserDto } from './dtos/user.dto';
 import type { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 import type { UserSettingsEntity } from './user-settings.entity';
+import type { Reference } from '../../types';
+import type { IFile } from '../../interfaces/IFile';
 
 @Injectable()
 export class UserService {
@@ -61,7 +62,7 @@ export class UserService {
   @Transactional()
   async createUser(
     userRegisterDto: UserRegisterDto,
-    file?: IFile,
+    file?: Reference<IFile>,
   ): Promise<UserEntity> {
     const user = this.userRepository.create(userRegisterDto);
 

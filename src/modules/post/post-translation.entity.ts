@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, type Relation } from 'typeorm';
 
 import { AbstractTranslationEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
@@ -22,5 +22,5 @@ export class PostTranslationEntity extends AbstractTranslationEntity<PostTransla
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'post_id' })
-  post?: PostEntity;
+  post?: Relation<PostEntity>;
 }

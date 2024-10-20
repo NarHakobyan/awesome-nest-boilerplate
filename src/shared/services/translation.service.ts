@@ -5,7 +5,7 @@ import { I18nService } from 'nestjs-i18n';
 
 import { AbstractDto } from '../../common/dto/abstract.dto';
 import { STATIC_TRANSLATION_DECORATOR_KEY } from '../../decorators';
-import type { ITranslationDecoratorInterface } from '../../interfaces';
+import type { ITranslationDecoratorInterface } from '../../interfaces/ITranslationDecoratorInterface';
 import { ContextProvider } from '../../providers';
 
 @Injectable()

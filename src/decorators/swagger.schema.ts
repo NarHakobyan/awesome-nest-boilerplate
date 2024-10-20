@@ -13,8 +13,8 @@ import type {
   SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import _ from 'lodash';
+import type { IApiFile } from '../interfaces/IApiFile';
 
-import type { IApiFile } from '../interfaces';
 const PARAMTYPES_METADATA = "design:paramtypes";
 const ROUTE_ARGS_METADATA = "__routeArguments__";
 
