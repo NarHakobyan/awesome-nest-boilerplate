@@ -7,7 +7,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build:prod": "tsc -p tsconfig.build.json",
+    "build:tsc": "tsc -p tsconfig.build.json",
+    "build:prod": "nest build -p tsconfig.build.json",
     "start:dev": "node --loader ts-node/esm src/main.ts",
     "start:prod": "node dist/main.js",
     "start:deno": "deno --watch --allow-read --allow-env --unstable-sloppy-imports --allow-net src/main.ts",

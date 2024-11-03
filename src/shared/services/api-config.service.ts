@@ -1,12 +1,9 @@
 import { join } from 'node:path';
-import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { ThrottlerOptions } from '@nestjs/throttler';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import _ from 'lodash';
-import type { Units } from 'parse-duration';
 import { default as parse } from 'parse-duration';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
@@ -38,7 +35,10 @@ export class ApiConfigService {
     }
   }
 
-  private getDuration(key: string, format?: Units): number {
+  private getDuration(
+    key: string,
+    format?: Parameters<typeof parse>[1],
+  ): number {
     const value = this.getString(key);
     const duration = parse(value, format);
 
