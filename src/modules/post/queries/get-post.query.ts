@@ -3,7 +3,7 @@ import { QueryHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { PostEntity } from '../post.entity';
+import { PostEntity } from '../post.entity.ts';
 
 export class GetPostQuery implements ICommand {
   constructor(public readonly userId: Uuid) {}

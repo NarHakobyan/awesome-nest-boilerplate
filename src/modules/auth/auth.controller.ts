@@ -10,17 +10,19 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { RoleType } from '../../constants';
-import { ApiFile, Auth, AuthUser } from '../../decorators';
-import { IFile } from '../../interfaces/IFile';
-import { UserDto } from '../user/dtos/user.dto';
-import { UserEntity } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { AuthService } from './auth.service';
-import { LoginPayloadDto } from './dto/login-payload.dto';
-import { UserLoginDto } from './dto/user-login.dto';
-import { UserRegisterDto } from './dto/user-register.dto';
-import type { Reference } from '../../types';
+import { RoleType } from '../../constants/role-type.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
+import { Auth } from '../../decorators/http.decorators.ts';
+import { ApiFile } from '../../decorators/swagger.schema.ts';
+import { IFile } from '../../interfaces/IFile.ts';
+import type { Reference } from '../../types.ts';
+import { UserDto } from '../user/dtos/user.dto.ts';
+import { UserEntity } from '../user/user.entity.ts';
+import { UserService } from '../user/user.service.ts';
+import { AuthService } from './auth.service.ts';
+import { LoginPayloadDto } from './dto/login-payload.dto.ts';
+import { UserLoginDto } from './dto/user-login.dto.ts';
+import { UserRegisterDto } from './dto/user-register.dto.ts';
 
 @Controller('auth')
 @ApiTags('auth')

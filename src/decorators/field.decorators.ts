@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-null */
 import { applyDecorators } from '@nestjs/common';
 import type { ApiPropertyOptions } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
@@ -25,23 +24,23 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { supportedLanguageCount } from '../constants';
-import type { Constructor } from '../types';
-import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators';
+import { supportedLanguageCount } from '../constants/language-code.ts';
+import type { Constructor } from '../types.ts';
+import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators.ts';
 import {
   PhoneNumberSerializer,
   ToArray,
   ToBoolean,
   ToLowerCase,
   ToUpperCase,
-} from './transform.decorators';
+} from './transform.decorators.ts';
 import {
   IsNullable,
   IsPassword,
   IsPhoneNumber,
   IsTmpKey as IsTemporaryKey,
   IsUndefinable,
-} from './validator.decorators';
+} from './validator.decorators.ts';
 
 type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
@@ -294,7 +293,7 @@ export function EnumField<TEnum extends object>(
   options: Omit<ApiPropertyOptions, 'type' | 'enum' | 'enumName' | 'isArray'> &
     IEnumFieldOptions = {},
 ): PropertyDecorator {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const enumValue = getEnum();
   const decorators = [IsEnum(enumValue, { each: options.each })];
 
@@ -322,7 +321,6 @@ export function ClassField<TClass extends Constructor>(
   getClass: () => TClass,
   options: Omit<ApiPropertyOptions, 'type'> & IClassFieldOptions = {},
 ): PropertyDecorator {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const classValue = getClass();
 
   const decorators = [

@@ -5,8 +5,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { LanguageCode } from '../constants';
-import type { AbstractDto, AbstractTranslationDto } from './dto/abstract.dto';
+import { LanguageCode } from '../constants/language-code.ts';
+import type {
+  AbstractDto,
+  AbstractTranslationDto,
+} from './dto/abstract.dto.ts';
 
 /**
  * Abstract Entity

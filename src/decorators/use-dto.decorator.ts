@@ -1,4 +1,4 @@
-import type { Constructor } from '../types';
+import type { Constructor } from '../types.ts';
 
 export function UseDto(dtoClass: Constructor): ClassDecorator {
   return (ctor) => {

@@ -1,4 +1,6 @@
-import './boilerplate.polyfill';
+import { registerArrayExtensions } from './boilerplate.polyfill.ts';
+
+registerArrayExtensions();
 
 import path from 'node:path';
 
@@ -16,12 +18,12 @@ import {
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 
-import { AuthModule } from './modules/auth/auth.module';
-import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
-import { PostModule } from './modules/post/post.module';
-import { UserModule } from './modules/user/user.module';
-import { ApiConfigService } from './shared/services/api-config.service';
-import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './modules/auth/auth.module.ts';
+import { HealthCheckerModule } from './modules/health-checker/health-checker.module.ts';
+import { PostModule } from './modules/post/post.module.ts';
+import { UserModule } from './modules/user/user.module.ts';
+import { ApiConfigService } from './shared/services/api-config.service.ts';
+import { SharedModule } from './shared/shared.module.ts';
 
 @Module({
   imports: [

@@ -6,8 +6,8 @@ import type { ThrottlerOptions } from '@nestjs/throttler';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { default as parse } from 'parse-duration';
 
-import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
-import { SnakeNamingStrategy } from '../../snake-naming.strategy';
+import { UserSubscriber } from '../../entity-subscribers/user-subscriber.ts';
+import { SnakeNamingStrategy } from '../../snake-naming.strategy.ts';
 
 @Injectable()
 export class ApiConfigService {

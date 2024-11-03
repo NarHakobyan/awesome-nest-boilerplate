@@ -3,9 +3,9 @@ import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import type { CreatePostDto } from '../dtos/create-post.dto';
-import { PostEntity } from '../post.entity';
-import { PostTranslationEntity } from '../post-translation.entity';
+import type { CreatePostDto } from '../dtos/create-post.dto.ts';
+import { PostEntity } from '../post.entity.ts';
+import { PostTranslationEntity } from '../post-translation.entity.ts';
 
 export class CreatePostCommand implements ICommand {
   constructor(

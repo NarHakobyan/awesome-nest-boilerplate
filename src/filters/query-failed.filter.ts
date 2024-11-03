@@ -6,7 +6,7 @@ import { Reflector } from '@nestjs/core';
 import type { Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 
-import { constraintErrors } from './constraint-errors';
+import { constraintErrors } from './constraint-errors.ts';
 
 @Catch(QueryFailedError)
 export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {

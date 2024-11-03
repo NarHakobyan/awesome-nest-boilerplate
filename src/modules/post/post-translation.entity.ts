@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, type Relation } from 'typeorm';
 
-import { AbstractTranslationEntity } from '../../common/abstract.entity';
-import { UseDto } from '../../decorators';
-import { PostTranslationDto } from './dtos/post-translation.dto';
-import { PostEntity } from './post.entity';
+import { AbstractTranslationEntity } from '../../common/abstract.entity.ts';
+import { PostTranslationDto } from './dtos/post-translation.dto.ts';
+import { PostEntity } from './post.entity.ts';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
 
 @Entity({ name: 'post_translations' })
 @UseDto(PostTranslationDto)

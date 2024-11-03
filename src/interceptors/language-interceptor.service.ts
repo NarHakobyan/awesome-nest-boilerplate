@@ -5,8 +5,8 @@ import type {
 } from '@nestjs/common';
 import { Injectable, UseInterceptors } from '@nestjs/common';
 
-import { LanguageCode } from '../constants';
-import { ContextProvider } from '../providers';
+import { LanguageCode } from '../constants/language-code.ts';
+import { ContextProvider } from '../providers/context.provider.ts';
 
 @Injectable()
 export class LanguageInterceptor implements NestInterceptor {

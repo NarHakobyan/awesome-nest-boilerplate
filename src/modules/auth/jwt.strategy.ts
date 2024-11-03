@@ -2,11 +2,11 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import type { RoleType } from '../../constants';
-import { TokenType } from '../../constants';
-import { ApiConfigService } from '../../shared/services/api-config.service';
-import type { UserEntity } from '../user/user.entity';
-import { UserService } from '../user/user.service';
+import type { RoleType } from '../../constants/role-type.ts';
+import { TokenType } from '../../constants/token-type.ts';
+import { ApiConfigService } from '../../shared/services/api-config.service.ts';
+import type { UserEntity } from '../user/user.entity.ts';
+import { UserService } from '../user/user.service.ts';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

@@ -16,16 +16,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import type { PageDto } from '../../common/dto/page.dto';
-import { RoleType } from '../../constants';
-import { ApiPageResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
-import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
-import { UserEntity } from '../user/user.entity';
-import { CreatePostDto } from './dtos/create-post.dto';
-import { PostDto } from './dtos/post.dto';
-import { PostPageOptionsDto } from './dtos/post-page-options.dto';
-import { UpdatePostDto } from './dtos/update-post.dto';
-import { PostService } from './post.service';
+import type { PageDto } from '../../common/dto/page.dto.ts';
+import { RoleType } from '../../constants/role-type.ts';
+import { ApiPageResponse } from '../../decorators/api-page-response.decorator.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
+import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service.ts';
+import { UserEntity } from '../user/user.entity.ts';
+import { CreatePostDto } from './dtos/create-post.dto.ts';
+import { PostDto } from './dtos/post.dto.ts';
+import { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
+import { UpdatePostDto } from './dtos/update-post.dto.ts';
+import { PostService } from './post.service.ts';
 
 @Controller('posts')
 @ApiTags('posts')

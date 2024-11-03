@@ -1,13 +1,13 @@
-import { AbstractDto } from '../../../common/dto/abstract.dto';
-import { RoleType } from '../../../constants';
+import { AbstractDto } from '../../../common/dto/abstract.dto.ts';
+import { RoleType } from '../../../constants/role-type.ts';
 import {
   BooleanFieldOptional,
   EmailFieldOptional,
   EnumFieldOptional,
   PhoneFieldOptional,
   StringFieldOptional,
-} from '../../../decorators';
-import type { UserEntity } from '../user.entity';
+} from '../../../decorators/field.decorators.ts';
+import type { UserEntity } from '../user.entity.ts';
 
 // TODO, remove this class and use constructor's second argument's type
 export type UserDtoOptions = Partial<{ isActive: boolean }>;

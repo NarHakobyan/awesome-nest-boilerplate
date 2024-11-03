@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, OneToOne, type Relation } from 'typeorm';
 
-import { AbstractEntity } from '../../common/abstract.entity';
-import { UseDto } from '../../decorators';
-import type { UserDtoOptions } from './dtos/user.dto';
-import { UserDto } from './dtos/user.dto';
-import { UserEntity } from './user.entity';
+import { AbstractEntity } from '../../common/abstract.entity.ts';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
+import type { UserDtoOptions } from './dtos/user.dto.ts';
+import { UserDto } from './dtos/user.dto.ts';
+import { UserEntity } from './user.entity.ts';
 
 @Entity({ name: 'user_settings' })
 @UseDto(UserDto)

@@ -3,8 +3,8 @@ import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import type { CreateSettingsDto } from '../dtos/create-settings.dto';
-import { UserSettingsEntity } from '../user-settings.entity';
+import type { CreateSettingsDto } from '../dtos/create-settings.dto.ts';
+import { UserSettingsEntity } from '../user-settings.entity.ts';
 
 export class CreateSettingsCommand implements ICommand {
   constructor(

@@ -2,11 +2,11 @@ import type { Provider } from '@nestjs/common';
 import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
-import { ApiConfigService } from './services/api-config.service';
-import { AwsS3Service } from './services/aws-s3.service';
-import { GeneratorService } from './services/generator.service';
-import { TranslationService } from './services/translation.service';
-import { ValidatorService } from './services/validator.service';
+import { ApiConfigService } from './services/api-config.service.ts';
+import { AwsS3Service } from './services/aws-s3.service.ts';
+import { GeneratorService } from './services/generator.service.ts';
+import { TranslationService } from './services/translation.service.ts';
+import { ValidatorService } from './services/validator.service.ts';
 
 const providers: Provider[] = [
   ApiConfigService,
