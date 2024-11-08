@@ -66,7 +66,7 @@ import { SharedModule } from './shared/shared.module.ts';
       useFactory: (configService: ApiConfigService) => ({
         fallbackLanguage: configService.fallbackLanguage,
         loaderOptions: {
-          path: path.join(import.meta.dirname, 'i18n/'),
+          path: path.join(import.meta.dirname!, 'i18n/'),
           watch: configService.isDevelopment,
         },
       }),

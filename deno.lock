@@ -1,6 +1,11 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@luca/esbuild-deno-loader@*": "0.11.0",
+    "jsr:@luca/esbuild-deno-loader@0.11": "0.11.0",
+    "jsr:@std/bytes@^1.0.2": "1.0.3",
+    "jsr:@std/encoding@^1.0.5": "1.0.5",
+    "jsr:@std/path@^1.0.6": "1.0.8",
     "npm:@handfish/hygen@^6.1.6": "6.1.6",
     "npm:@nestjs/cli@^10.4.5": "10.4.5_chokidar@3.6.0_typescript@5.3.3_webpack@5.94.0__acorn@8.13.0",
     "npm:@nestjs/common@^10.4.5": "10.4.5_class-transformer@0.5.1_class-validator@0.14.1_reflect-metadata@0.2.2_rxjs@7.8.1",
@@ -55,6 +60,25 @@
     "npm:typescript@^5.6.3": "5.6.3",
     "npm:uuid@^9.0.1": "9.0.1",
     "npm:vue@^3.5.12": "3.5.12_typescript@5.6.3"
+  },
+  "jsr": {
+    "@luca/esbuild-deno-loader@0.11.0": {
+      "integrity": "c05a989aa7c4ee6992a27be5f15cfc5be12834cab7ff84cabb47313737c51a2c",
+      "dependencies": [
+        "jsr:@std/bytes",
+        "jsr:@std/encoding",
+        "jsr:@std/path"
+      ]
+    },
+    "@std/bytes@1.0.3": {
+      "integrity": "e5d5b9e685966314e4edb4be60dfc4bd7624a075bfd4ec8109252b4320f76452"
+    },
+    "@std/encoding@1.0.5": {
+      "integrity": "ecf363d4fc25bd85bd915ff6733a7e79b67e0e7806334af15f4645c569fefc04"
+    },
+    "@std/path@1.0.8": {
+      "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    }
   },
   "npm": {
     "@ampproject/remapping@2.3.0": {
@@ -5698,7 +5722,9 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@luca/esbuild-deno-loader@*",
       "npm:@nestjs/common@*",
+      "npm:esbuild@*",
       "npm:typeorm@*"
     ],
     "packageJson": {
@@ -5750,6 +5776,7 @@
         "npm:class-validator@~0.14.1",
         "npm:compression@^1.7.5",
         "npm:cross-env@^7.0.3",
+        "npm:esbuild@0.24",
         "npm:eslint-config-prettier@^9.1.0",
         "npm:eslint-import-resolver-typescript@^3.6.3",
         "npm:eslint-plugin-canonical@5",

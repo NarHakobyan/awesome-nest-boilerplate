@@ -50,6 +50,38 @@ yarn build:prod
 
 And you will see the generated file in `dist` that ready to be served.
 
+
+### Deno Integration
+
+We are excited to announce that this project now supports Deno! You can use Deno to run, build, and test your application. 🦕
+
+#### Deno Scripts
+
+Here are the available scripts for Deno:
+
+```bash
+# Start the development server
+deno task start
+
+# Start the server with file watcher
+deno task watch
+
+# Run tests
+deno task test
+
+# Compile the application (not working yet)
+deno task compile
+```
+
+To build the App using Deno, run:
+
+```bash
+deno task buildr
+```
+
+And you will see the generated file in `dist` that is ready to be served.
+
+
 ## Features
 
 <dl>

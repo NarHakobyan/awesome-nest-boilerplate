@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*",
+    "bundle.ts",
     "*.{ts,js,mts}",
     "test/**/*"
   ],

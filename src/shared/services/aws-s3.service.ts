@@ -1,8 +1,8 @@
-import type { IFile } from './../../interfaces/IFile.ts';
 import { S3 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import mime from 'mime-types';
 
+import type { IFile } from './../../interfaces/IFile.ts';
 import { ApiConfigService } from './api-config.service.ts';
 import { GeneratorService } from './generator.service.ts';
 
