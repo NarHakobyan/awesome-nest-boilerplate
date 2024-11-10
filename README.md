@@ -79,6 +79,30 @@ To build the App using Deno, run:
 deno task buildr
 ```
 
+### Bun Integration
+
+We are excited to announce that this project now supports Bun! You can use Bun to run, build, and test your application. 🧅
+
+#### Bun Scripts
+
+Here are the available scripts for Bun:
+
+```bash
+# Start the development server
+bun start:dev:bun
+
+# Start the server with file watcher
+bun watch:bun
+
+# Run tests
+
+bun test
+
+# Build the application
+
+bun build:bun
+```
+
 And you will see the generated file in `dist` that is ready to be served.
 
 
@@ -105,6 +129,9 @@ And you will see the generated file in `dist` that is ready to be served.
 
   <dt><b>Swagger Api Documentation</b></dt>
   <dd>Already integrated API documentation. To see all available endpoints visit http://localhost:3000/documentation</dd>
+
+  <dt><b>Node, Bun, Deno</b></dt>
+  <dd>Support for Node, Bun, and Deno. You can run, build, and test your application using any of these runtime.</dd>
 
   <dt><b>Linter</b></dt>
   <dd>eslint + prettier = ❤️</dd>
