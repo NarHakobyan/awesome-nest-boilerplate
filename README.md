@@ -30,9 +30,11 @@ When you use this template, try follow the checklist to update your info properl
 - [ ] Clean up the README.md file
 
 And, enjoy :)
+<details>
+  <summary>Node Development</summary>
 
+### Scripts
 
-### Development
 ```bash
 # 4. Run development server and open http://localhost:3000
 yarn start:dev
@@ -50,12 +52,14 @@ yarn build:prod
 
 And you will see the generated file in `dist` that ready to be served.
 
+</details>
 
-### Deno Integration
+<details>
+  <summary>Deno Development</summary>
 
 We are excited to announce that this project now supports Deno! You can use Deno to run, build, and test your application. 🦕
 
-#### Deno Scripts
+#### Scripts
 
 Here are the available scripts for Deno:
 
@@ -79,11 +83,16 @@ To build the App using Deno, run:
 deno task buildr
 ```
 
-### Bun Integration
+And you will see the generated file in `dist` that is ready to be served.
+
+</details>
+
+<details>
+  <summary>Bun Development</summary>
 
 We are excited to announce that this project now supports Bun! You can use Bun to run, build, and test your application. 🧅
 
-#### Bun Scripts
+#### Scripts
 
 Here are the available scripts for Bun:
 
@@ -104,6 +113,8 @@ bun build:bun
 ```
 
 And you will see the generated file in `dist` that is ready to be served.
+
+</details>
 
 
 ## Features
