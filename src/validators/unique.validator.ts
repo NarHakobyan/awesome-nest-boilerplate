@@ -29,7 +29,9 @@ export class UniqueValidator implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments): string {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const [entityClass] = args.constraints;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     const entity = entityClass.name || 'Entity';
 
     return `${entity} with the same ${args.property} already exists`;

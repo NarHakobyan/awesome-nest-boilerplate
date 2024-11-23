@@ -22,7 +22,7 @@ export class TranslationInterceptor implements NestInterceptor {
     return next
       .handle()
       .pipe(
-        mergeMap((data) =>
+        mergeMap((data: AbstractDto) =>
           this.translationService.translateNecessaryKeys(data),
         ),
       );

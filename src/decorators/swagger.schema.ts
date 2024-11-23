@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line max-len
+/* eslint-disable @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-argument */
 import type { Type } from '@nestjs/common';
 import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -13,12 +14,27 @@ import type {
   SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import _ from 'lodash';
+
 import type { IApiFile } from '../interfaces/IApiFile.ts';
 
-const PARAMTYPES_METADATA = "design:paramtypes";
-const ROUTE_ARGS_METADATA = "__routeArguments__";
+const PARAMTYPES_METADATA = 'design:paramtypes';
 
-function explore(instance: Object, propertyKey: string | symbol) {
+function reverseObjectKeys(
+  originalObject: Record<string, any>,
+): Record<string, any> {
+  const reversedObject: any = {};
+  const keys = Object.keys(originalObject).reverse();
+
+  for (const key of keys) {
+    reversedObject[key] = originalObject[key];
+  }
+
+  return reversedObject;
+}
+
+const ROUTE_ARGS_METADATA = '__routeArguments__';
+
+function explore(instance: object, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
     PARAMTYPES_METADATA,
     instance,
@@ -121,15 +137,4 @@ export function ApiFile(
     ApiFileDecorator(filesArray, options),
     ...apiFileInterceptors,
   );
-}
-
-function reverseObjectKeys(
-  originalObject: Record<string, any>
-): Record<string, any> {
-  const reversedObject: any = {};
-  const keys = Object.keys(originalObject).reverse();
-  for (const key of keys) {
-    reversedObject[key] = originalObject[key];
-  }
-  return reversedObject;
 }

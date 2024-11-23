@@ -58,13 +58,6 @@ export default tseslint.config(
     },
   },
   {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        // @ts-ignore
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
     rules: {
       'n/no-extraneous-import': 'off',
       'n/no-missing-import': 'off',
@@ -393,4 +386,19 @@ export default tseslint.config(
       'space-before-function-paren': 'off',
     },
   },
+  {
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...globals.node, /*...globals.browser*/ },
+      parserOptions: {
+        projectService: {
+          extraFileExtensions: [".ts"],
+          defaultProject: 'tsconfig.eslint.json',
+        },
+        // @ts-ignore
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  }
 );

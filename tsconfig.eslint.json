@@ -7,6 +7,9 @@
     "test/**/*"
   ],
   "exclude": [
+    ".vuepress",
+    ".hygen.js",
+    ".hygen",
     "node_modules",
     "dist"
   ]

@@ -3,20 +3,23 @@ import { DefaultNamingStrategy } from 'typeorm';
 
 function snakeCase(str: string): string {
   return (
-      str
-          // ABc -> a_bc
-          .replace(/([A-Z])([A-Z])([a-z])/g, "$1_$2$3")
-          // aC -> a_c
-          .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
-          .toLowerCase()
-  )
+    str
+      // ABc -> a_bc
+      .replace(/([A-Z])([A-Z])([a-z])/g, '$1_$2$3')
+      // aC -> a_c
+      .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+      .toLowerCase()
+  );
 }
 
 export class SnakeNamingStrategy
   extends DefaultNamingStrategy
   implements NamingStrategyInterface
 {
-  override tableName(className: string, customName: string | undefined): string {
+  override tableName(
+    className: string,
+    customName: string | undefined,
+  ): string {
     return customName ?? snakeCase(className);
   }
 
@@ -35,7 +38,10 @@ export class SnakeNamingStrategy
     return snakeCase(propertyName);
   }
 
-  override joinColumnName(relationName: string, referencedColumnName: string): string {
+  override joinColumnName(
+    relationName: string,
+    referencedColumnName: string,
+  ): string {
     return snakeCase(relationName + '_' + referencedColumnName);
   }
 

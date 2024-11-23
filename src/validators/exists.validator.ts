@@ -29,7 +29,9 @@ export class ExistsValidator implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments): string {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const [entityClass] = args.constraints;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     const entity = entityClass.name ?? 'Entity';
 
     return `The selected ${args.property}  does not exist in ${entity} entity`;
