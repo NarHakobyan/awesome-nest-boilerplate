@@ -6,18 +6,20 @@ import type { FindOptionsWhere } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
-import type { PageDto } from '../../common/dto/page.dto';
-import { FileNotImageException, UserNotFoundException } from '../../exceptions';
-import { IFile } from '../../interfaces';
-import { AwsS3Service } from '../../shared/services/aws-s3.service';
-import { ValidatorService } from '../../shared/services/validator.service';
-import { UserRegisterDto } from '../auth/dto/user-register.dto';
-import { CreateSettingsCommand } from './commands/create-settings.command';
-import { CreateSettingsDto } from './dtos/create-settings.dto';
-import type { UserDto } from './dtos/user.dto';
-import type { UsersPageOptionsDto } from './dtos/users-page-options.dto';
-import { UserEntity } from './user.entity';
-import type { UserSettingsEntity } from './user-settings.entity';
+import type { PageDto } from '../../common/dto/page.dto.ts';
+import { FileNotImageException } from '../../exceptions/file-not-image.exception.ts';
+import { UserNotFoundException } from '../../exceptions/user-not-found.exception.ts';
+import type { IFile } from '../../interfaces/IFile.ts';
+import { AwsS3Service } from '../../shared/services/aws-s3.service.ts';
+import { ValidatorService } from '../../shared/services/validator.service.ts';
+import type { Reference } from '../../types.ts';
+import { UserRegisterDto } from '../auth/dto/user-register.dto.ts';
+import { CreateSettingsCommand } from './commands/create-settings.command.ts';
+import { CreateSettingsDto } from './dtos/create-settings.dto.ts';
+import type { UserDto } from './dtos/user.dto.ts';
+import type { UsersPageOptionsDto } from './dtos/users-page-options.dto.ts';
+import { UserEntity } from './user.entity.ts';
+import type { UserSettingsEntity } from './user-settings.entity.ts';
 
 @Injectable()
 export class UserService {
@@ -36,7 +38,7 @@ export class UserService {
     return this.userRepository.findOneBy(findData);
   }
 
-  async findByUsernameOrEmail(
+  findByUsernameOrEmail(
     options: Partial<{ username: string; email: string }>,
   ): Promise<UserEntity | null> {
     const queryBuilder = this.userRepository
@@ -61,7 +63,7 @@ export class UserService {
   @Transactional()
   async createUser(
     userRegisterDto: UserRegisterDto,
-    file?: IFile,
+    file?: Reference<IFile>,
   ): Promise<UserEntity> {
     const user = this.userRepository.create(userRegisterDto);
 
@@ -109,7 +111,7 @@ export class UserService {
     return userEntity.toDto();
   }
 
-  async createSettings(
+  createSettings(
     userId: Uuid,
     createSettingsDto: CreateSettingsDto,
   ): Promise<UserSettingsEntity> {

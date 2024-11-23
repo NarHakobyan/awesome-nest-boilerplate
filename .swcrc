@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "exclude": "node_modules/",
+  "sourceMaps": true,
+  "isModule": true,
+  "module": {
+    "type": "nodenext",
+    "resolveFully": true
+  },
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true,
+      "dts": true
+    },
+    "target": "esnext",
+    "baseUrl": "./",
+    "experimental": {
+      "plugins": [
+        [
+          "@swc/plugin-transform-imports",
+          {
+            "^(.*?)(\\.ts)$": {
+              "skipDefaultConversion": true,
+              "transform": "{{matches.[1]}}.js"
+            }
+          }
+        ]
+      ]
+    }
+  }
+}

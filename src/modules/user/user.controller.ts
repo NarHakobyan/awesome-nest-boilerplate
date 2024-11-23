@@ -8,15 +8,17 @@ import {
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { PageDto } from '../../common/dto/page.dto';
-import { RoleType } from '../../constants';
-import { ApiPageResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
-import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
-import { TranslationService } from '../../shared/services/translation.service';
-import { UserDto } from './dtos/user.dto';
-import { UsersPageOptionsDto } from './dtos/users-page-options.dto';
-import { UserEntity } from './user.entity';
-import { UserService } from './user.service';
+import { PageDto } from '../../common/dto/page.dto.ts';
+import { RoleType } from '../../constants/role-type.ts';
+import { ApiPageResponse } from '../../decorators/api-page-response.decorator.ts';
+import { AuthUser } from '../../decorators/auth-user.decorator.ts';
+import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service.ts';
+import { TranslationService } from '../../shared/services/translation.service.ts';
+import { UserDto } from './dtos/user.dto.ts';
+import { UsersPageOptionsDto } from './dtos/users-page-options.dto.ts';
+import { UserEntity } from './user.entity.ts';
+import { UserService } from './user.service.ts';
 
 @Controller('users')
 @ApiTags('users')

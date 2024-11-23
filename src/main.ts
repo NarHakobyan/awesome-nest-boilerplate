@@ -13,14 +13,14 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 
-import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './filters/bad-request.filter';
-import { QueryFailedFilter } from './filters/query-failed.filter';
-import { TranslationInterceptor } from './interceptors/translation-interceptor.service';
-import { setupSwagger } from './setup-swagger';
-import { ApiConfigService } from './shared/services/api-config.service';
-import { TranslationService } from './shared/services/translation.service';
-import { SharedModule } from './shared/shared.module';
+import { AppModule } from './app.module.ts';
+import { HttpExceptionFilter } from './filters/bad-request.filter.ts';
+import { QueryFailedFilter } from './filters/query-failed.filter.ts';
+import { TranslationInterceptor } from './interceptors/translation-interceptor.service.ts';
+import { setupSwagger } from './setup-swagger.ts';
+import { ApiConfigService } from './shared/services/api-config.service.ts';
+import { TranslationService } from './shared/services/translation.service.ts';
+import { SharedModule } from './shared/shared.module.ts';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   initializeTransactionalContext();

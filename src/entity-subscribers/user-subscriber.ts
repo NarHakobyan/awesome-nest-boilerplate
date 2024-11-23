@@ -5,8 +5,8 @@ import type {
 } from 'typeorm';
 import { EventSubscriber } from 'typeorm';
 
-import { generateHash } from '../common/utils';
-import { UserEntity } from '../modules/user/user.entity';
+import { generateHash } from '../common/utils.ts';
+import { UserEntity } from '../modules/user/user.entity.ts';
 
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {

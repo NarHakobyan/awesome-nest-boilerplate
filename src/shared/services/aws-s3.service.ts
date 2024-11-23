@@ -2,9 +2,9 @@ import { S3 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import mime from 'mime-types';
 
-import type { IFile } from '../../interfaces';
-import { ApiConfigService } from './api-config.service';
-import { GeneratorService } from './generator.service';
+import type { IFile } from './../../interfaces/IFile.ts';
+import { ApiConfigService } from './api-config.service.ts';
+import { GeneratorService } from './generator.service.ts';
 
 @Injectable()
 export class AwsS3Service {
@@ -14,11 +14,11 @@ export class AwsS3Service {
     public configService: ApiConfigService,
     public generatorService: GeneratorService,
   ) {
-    const awsS3Config = configService.awsS3Config;
+    const config = configService.awsS3Config;
 
     this.s3 = new S3({
-      apiVersion: awsS3Config.bucketApiVersion,
-      region: awsS3Config.bucketRegion,
+      apiVersion: config.bucketApiVersion,
+      region: config.bucketRegion,
     });
   }
 

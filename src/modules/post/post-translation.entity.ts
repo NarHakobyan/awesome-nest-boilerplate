@@ -1,9 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, type Relation } from 'typeorm';
 
-import { AbstractTranslationEntity } from '../../common/abstract.entity';
-import { UseDto } from '../../decorators';
-import { PostTranslationDto } from './dtos/post-translation.dto';
-import { PostEntity } from './post.entity';
+import { AbstractTranslationEntity } from '../../common/abstract.entity.ts';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
+import { PostTranslationDto } from './dtos/post-translation.dto.ts';
+import { PostEntity } from './post.entity.ts';
 
 @Entity({ name: 'post_translations' })
 @UseDto(PostTranslationDto)
@@ -22,5 +22,5 @@ export class PostTranslationEntity extends AbstractTranslationEntity<PostTransla
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'post_id' })
-  post?: PostEntity;
+  post?: Relation<PostEntity>;
 }

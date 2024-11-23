@@ -4,14 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
-import type { PageDto } from '../../common/dto/page.dto';
-import { CreatePostCommand } from './commands/create-post.command';
-import { CreatePostDto } from './dtos/create-post.dto';
-import type { PostDto } from './dtos/post.dto';
-import type { PostPageOptionsDto } from './dtos/post-page-options.dto';
-import type { UpdatePostDto } from './dtos/update-post.dto';
-import { PostNotFoundException } from './exceptions/post-not-found.exception';
-import { PostEntity } from './post.entity';
+import type { PageDto } from '../../common/dto/page.dto.ts';
+import { CreatePostCommand } from './commands/create-post.command.ts';
+import { CreatePostDto } from './dtos/create-post.dto.ts';
+import type { PostDto } from './dtos/post.dto.ts';
+import type { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
+import type { UpdatePostDto } from './dtos/update-post.dto.ts';
+import { PostNotFoundException } from './exceptions/post-not-found.exception.ts';
+import { PostEntity } from './post.entity.ts';
 
 @Injectable()
 export class PostService {

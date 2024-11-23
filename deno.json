@@ -1,0 +1,61 @@
+{
+  "imports": {
+    "@nestjs/common": "npm:@nestjs/common",
+    "esbuild": "npm:esbuild",
+    "@luca/esbuild-deno-loader": "jsr:@luca/esbuild-deno-loader",
+    "typeorm": "npm:typeorm"
+  },
+  "compilerOptions": {
+    "declaration": false,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "noLib": false,
+    "skipLibCheck": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowUnreachableCode": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "strictPropertyInitialization": true,
+    "target": "ES2022",
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "noEmitHelpers": true,
+    "noUncheckedIndexedAccess": true,
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "incremental": true,
+    "isolatedModules": true,
+    "strictNullChecks": true
+  },
+  "tasks": {
+    "start": "deno run --allow-net --allow-read --allow-env --allow-ffi --unstable-sloppy-imports src/main.ts",
+    "start:prod": "deno run --allow-net --allow-read --allow-env --allow-ffi --unstable-sloppy-imports dist/main.js",
+    "watch": "deno run --allow-net --allow-read --allow-env --allow-ffi --unstable-sloppy-imports --watch=src/ src/main.ts",
+    "test": "deno test --allow-net --allow-read --allow-env --allow-ffi",
+    "compile": "deno compile --allow-read --allow-write --allow-env --allow-ffi --allow-ffi --unstable --output dist/main ./src/main.ts",
+    "buildr": "yarn build:prod"
+  },
+  "fmt": {
+    "options": {
+      "useTabs": false,
+      "lineWidth": 80,
+      "indentWidth": 2,
+      "singleQuote": true,
+      "proseWrap": "preserve"
+    }
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["src/**/*.ts"],
+      "exclude": ["node_modules/"]
+    }
+  }
+}

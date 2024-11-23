@@ -1,8 +1,8 @@
 import { Transform, TransformationType } from 'class-transformer';
 import { parsePhoneNumber } from 'libphonenumber-js';
-import { castArray, isArray, isNil, map, trim } from 'lodash';
+import _ from 'lodash';
 
-import { GeneratorProvider } from '../providers';
+import { GeneratorProvider } from '../providers/generator.provider.ts';
 
 /**
  * @description trim spaces from start and end, replace multiple spaces with one.
@@ -18,11 +18,11 @@ export function Trim(): PropertyDecorator {
   return Transform((params) => {
     const value = params.value as string[] | string;
 
-    if (isArray(value)) {
-      return map(value, (v) => trim(v).replaceAll(/\s\s+/g, ' '));
+    if (Array.isArray(value)) {
+      return value.map((v) => v.trim().replaceAll(/\s\s+/g, ' '));
     }
 
-    return trim(value).replaceAll(/\s\s+/g, ' ');
+    return value.trim().replaceAll(/\s\s+/g, ' ');
   });
 }
 
@@ -84,7 +84,7 @@ export function ToArray(): PropertyDecorator {
         return value;
       }
 
-      return castArray(value);
+      return _.castArray(value);
     },
     { toClassOnly: true },
   );

@@ -16,7 +16,8 @@ export function SameAs(
         validate(value, args) {
           const [relatedPropertyName] = args!.constraints as [string];
 
-          return (<any>args!.object)[relatedPropertyName] === value;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+          return (args!.object as any)[relatedPropertyName] === value;
         },
         defaultMessage() {
           return '$property must match $constraint1';

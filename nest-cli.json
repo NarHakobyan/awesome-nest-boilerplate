@@ -3,12 +3,18 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "plugins": [
-      "@nestjs/swagger/plugin"
-    ],
+    "builder": {
+      "type": "swc",
+      "options": {
+        "swcrcPath": ".swcrc"
+      }
+    },
+    "typeCheck": true,
+    "plugins": ["@nestjs/swagger/plugin"],
     "assets": [
       {
         "include": "i18n/**/*",
+        "outDir": "dist/i18n",
         "watchAssets": true
       }
     ]

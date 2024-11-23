@@ -10,3 +10,5 @@ export type KeyOfType<Entity, U> = {
       ? P
       : never;
 }[keyof Entity];
+
+export type Reference<T> = T;

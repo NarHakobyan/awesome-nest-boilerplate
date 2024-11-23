@@ -1,4 +1,7 @@
-import { NumberField, StringField } from '../../../decorators';
+import {
+  NumberField,
+  StringField,
+} from '../../../decorators/field.decorators.ts';
 
 export class TokenPayloadDto {
   @NumberField()

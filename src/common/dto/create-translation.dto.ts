@@ -1,5 +1,5 @@
-import { LanguageCode } from '../../constants';
-import { EnumField, StringField } from '../../decorators';
+import { LanguageCode } from '../../constants/language-code.ts';
+import { EnumField, StringField } from '../../decorators/field.decorators.ts';
 
 export class CreateTranslationDto {
   @EnumField(() => LanguageCode)

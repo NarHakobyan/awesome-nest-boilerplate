@@ -2,10 +2,14 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*",
+    "bundle.ts",
     "*.{ts,js,mts}",
     "test/**/*"
   ],
   "exclude": [
+    ".vuepress",
+    ".hygen.js",
+    ".hygen",
     "node_modules",
     "dist"
   ]

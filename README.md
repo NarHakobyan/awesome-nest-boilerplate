@@ -30,9 +30,11 @@ When you use this template, try follow the checklist to update your info properl
 - [ ] Clean up the README.md file
 
 And, enjoy :)
+<details>
+  <summary>Node Development</summary>
 
+### Scripts
 
-### Development
 ```bash
 # 4. Run development server and open http://localhost:3000
 yarn start:dev
@@ -49,6 +51,71 @@ yarn build:prod
 ```
 
 And you will see the generated file in `dist` that ready to be served.
+
+</details>
+
+<details>
+  <summary>Deno Development</summary>
+
+We are excited to announce that this project now supports Deno! You can use Deno to run, build, and test your application. 🦕
+
+#### Scripts
+
+Here are the available scripts for Deno:
+
+```bash
+# Start the development server
+deno task start
+
+# Start the server with file watcher
+deno task watch
+
+# Run tests
+deno task test
+
+# Compile the application (not working yet)
+deno task compile
+```
+
+To build the App using Deno, run:
+
+```bash
+deno task buildr
+```
+
+And you will see the generated file in `dist` that is ready to be served.
+
+</details>
+
+<details>
+  <summary>Bun Development</summary>
+
+We are excited to announce that this project now supports Bun! You can use Bun to run, build, and test your application. 🧅
+
+#### Scripts
+
+Here are the available scripts for Bun:
+
+```bash
+# Start the development server
+bun start:dev:bun
+
+# Start the server with file watcher
+bun watch:bun
+
+# Run tests
+
+bun test
+
+# Build the application
+
+bun build:bun
+```
+
+And you will see the generated file in `dist` that is ready to be served.
+
+</details>
+
 
 ## Features
 
@@ -73,6 +140,9 @@ And you will see the generated file in `dist` that ready to be served.
 
   <dt><b>Swagger Api Documentation</b></dt>
   <dd>Already integrated API documentation. To see all available endpoints visit http://localhost:3000/documentation</dd>
+
+  <dt><b>Node, Bun, Deno</b></dt>
+  <dd>Support for Node, Bun, and Deno. You can run, build, and test your application using any of these runtime.</dd>
 
   <dt><b>Linter</b></dt>
   <dd>eslint + prettier = ❤️</dd>
