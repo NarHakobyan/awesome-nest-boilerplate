@@ -1,19 +1,12 @@
-/* eslint-disable @typescript-eslint/naming-convention,@typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access,quote-props */
-// @ts-check
-
 import eslint from '@eslint/js';
 import stylisticPlugin from '@stylistic/eslint-plugin-ts';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import canonicalPlugin from 'eslint-plugin-canonical';
 import nPlugin from 'eslint-plugin-n';
 import prettierPlugin from 'eslint-plugin-prettier/recommended';
-// import sonarjsPlugin from "eslint-plugin-sonarjs";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+import sonarjsPlugin from "eslint-plugin-sonarjs";
 import promisePlugin from 'eslint-plugin-promise';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-// import importPlugin from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import";
 import unicornPlugin from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -24,6 +17,9 @@ export default tseslint.config(
   tseslint.configs.eslintRecommended,
   ...tseslint.configs.stylisticTypeChecked,
   ...tseslint.configs.recommendedTypeChecked,
+  sonarjsPlugin.configs.recommended,
+  importPlugin.flatConfigs.recommended,
+  importPlugin.flatConfigs.typescript,
   promisePlugin.configs['flat/recommended'],
   nPlugin.configs['flat/recommended'],
   canonicalPlugin.configs['flat/recommended'],

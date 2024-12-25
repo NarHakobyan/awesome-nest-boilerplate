@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/nest-cli",
   "language": "ts",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
@@ -9,6 +10,7 @@
         "swcrcPath": ".swcrc"
       }
     },
+    "deleteOutDir": true,
     "typeCheck": true,
     "plugins": ["@nestjs/swagger/plugin"],
     "assets": [
