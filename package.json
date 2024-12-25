@@ -58,10 +58,10 @@
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.11.12",
     "lodash": "^4.17.21",
-    "mime-types": "^2.1.35",
+    "mime-types": "^3.0.0",
     "morgan": "^1.10.0",
-    "nestjs-cls": "^4.4.1",
-    "nestjs-i18n": "^10.4.9",
+    "nestjs-cls": "^4.5.0",
+    "nestjs-i18n": "^10.5.0",
     "parse-duration": "^1.1.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -73,6 +73,7 @@
     "tslib": "^2.8.1",
     "typeorm": "0.3.19",
     "typeorm-transactional": "~0.5.0",
+    "globals": "^15.14.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

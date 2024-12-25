@@ -39,7 +39,7 @@ export abstract class AbstractEntity<
   translations?: AbstractTranslationEntity[];
 
   toDto(options?: O): DTO {
-    const dtoClass = this.constructor.prototype.dtoClass;
+    const dtoClass = Object.getPrototypeOf(this).dtoClass;
 
     if (!dtoClass) {
       throw new Error(
