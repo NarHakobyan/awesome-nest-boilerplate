@@ -26,7 +26,7 @@ export class AwsS3Service {
     const fileName = this.generatorService.fileName(
       mime.extension(file.mimetype) as string,
     );
-    const key = 'images/' + fileName;
+    const key = `images/${fileName}`;
     await this.s3.putObject({
       Bucket: this.configService.awsS3Config.bucketName,
       Body: file.buffer,

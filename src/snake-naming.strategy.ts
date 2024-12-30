@@ -5,9 +5,9 @@ function snakeCase(str: string): string {
   return (
     str
       // ABc -> a_bc
-      .replace(/([A-Z])([A-Z])([a-z])/g, '$1_$2$3')
+      .replaceAll(/([A-Z])([A-Z])([a-z])/g, '$1_$2$3')
       // aC -> a_c
-      .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+      .replaceAll(/([\da-z])([A-Z])/g, '$1_$2')
       .toLowerCase()
   );
 }
@@ -17,10 +17,10 @@ export class SnakeNamingStrategy
   implements NamingStrategyInterface
 {
   override tableName(
-    className: string,
+    entityName: string,
     customName: string | undefined,
   ): string {
-    return customName ?? snakeCase(className);
+    return customName ?? snakeCase(entityName);
   }
 
   override columnName(
@@ -42,7 +42,7 @@ export class SnakeNamingStrategy
     relationName: string,
     referencedColumnName: string,
   ): string {
-    return snakeCase(relationName + '_' + referencedColumnName);
+    return snakeCase(`${relationName}_${referencedColumnName}`);
   }
 
   override joinTableName(
@@ -52,11 +52,9 @@ export class SnakeNamingStrategy
     _secondPropertyName: string,
   ): string {
     return snakeCase(
-      firstTableName +
-        '_' +
-        firstPropertyName.replaceAll(/\./gi, '_') +
-        '_' +
-        secondTableName,
+      `${firstTableName}_${firstPropertyName.replaceAll(/\./gi, '_')}_${
+        secondTableName
+      }`,
     );
   }
 
@@ -65,13 +63,6 @@ export class SnakeNamingStrategy
     propertyName: string,
     columnName?: string,
   ): string {
-    return snakeCase(tableName + '_' + (columnName ?? propertyName));
-  }
-
-  classTableInheritanceParentColumnName(
-    parentTableName: string,
-    parentTableIdPropertyName: string,
-  ): string {
-    return snakeCase(`${parentTableName}_${parentTableIdPropertyName}`);
+    return snakeCase(`${tableName}_${columnName ?? propertyName}`);
   }
 }

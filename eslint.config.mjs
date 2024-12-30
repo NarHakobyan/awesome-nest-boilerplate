@@ -1,5 +1,5 @@
 import eslint from '@eslint/js';
-import stylisticPlugin from '@stylistic/eslint-plugin-ts';
+import stylisticPlugin from '@stylistic/eslint-plugin';
 import canonicalPlugin from 'eslint-plugin-canonical';
 import nPlugin from 'eslint-plugin-n';
 import prettierPlugin from 'eslint-plugin-prettier/recommended';
@@ -10,20 +10,12 @@ import importPlugin from "eslint-plugin-import";
 import unicornPlugin from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import github from 'eslint-plugin-github'
 
+let githubFlatConfig = github.getFlatConfigs();
 export default tseslint.config(
   eslint.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  tseslint.configs.eslintRecommended,
-  ...tseslint.configs.stylisticTypeChecked,
-  ...tseslint.configs.recommendedTypeChecked,
-  sonarjsPlugin.configs.recommended,
-  importPlugin.flatConfigs.recommended,
-  importPlugin.flatConfigs.typescript,
   promisePlugin.configs['flat/recommended'],
-  nPlugin.configs['flat/recommended'],
-  canonicalPlugin.configs['flat/recommended'],
-  prettierPlugin,
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
@@ -32,6 +24,56 @@ export default tseslint.config(
     rules: {
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      '@stylistic/member-delimiter-style': [
+        'error',
+        {
+          multiline: {
+            delimiter: 'semi',
+            requireLast: true,
+          },
+
+          singleline: {
+            delimiter: 'semi',
+            requireLast: false,
+          },
+        },
+      ],
+      '@stylistic/keyword-spacing': 'error',
+      '@stylistic/type-annotation-spacing': 'error',
+      '@stylistic/quotes': [
+        'error',
+        'single',
+        {
+          avoidEscape: true,
+          allowTemplateLiterals: true,
+        },
+      ],
+      '@stylistic/semi': ['error', 'always'],
+    },
+  },
+  {
+    extends: [
+      githubFlatConfig.recommended,
+      ...githubFlatConfig.typescript,
+    ],
+    rules: {
+      'eslintComments/no-use': 'off',
+    },
+  },
+  {
+    extends: [
+      importPlugin.flatConfigs.recommended,
+      importPlugin.flatConfigs.typescript,
+    ],
+    rules: {
+      'importPlugin/extensions': ['error', 'always', { ignorePackages: true }],
+      'importPlugin/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+      // "importPlugin/no-unresolved": ["error", {
+      //   ignore: ["^@hr-drone/*", "^firebase-admin/.+"],
+      // }],
+
+      // "importPlugin/no-duplicates": ["error"],
+      // "importPlugin/consistent-type-specifier-style": ["error", "prefer-top-level"],
     },
   },
   {
@@ -41,9 +83,9 @@ export default tseslint.config(
         ...globals.node,
       },
     },
-    plugins: {
-      unicorn: unicornPlugin,
-    },
+    extends: [
+      unicornPlugin.configs['flat/all'],
+    ],
     rules: {
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/no-abusive-eslint-disable': 'off',
@@ -54,24 +96,49 @@ export default tseslint.config(
     },
   },
   {
+    languageOptions: {
+      globals: {
+        ...globals.builtin,
+        ...globals.node,
+      },
+    },
+    extends: [
+      canonicalPlugin.configs['flat/recommended'],
+    ],
     rules: {
-      'n/no-extraneous-import': 'off',
-      'n/no-missing-import': 'off',
       'canonical/filename-match-exported': 'error',
       'canonical/import-specifier-newline': 'off',
       'canonical/destructuring-property-newline': 'off',
       'canonical/no-restricted-strings': 'error',
       'canonical/no-use-extend-native': 'error',
       'canonical/prefer-inline-type-import': 'off',
+    },
+  },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.builtin,
+        ...globals.node,
+      },
+    },
+    extends: [
+      sonarjsPlugin.configs.recommended,
+    ],
+    rules: {
       'sonarjs/no-duplicate-string': 'off',
-
-      // "import/no-unresolved": ["error", {
-      //   ignore: ["^@hr-drone/*", "^firebase-admin/.+"],
-      // }],
-
-      // "import/no-duplicates": ["error"],
-      // "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
-
+    },
+  },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.builtin,
+        ...globals.node,
+      },
+    },
+    extends: [
+      prettierPlugin,
+    ],
+    rules: {
       'prettier/prettier': [
         'error',
         {
@@ -81,6 +148,29 @@ export default tseslint.config(
           bracketSpacing: true,
         },
       ],
+    },
+  },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.builtin,
+        ...globals.node,
+      },
+    },
+    extends: [
+      nPlugin.configs['flat/recommended'],
+    ],
+    rules: {
+      'n/no-extraneous-import': 'off',
+      'n/no-missing-import': 'off',
+    },
+  },
+  {
+    extends: [  ...tseslint.configs.strictTypeChecked,
+      tseslint.configs.eslintRecommended,
+      ...tseslint.configs.stylisticTypeChecked,
+      ...tseslint.configs.recommendedTypeChecked,],
+    rules: {
       'no-redeclare': 'off',
       '@typescript-eslint/no-redeclare': 'error',
       // "import/newline-after-import": "error",
@@ -117,22 +207,6 @@ export default tseslint.config(
           },
         },
       ],
-
-      '@stylistic/member-delimiter-style': [
-        'error',
-        {
-          multiline: {
-            delimiter: 'semi',
-            requireLast: true,
-          },
-
-          singleline: {
-            delimiter: 'semi',
-            requireLast: false,
-          },
-        },
-      ],
-
       '@typescript-eslint/member-ordering': 'off',
       '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-angle-bracket-type-assertion': 'off',
@@ -161,7 +235,6 @@ export default tseslint.config(
       '@typescript-eslint/no-misused-new': 'error',
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/no-require-imports': 'error',
-      '@stylistic/keyword-spacing': 'error',
       '@typescript-eslint/no-namespace': 'error',
       '@typescript-eslint/no-this-alias': 'error',
       '@typescript-eslint/no-use-before-define': 'error',
@@ -169,18 +242,6 @@ export default tseslint.config(
       '@typescript-eslint/prefer-for-of': 'error',
       '@typescript-eslint/prefer-function-type': 'error',
       '@typescript-eslint/prefer-namespace-keyword': 'error',
-
-      '@stylistic/quotes': [
-        'error',
-        'single',
-        {
-          avoidEscape: true,
-          allowTemplateLiterals: true,
-        },
-      ],
-
-      '@stylistic/semi': ['error', 'always'],
-
       '@typescript-eslint/naming-convention': [
         'error',
         {
@@ -218,15 +279,12 @@ export default tseslint.config(
           prefix: ['is', 'should', 'has', 'can', 'did', 'will'],
         },
       ],
-
-      '@stylistic/type-annotation-spacing': 'error',
       '@typescript-eslint/unified-signatures': 'error',
       '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/no-unused-expressions': ['error'],
       'no-await-in-loop': 'error',
-
       'padding-line-between-statements': [
         'error',
         {

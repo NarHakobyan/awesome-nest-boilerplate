@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/pseudo-random */
 import { v1 as uuid } from 'uuid';
 
 export class GeneratorProvider {
@@ -6,7 +7,7 @@ export class GeneratorProvider {
   }
 
   static fileName(ext: string): string {
-    return GeneratorProvider.uuid() + '.' + ext;
+    return `${GeneratorProvider.uuid()}.${ext}`;
   }
 
   static getS3PublicUrl(key: string): string {

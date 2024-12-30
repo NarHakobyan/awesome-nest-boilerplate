@@ -25,7 +25,7 @@ import {
 } from 'class-validator';
 
 import { supportedLanguageCount } from '../constants/language-code.ts';
-import type { Constructor } from '../types.ts';
+import type { Constructor } from '../types';
 import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators.ts';
 import {
   PhoneNumberSerializer,
@@ -136,7 +136,7 @@ export function StringField(
     );
   }
 
-  const minLength = options.minLength || 1;
+  const minLength = options.minLength ?? 1;
 
   decorators.push(MinLength(minLength, { each: options.each }));
 
@@ -287,13 +287,12 @@ export function TmpKeyFieldOptional(
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function EnumField<TEnum extends object>(
   getEnum: () => TEnum,
   options: Omit<ApiPropertyOptions, 'type' | 'enum' | 'enumName' | 'isArray'> &
     IEnumFieldOptions = {},
 ): PropertyDecorator {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   const enumValue = getEnum();
   const decorators = [IsEnum(enumValue, { each: options.each })];
 
@@ -316,15 +315,15 @@ export function EnumField<TEnum extends object>(
   return applyDecorators(...decorators);
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function ClassField<TClass extends Constructor>(
   getClass: () => TClass,
   options: Omit<ApiPropertyOptions, 'type'> & IClassFieldOptions = {},
 ): PropertyDecorator {
-  const classValue = getClass();
+  const entity = getClass();
 
   const decorators = [
-    Type(() => classValue),
+    Type(() => entity),
     ValidateNested({ each: options.each }),
   ];
 
@@ -341,7 +340,7 @@ export function ClassField<TClass extends Constructor>(
   if (options.swagger !== false) {
     decorators.push(
       ApiProperty({
-        type: () => classValue,
+        type: () => entity,
         ...options,
       }),
     );
@@ -354,7 +353,7 @@ export function ClassField<TClass extends Constructor>(
   return applyDecorators(...decorators);
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function EnumFieldOptional<TEnum extends object>(
   getEnum: () => TEnum,
   options: Omit<ApiPropertyOptions, 'type' | 'required' | 'enum' | 'enumName'> &
@@ -366,7 +365,7 @@ export function EnumFieldOptional<TEnum extends object>(
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function ClassFieldOptional<TClass extends Constructor>(
   getClass: () => TClass,
   options: Omit<ApiPropertyOptions, 'type' | 'required'> &

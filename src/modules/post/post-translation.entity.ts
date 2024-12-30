@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, type Relation } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { AbstractTranslationEntity } from '../../common/abstract.entity.ts';
 import { UseDto } from '../../decorators/use-dto.decorator.ts';

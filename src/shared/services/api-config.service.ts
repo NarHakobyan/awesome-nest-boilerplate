@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import path from 'node:path';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -31,7 +31,7 @@ export class ApiConfigService {
     try {
       return Number(value);
     } catch {
-      throw new Error(key + ' environment variable is not a number');
+      throw new Error(`${key} environment variable is not a number`);
     }
   }
 
@@ -42,7 +42,7 @@ export class ApiConfigService {
     const value = this.getString(key);
     const duration = parse(value, format);
 
-    if (duration === undefined) {
+    if (duration === null) {
       throw new Error(`${key} environment variable is not a valid duration`);
     }
 
@@ -55,14 +55,14 @@ export class ApiConfigService {
     try {
       return Boolean(JSON.parse(value));
     } catch {
-      throw new Error(key + ' env var is not a boolean');
+      throw new Error(`${key} env var is not a boolean`);
     }
   }
 
   private getString(key: string): string {
     const value = this.get(key);
 
-    return value.replaceAll('\\n', '\n');
+    return value.replaceAll(String.raw`\n`, '\n');
   }
 
   get nodeEnv(): string {
@@ -83,11 +83,11 @@ export class ApiConfigService {
 
   get postgresConfig(): TypeOrmModuleOptions {
     const entities = [
-      join(import.meta.dirname + '/modules/**/*.entity{.ts,.js}'),
-      join(import.meta.dirname + '/modules/**/*.view-entity{.ts,.js}'),
+      path.join(`${import.meta.dirname}/modules/**/*.entity{.ts,.js}`),
+      path.join(`${import.meta.dirname}/modules/**/*.view-entity{.ts,.js}`),
     ];
     const migrations = [
-      join(import.meta.dirname + '/database/migrations/*{.ts,.js}'),
+      path.join(`${import.meta.dirname}/database/migrations/*{.ts,.js}`),
     ];
 
     return {
@@ -150,7 +150,7 @@ export class ApiConfigService {
     const value = this.configService.get<string>(key);
 
     if (value == null) {
-      throw new Error(key + ' environment variable does not set'); // probably we should call process.exit() too to avoid locking the service
+      throw new Error(`${key} environment variable does not set`); // probably we should call process.exit() too to avoid locking the service
     }
 
     return value;

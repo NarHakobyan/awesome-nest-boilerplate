@@ -2,14 +2,14 @@ import _ from 'lodash';
 import type { ObjectLiteral } from 'typeorm';
 import { Brackets, SelectQueryBuilder } from 'typeorm';
 
-import type { AbstractEntity } from './common/abstract.entity.ts';
-import type { AbstractDto } from './common/dto/abstract.dto.ts';
-import type { CreateTranslationDto } from './common/dto/create-translation.dto.ts';
+import type { AbstractEntity } from './common/abstract.entity';
+import type { AbstractDto } from './common/dto/abstract.dto';
+import type { CreateTranslationDto } from './common/dto/create-translation.dto';
 import { PageDto } from './common/dto/page.dto.ts';
 import { PageMetaDto } from './common/dto/page-meta.dto.ts';
-import type { PageOptionsDto } from './common/dto/page-options.dto.ts';
-import type { LanguageCode } from './constants/language-code.ts';
-import type { KeyOfType } from './types.ts';
+import type { PageOptionsDto } from './common/dto/page-options.dto';
+import type { LanguageCode } from './constants/language-code';
+import type { KeyOfType } from './types';
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };
@@ -97,83 +97,78 @@ declare module 'typeorm' {
   }
 }
 
-export function registerArrayExtensions(): void {
-  Array.prototype.toDtos = function <
-    Entity extends AbstractEntity<Dto>,
-    Dto extends AbstractDto,
-  >(options?: unknown): Dto[] {
-    return _.compact(
-      _.map<Entity, Dto>(this as Entity[], (item) =>
-        item.toDto(options as never),
-      ),
-    );
-  };
+Array.prototype.toDtos = function <
+  Entity extends AbstractEntity<Dto>,
+  Dto extends AbstractDto,
+>(options?: unknown): Dto[] {
+  return _.compact(
+    _.map<Entity, Dto>(this as Entity[], (item) =>
+      item.toDto(options as never),
+    ),
+  );
+};
 
-  Array.prototype.getByLanguage = function (
-    languageCode: LanguageCode,
-  ): string {
-    return this.find(
-      (translation) => languageCode === translation.languageCode,
-    )!.text;
-  };
+Array.prototype.getByLanguage = function (languageCode: LanguageCode): string {
+  return this.find((translation) => languageCode === translation.languageCode)!
+    .text;
+};
 
-  Array.prototype.toPageDto = function (
-    pageMetaDto: PageMetaDto,
-    options?: unknown,
-  ) {
-    return new PageDto(this.toDtos(options), pageMetaDto);
-  };
+Array.prototype.toPageDto = function (
+  pageMetaDto: PageMetaDto,
+  options?: unknown,
+) {
+  return new PageDto(this.toDtos(options), pageMetaDto);
+};
 
-  SelectQueryBuilder.prototype.searchByString = function (
-    q,
-    columnNames,
-    options,
-  ) {
-    if (!q) {
-      return this;
-    }
-
-    this.andWhere(
-      new Brackets((qb) => {
-        for (const item of columnNames) {
-          qb.orWhere(`${item} ILIKE :q`);
-        }
-      }),
-    );
-
-    if (options?.formStart) {
-      this.setParameter('q', `${q}%`);
-    } else {
-      this.setParameter('q', `%${q}%`);
-    }
-
+SelectQueryBuilder.prototype.searchByString = function (
+  q,
+  columnNames,
+  options,
+) {
+  if (!q) {
     return this;
-  };
+  }
 
-  SelectQueryBuilder.prototype.paginate = async function (
-    pageOptionsDto: PageOptionsDto,
-    options?: Partial<{
-      skipCount: boolean;
-      takeAll: boolean;
-    }>,
-  ) {
-    if (!options?.takeAll) {
-      this.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
-    }
+  this.andWhere(
+    new Brackets((qb) => {
+      for (const item of columnNames) {
+        qb.orWhere(`${item} ILIKE :q`);
+      }
+    }),
+  );
 
-    const entities = await this.getMany();
+  if (options?.formStart) {
+    this.setParameter('q', `${q}%`);
+  } else {
+    this.setParameter('q', `%${q}%`);
+  }
 
-    let itemCount = -1;
+  return this;
+};
 
-    if (!options?.skipCount) {
-      itemCount = await this.getCount();
-    }
+SelectQueryBuilder.prototype.paginate = async function (
+  pageOptionsDto: PageOptionsDto,
+  options?: Partial<{
+    skipCount: boolean;
+    takeAll: boolean;
+  }>,
+) {
+  if (!options?.takeAll) {
+    this.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+  }
 
-    const pageMetaDto = new PageMetaDto({
-      itemCount,
-      pageOptionsDto,
-    });
+  const entities = await this.getMany();
 
-    return [entities, pageMetaDto];
-  };
-}
+  let itemCount = -1;
+
+  if (!options?.skipCount) {
+    itemCount = await this.getCount();
+  }
+
+  const pageMetaDto = new PageMetaDto({
+    itemCount,
+    pageOptionsDto,
+  });
+
+  return [entities, pageMetaDto];
+};

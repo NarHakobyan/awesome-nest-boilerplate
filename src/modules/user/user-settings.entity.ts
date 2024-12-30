@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, OneToOne, type Relation } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import { AbstractEntity } from '../../common/abstract.entity.ts';
 import { UseDto } from '../../decorators/use-dto.decorator.ts';

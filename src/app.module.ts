@@ -1,6 +1,4 @@
-import { registerArrayExtensions } from './boilerplate.polyfill.ts';
-
-registerArrayExtensions();
+import './boilerplate.polyfill.ts';
 
 import path from 'node:path';
 
@@ -62,11 +60,12 @@ import { SharedModule } from './shared/shared.module.ts';
         );
       },
     }),
+    // eslint-disable-next-line canonical/id-match
     I18nModule.forRootAsync({
       useFactory: (configService: ApiConfigService) => ({
         fallbackLanguage: configService.fallbackLanguage,
         loaderOptions: {
-          path: path.join(import.meta.dirname!, 'i18n/'),
+          path: path.join(import.meta.dirname, 'i18n/'),
           watch: configService.isDevelopment,
         },
       }),
