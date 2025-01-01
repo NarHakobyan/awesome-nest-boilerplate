@@ -12,6 +12,7 @@ export default defineUserConfig({
     vuePluginOptions: {},
   }),
   theme: defaultTheme({
+    colorMode: 'light',
     sidebar: [
       // ['/', 'Introduction'],
       // '/docs/development',

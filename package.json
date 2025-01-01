@@ -103,9 +103,8 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^8.12.2",
     "@typescript-eslint/parser": "^8.18.2",
-    "@vuepress/bundler-vite": "^2.0.0-rc.19",
-    "@vuepress/client": "2.0.0-rc.2",
-    "@vuepress/theme-default": "^2.0.0-rc.68",
+    "@vuepress/bundler-vite": "2.0.0-rc.19",
+    "@vuepress/theme-default": "2.0.0-rc.68",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.2",
     "eslint": "^9.14.0",
@@ -137,8 +136,8 @@
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.18.2",
-    "vue": "^3.5.12",
-    "vuepress": "^2.0.0-rc.19"
+    "vue": "^3.5.13",
+    "vuepress": "2.0.0-rc.19"
   },
   "lint-staged": {
     "*.ts": [
