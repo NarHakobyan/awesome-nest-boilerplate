@@ -1,17 +1,29 @@
 # Naming cheatsheet
 
-- [English language](#english-language)
-- [Naming convention](#naming-convention)
-- [S-I-D](#s-i-d)
-- [Avoid contractions](#avoid-contractions)
-- [Avoid context duplication](#avoid-context-duplication)
-- [Reflect the expected result](#reflect-the-expected-result)
+- [Naming cheatsheet](#naming-cheatsheet)
+  - [English language](#english-language)
+  - [Naming convention](#naming-convention)
+  - [S-I-D](#s-i-d)
+  - [Avoid contractions](#avoid-contractions)
+  - [Avoid context duplication](#avoid-context-duplication)
+  - [Reflect the expected result](#reflect-the-expected-result)
 - [Naming functions](#naming-functions)
-  - [A/HC/LC pattern](#ahclc-pattern)
-    - [Actions](#actions)
-    - [Context](#context)
-    - [Prefixes](#prefixes)
-- [Singular and Plurals](#singular-and-plurals)
+  - [A/HC/LC Pattern](#ahclc-pattern)
+  - [Actions](#actions)
+    - [`get`](#get)
+    - [`set`](#set)
+    - [`reset`](#reset)
+    - [`fetch`](#fetch)
+    - [`remove`](#remove)
+    - [`delete`](#delete)
+    - [`compose`](#compose)
+  - [Context](#context)
+  - [Prefixes](#prefixes)
+    - [`is`](#is)
+    - [`has`](#has)
+    - [`should`](#should)
+    - [`min`/`max`](#minmax)
+  - [Singular and Plurals](#singular-and-plurals)
 
 ---
 
@@ -94,12 +106,12 @@ A name should not duplicate the context in which it is defined. Always remove th
 ```js
 class UserService {
   /* Method name duplicates the context (which is "User") */
-  getUserSettings(event) { 
+  getUserSettings(event) {
     // ...
   }
 
   /* Reads nicely as `userService.getSettings()` */
-  getSettings(event) { 
+  getSettings(event) {
     // ...
   }
 }
