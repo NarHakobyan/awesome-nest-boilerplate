@@ -1,5 +1,5 @@
-import type { ICommand } from '@nestjs/cqrs';
+import type { IQuery } from '@nestjs/cqrs';
 
-export class GetPostQuery implements ICommand {
+export class GetPostQuery implements IQuery {
   constructor(public readonly userId: Uuid) {}
 }
