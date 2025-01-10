@@ -39,7 +39,7 @@ declare module 'typeorm' {
   interface SelectQueryBuilder<Entity> {
     searchByString(
       q: string,
-      columnNames: string[],
+      columnNames: Array<keyof Entity>,
       options?: {
         formStart: boolean;
       },
@@ -125,23 +125,19 @@ SelectQueryBuilder.prototype.searchByString = function (
   columnNames,
   options,
 ) {
-  if (!q) {
+  if (!q || !Array.isArray(columnNames) || columnNames.length === 0) {
     return this;
   }
 
   this.andWhere(
     new Brackets((qb) => {
       for (const item of columnNames) {
-        qb.orWhere(`${item} ILIKE :q`);
+        qb.orWhere(`${String(item)} ILIKE :q`);
       }
     }),
   );
 
-  if (options?.formStart) {
-    this.setParameter('q', `${q}%`);
-  } else {
-    this.setParameter('q', `%${q}%`);
-  }
+  this.setParameter('q', options?.formStart ? `${q}%` : `%${q}%`);
 
   return this;
 };
@@ -159,11 +155,7 @@ SelectQueryBuilder.prototype.paginate = async function (
 
   const entities = await this.getMany();
 
-  let itemCount = -1;
-
-  if (!options?.skipCount) {
-    itemCount = await this.getCount();
-  }
+  const itemCount = options?.skipCount ? -1 : await this.getCount();
 
   const pageMetaDto = new PageMetaDto({
     itemCount,

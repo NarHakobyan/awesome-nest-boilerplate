@@ -26,8 +26,10 @@ export function validateHash(
   return bcrypt.compare(password, hash);
 }
 
+type NewType<TResult> = TResult;
+
 export function getVariableName<TResult>(
-  getVar: () => TResult,
+  getVar: () => NewType<TResult>,
 ): string | undefined {
   const m = /\(\)=>(.*)/.exec(
     getVar.toString().replaceAll(/(\r\n|\n|\r|\s)/gm, ''),
