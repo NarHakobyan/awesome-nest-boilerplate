@@ -6,7 +6,7 @@ import { getVariableName } from '../common/utils.ts';
 export function ApiBooleanProperty(
   options: Omit<ApiPropertyOptions, 'type'> = {},
 ): PropertyDecorator {
-  return ApiProperty({ type: Boolean, ...options });
+  return ApiProperty({ type: Boolean, ...(options as ApiPropertyOptions) });
 }
 
 export function ApiBooleanPropertyOptional(
@@ -23,7 +23,7 @@ export function ApiUUIDProperty(
     type: options.each ? [String] : String,
     format: 'uuid',
     isArray: options.each,
-    ...options,
+    ...(options as ApiPropertyOptions),
   });
 }
 
@@ -42,12 +42,11 @@ export function ApiEnumProperty<TEnum>(
   const enumValue = getEnum() as any;
 
   return ApiProperty({
-    type: 'enum',
     // throw error during the compilation of swagger
     // isArray: options.each,
     enum: enumValue,
     enumName: getVariableName(getEnum),
-    ...options,
+    ...(options as ApiPropertyOptions),
   });
 }
 

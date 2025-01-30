@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { ThrottlerOptions } from '@nestjs/throttler';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { default as parse } from 'parse-duration';
+import parse from 'parse-duration';
 
 import { UserSubscriber } from '../../entity-subscribers/user-subscriber.ts';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy.ts';
@@ -93,10 +93,8 @@ export class ApiConfigService {
     return {
       entities,
       migrations,
-      keepConnectionAlive: !this.isTest,
       dropSchema: this.isTest,
       type: 'postgres',
-      name: 'default',
       host: this.getString('DB_HOST'),
       port: this.getNumber('DB_PORT'),
       username: this.getString('DB_USERNAME'),

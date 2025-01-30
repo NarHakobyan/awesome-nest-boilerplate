@@ -1,13 +1,13 @@
 {
   "name": "awesome-nestjs-boilerplate",
-  "version": "10.0.0",
+  "version": "11.0.0",
   "description": "Awesome NestJS Boilerplate, Typescript, Postgres, TypeORM",
   "author": "Narek Hakobyan <narek.hakobyan.07@gmail.com>",
   "private": true,
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build:prod": "vite build",
+    "build:prod": "nest build",
     "start:dev": "vite",
     "nest:start": "nest start ./src/main.ts",
     "nest:start:dev": "nest start --watch",

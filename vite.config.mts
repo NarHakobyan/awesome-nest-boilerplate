@@ -16,10 +16,10 @@ export default defineConfig({
       // tell the plugin where is your project entry
       appPath: './src/main.ts',
       port: 3000,
-
+      outputFormat: 'esm',
       // Optional, default: false
       // if you want to init your app on boot, set this to true
-      // initAppOnBoot: false,
+      initAppOnBoot: true,
 
       // Optional, default: 'esbuild'
       // The TypeScript compiler you want to use
@@ -28,7 +28,6 @@ export default defineConfig({
       // like Nestjs (esbuild dont support 'emitDecoratorMetadata' yet)
       // you need to INSTALL `@swc/core` as dev dependency if you want to use swc
       tsCompiler: 'swc',
-      // tsCompiler: 'swc',
 
       // Optional, default: {
       // jsc: {

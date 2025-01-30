@@ -81,7 +81,7 @@ export function NumberField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: Number, ...options }));
+    decorators.push(ApiProperty({ type: Number, ...(options as ApiPropertyOptions) }));
   }
 
   if (options.each) {
@@ -132,7 +132,7 @@ export function StringField(
 
   if (options.swagger !== false) {
     decorators.push(
-      ApiProperty({ type: String, ...options, isArray: options.each }),
+      ApiProperty({ type: String, ...(options as ApiPropertyOptions), isArray: options.each }),
     );
   }
 
@@ -202,7 +202,7 @@ export function BooleanField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: Boolean, ...options }));
+    decorators.push(ApiProperty({ type: Boolean, ...(options as ApiPropertyOptions) }));
   }
 
   return applyDecorators(...decorators);
@@ -238,7 +238,7 @@ export function TranslationsField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ isArray: true, ...options }));
+    decorators.push(ApiProperty({ isArray: true, ...(options as ApiPropertyOptions) }));
   }
 
   return applyDecorators(...decorators);
@@ -270,7 +270,7 @@ export function TmpKeyField(
 
   if (options.swagger !== false) {
     decorators.push(
-      ApiProperty({ type: String, ...options, isArray: options.each }),
+      ApiProperty({ type: String, ...(options as ApiPropertyOptions), isArray: options.each }),
     );
   }
 
@@ -341,7 +341,7 @@ export function ClassField<TClass extends Constructor>(
     decorators.push(
       ApiProperty({
         type: () => entity,
-        ...options,
+        ...(options as ApiPropertyOptions),
       }),
     );
   }
@@ -392,7 +392,7 @@ export function EmailField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: String, ...options }));
+    decorators.push(ApiProperty({ type: String, ...(options as ApiPropertyOptions) }));
   }
 
   return applyDecorators(...decorators);
@@ -419,7 +419,7 @@ export function PhoneField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: String, ...options }));
+    decorators.push(ApiProperty({ type: String, ...(options as ApiPropertyOptions) }));
   }
 
   return applyDecorators(...decorators);
@@ -502,7 +502,7 @@ export function DateField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: Date, ...options }));
+    decorators.push(ApiProperty({ type: Date, ...(options as ApiPropertyOptions) }));
   }
 
   return applyDecorators(...decorators);

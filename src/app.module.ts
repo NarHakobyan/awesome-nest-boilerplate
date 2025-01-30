@@ -1,5 +1,3 @@
-import './boilerplate.polyfill.ts';
-
 import path from 'node:path';
 
 import { Module } from '@nestjs/common';
