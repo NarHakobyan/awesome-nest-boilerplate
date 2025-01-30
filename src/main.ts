@@ -86,7 +86,10 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   }
 
   const port = configService.appConfig.port;
-  await app.listen(port);
+
+  if (import.meta.env.PROD) {
+    await app.listen(port);
+  }
 
   console.info(`server running on ${await app.getUrl()}`);
 

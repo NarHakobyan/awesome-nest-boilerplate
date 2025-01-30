@@ -4,7 +4,8 @@
     "src/**/*",
     "bundle.ts",
     "*.{ts,js,mts}",
-    "test/**/*"
+    "test/**/*",
+    "./eslint.config.mjs"
   ],
   "exclude": [
     ".vuepress/**/*",

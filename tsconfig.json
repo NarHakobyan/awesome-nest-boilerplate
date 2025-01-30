@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "ES2022",
-    "lib": ["es2022"],
+    "module": "ESNext",
+    "lib": ["ESNext"],
     "moduleResolution": "Node",
     "declaration": true,
     "noImplicitAny": true,
@@ -15,6 +15,8 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "useDefineForClassFields": true,
     "allowUnreachableCode": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
@@ -25,7 +27,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "strictPropertyInitialization": true,
-    "target": "ES2022",
+    "target": "ESNext",
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "noEmitHelpers": true,

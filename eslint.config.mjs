@@ -1,16 +1,18 @@
+// @ts-check
+
 import eslint from '@eslint/js';
 import stylisticPlugin from '@stylistic/eslint-plugin';
 import canonicalPlugin from 'eslint-plugin-canonical';
 import nPlugin from 'eslint-plugin-n';
 import prettierPlugin from 'eslint-plugin-prettier/recommended';
-import sonarjsPlugin from "eslint-plugin-sonarjs";
+import sonarjsPlugin from 'eslint-plugin-sonarjs';
 import promisePlugin from 'eslint-plugin-promise';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import importPlugin from "eslint-plugin-import";
+import importPlugin from 'eslint-plugin-import';
 import unicornPlugin from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import github from 'eslint-plugin-github'
+import github from 'eslint-plugin-github';
 
 let githubFlatConfig = github.getFlatConfigs();
 export default tseslint.config(
@@ -66,8 +68,8 @@ export default tseslint.config(
       importPlugin.flatConfigs.typescript,
     ],
     rules: {
-      'importPlugin/extensions': ['error', 'always', { ignorePackages: true }],
-      'importPlugin/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+      'import/extensions': ['error', 'always', {ignorePackages: true}],
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
       // "importPlugin/no-unresolved": ["error", {
       //   ignore: ["^@hr-drone/*", "^firebase-admin/.+"],
       // }],
@@ -166,10 +168,10 @@ export default tseslint.config(
     },
   },
   {
-    extends: [  ...tseslint.configs.strictTypeChecked,
+    extends: [...tseslint.configs.strictTypeChecked,
       tseslint.configs.eslintRecommended,
       ...tseslint.configs.stylisticTypeChecked,
-      ...tseslint.configs.recommendedTypeChecked,],
+      ...tseslint.configs.recommendedTypeChecked],
     rules: {
       'no-redeclare': 'off',
       '@typescript-eslint/no-redeclare': 'error',
@@ -223,7 +225,7 @@ export default tseslint.config(
       '@typescript-eslint/ban-tslint-comment': 'error',
       '@typescript-eslint/consistent-indexed-object-style': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
-
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
@@ -334,7 +336,7 @@ export default tseslint.config(
           paths: [
             {
               name: 'rxjs/Rx',
-              message: "Please import directly from 'rxjs' instead",
+              message: 'Please import directly from \'rxjs\' instead',
             },
           ],
         },
@@ -442,17 +444,20 @@ export default tseslint.config(
   },
   {
     languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      globals: { ...globals.node, /*...globals.browser*/ },
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.builtin,
+        ...globals.node,
+      },
       parserOptions: {
         projectService: {
-          extraFileExtensions: [".ts"],
+          extraFileExtensions: ['.ts'],
           defaultProject: 'tsconfig.eslint.json',
         },
         // @ts-ignore
         tsconfigRootDir: import.meta.dirname,
       },
     },
-  }
+  },
 );
