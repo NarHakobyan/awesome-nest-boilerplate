@@ -14,7 +14,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import github from 'eslint-plugin-github';
 
-let githubFlatConfig = github.getFlatConfigs();
+const  githubFlatConfig = github.getFlatConfigs();
 export default tseslint.config(
   eslint.configs.recommended,
   promisePlugin.configs['flat/recommended'],
@@ -57,17 +57,10 @@ export default tseslint.config(
     extends: [
       githubFlatConfig.recommended,
       ...githubFlatConfig.typescript,
-    ],
-    rules: {
-      'eslintComments/no-use': 'off',
-    },
-  },
-  {
-    extends: [
-      importPlugin.flatConfigs.recommended,
       importPlugin.flatConfigs.typescript,
     ],
     rules: {
+      'eslintComments/no-use': 'off',
       'import/extensions': ['error', 'always', {ignorePackages: true}],
       'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
       // "importPlugin/no-unresolved": ["error", {

@@ -1,9 +1,6 @@
 {
   "imports": {
-    "@nestjs/common": "npm:@nestjs/common",
-    "esbuild": "npm:esbuild",
-    "@luca/esbuild-deno-loader": "jsr:@luca/esbuild-deno-loader",
-    "typeorm": "npm:typeorm"
+    "@luca/esbuild-deno-loader": "jsr:@luca/esbuild-deno-loader"
   },
   "compilerOptions": {
     "declaration": false,
