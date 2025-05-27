@@ -1,12 +1,13 @@
 # Linting & formatting
 
-- [Languages](#languages)
-- [Scripts](#scripts)
-  - [Terminal](#terminal)
-  - [Pre-commit](#pre-commit)
-  - [Editor](#editor)
-- [Configuration](#configuration)
-- [FAQ](#faq)
+- [Linting \& formatting](#linting--formatting)
+  - [Languages](#languages)
+  - [Scripts](#scripts)
+    - [Terminal](#terminal)
+    - [Pre-commit](#pre-commit)
+    - [Editor](#editor)
+  - [Configuration](#configuration)
+  - [FAQ](#faq)
 
 This project uses Typescript Eslint, and Prettier to catch errors and avoid bike-shedding by enforcing a common code style.
 

@@ -5,6 +5,8 @@
   - [Installation](#installation)
     - [Database](#database)
     - [Configuration](#configuration)
+      - [MySQL](#mysql)
+        - [Docker Compose](#docker-compose)
     - [Dev server](#dev-server)
   - [Generators](#generators)
   - [Docker](#docker)

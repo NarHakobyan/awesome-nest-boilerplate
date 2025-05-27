@@ -27,12 +27,15 @@ export class ApiConfigService {
 
   private getNumber(key: string): number {
     const value = this.get(key);
+    const num = Number(value);
 
-    try {
-      return Number(value);
-    } catch {
-      throw new Error(`${key} environment variable is not a number`);
+    if (Number.isNaN(num)) {
+      throw new Error(
+        `Environment variable ${key} must be a number. Received: ${value}`
+      );
     }
+
+    return num;
   }
 
   private getDuration(
@@ -43,7 +46,9 @@ export class ApiConfigService {
     const duration = parse(value, format);
 
     if (duration === null) {
-      throw new Error(`${key} environment variable is not a valid duration`);
+      throw new Error(
+        `Environment variable ${key} must be a valid duration. Received: ${value}`
+      );
     }
 
     return duration;
@@ -55,13 +60,14 @@ export class ApiConfigService {
     try {
       return Boolean(JSON.parse(value));
     } catch {
-      throw new Error(`${key} env var is not a boolean`);
+      throw new Error(
+        `Environment variable ${key} must be a boolean. Received: ${value}`
+      );
     }
   }
 
   private getString(key: string): string {
     const value = this.get(key);
-
     return value.replaceAll(String.raw`\n`, '\n');
   }
 
@@ -148,7 +154,7 @@ export class ApiConfigService {
     const value = this.configService.get<string>(key);
 
     if (value == null) {
-      throw new Error(`${key} environment variable does not set`); // probably we should call process.exit() too to avoid locking the service
+      throw new Error(`Environment variable ${key} is not set`);
     }
 
     return value;

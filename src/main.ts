@@ -29,7 +29,13 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(),
-    { cors: true },
+    {
+      cors: {
+        origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        credentials: true,
+      }
+    },
   );
   app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
   app.use(helmet());
@@ -93,7 +99,6 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     await app.listen(port);
     console.info(`server running on ${await app.getUrl()}`);
   }
-
 
   return app;
 }
