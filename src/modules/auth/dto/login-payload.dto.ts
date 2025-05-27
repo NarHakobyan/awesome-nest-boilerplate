@@ -7,10 +7,10 @@ export class LoginPayloadDto {
   user: UserDto;
 
   @ClassField(() => TokenPayloadDto)
-  token: TokenPayloadDto;
+  accessToken: TokenPayloadDto;
 
   constructor(user: UserDto, token: TokenPayloadDto) {
     this.user = user;
-    this.token = token;
+    this.accessToken = token;
   }
 }

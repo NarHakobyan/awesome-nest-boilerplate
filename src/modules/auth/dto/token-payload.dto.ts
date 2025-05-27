@@ -8,10 +8,10 @@ export class TokenPayloadDto {
   expiresIn: number;
 
   @StringField()
-  accessToken: string;
+  token: string;
 
-  constructor(data: { expiresIn: number; accessToken: string }) {
+  constructor(data: { expiresIn: number; token: string }) {
     this.expiresIn = data.expiresIn;
-    this.accessToken = data.accessToken;
+    this.token = data.token;
   }
 }

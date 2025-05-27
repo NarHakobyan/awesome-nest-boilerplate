@@ -1,29 +1,24 @@
----
-description: Clean NestJs APIs with TypeScript Cursor Rules
-globs:
-alwaysApply: false
----
 # NestJS Code Style Guide
 
 This document serves as the definitive guide for code style, patterns, and conventions used in the Awesome NestJS Boilerplate. This guide should be used as context for all future code generation and development work.
 
 ## Table of Contents
 
-- [Project Overview](mdc:#project-overview)
-- [General TypeScript Guidelines](mdc:#general-typescript-guidelines)
-- [File and Directory Structure](mdc:#file-and-directory-structure)
-- [Module Architecture](mdc:#module-architecture)
-- [Controllers](mdc:#controllers)
-- [Services](mdc:#services)
-- [DTOs and Validation](mdc:#dtos-and-validation)
-- [Entities](mdc:#entities)
-- [CQRS Pattern](mdc:#cqrs-pattern)
-- [Authentication and Authorization](mdc:#authentication-and-authorization)
-- [Exception Handling](mdc:#exception-handling)
-- [API Documentation](mdc:#api-documentation)
-- [Configuration and Environment](mdc:#configuration-and-environment)
-- [Testing Patterns](mdc:#testing-patterns)
-- [Code Quality and Linting](mdc:#code-quality-and-linting)
+- [Project Overview](#project-overview)
+- [General TypeScript Guidelines](#general-typescript-guidelines)
+- [File and Directory Structure](#file-and-directory-structure)
+- [Module Architecture](#module-architecture)
+- [Controllers](#controllers)
+- [Services](#services)
+- [DTOs and Validation](#dtos-and-validation)
+- [Entities](#entities)
+- [CQRS Pattern](#cqrs-pattern)
+- [Authentication and Authorization](#authentication-and-authorization)
+- [Exception Handling](#exception-handling)
+- [API Documentation](#api-documentation)
+- [Configuration and Environment](#configuration-and-environment)
+- [Testing Patterns](#testing-patterns)
+- [Code Quality and Linting](#code-quality-and-linting)
 
 ## Project Overview
 

@@ -1,25 +1,36 @@
-# Setup and development
+# Development Guide
 
-- [Setup and development](#setup-and-development)
-  - [First-time setup](#first-time-setup)
+- [Development Guide](#development-guide)
+  - [First-time Setup](#first-time-setup)
   - [Installation](#installation)
-    - [Database](#database)
-    - [Configuration](#configuration)
-      - [MySQL](#mysql)
-        - [Docker Compose](#docker-compose)
-    - [Dev server](#dev-server)
-  - [Generators](#generators)
-  - [Docker](#docker)
-    - [Docker installation](#docker-installation)
-    - [Docker-compose installation](#docker-compose-installation)
-    - [Run](#run)
+  - [Database Configuration](#database-configuration)
+    - [PostgreSQL (Default)](#postgresql-default)
+    - [MySQL/MariaDB Alternative](#mysqlmariadb-alternative)
+    - [Database Operations](#database-operations)
+  - [Development Server](#development-server)
+  - [Project Structure](#project-structure)
+  - [Code Generation](#code-generation)
+  - [Environment Variables](#environment-variables)
+  - [Docker Development](#docker-development)
+    - [Prerequisites](#prerequisites)
+    - [Running with Docker](#running-with-docker)
+    - [Docker Compose Services](#docker-compose-services)
+  - [Development Workflow](#development-workflow)
+  - [Debugging](#debugging)
+    - [VS Code Configuration](#vs-code-configuration)
+    - [Debug Commands](#debug-commands)
+  - [Performance Optimization](#performance-optimization)
+    - [Development Performance](#development-performance)
+    - [Production Considerations](#production-considerations)
 
-## First-time setup
+## First-time Setup
 
-Make sure you have the following installed:
+Ensure you have the required tools installed:
 
-- [Node](https://nodejs.org/en/) (at least the latest LTS)
-- [Yarn](https://yarnpkg.com/lang/en/docs/install/) (at least 1.0)
+- [Node.js](https://nodejs.org/en/) (v18+ LTS recommended)
+- [Yarn](https://yarnpkg.com/lang/en/docs/install/) (v1.22.22+)
+- [PostgreSQL](https://www.postgresql.org/) (v12+)
+- [Git](https://git-scm.com/)
 
 ## Installation
 
@@ -28,45 +39,38 @@ Make sure you have the following installed:
 yarn install
 ```
 
-> Note: don't delete yarn.lock before installation, See more [in yarn docs](https://classic.yarnpkg.com/en/docs/yarn-lock/)
+> **Note**: Don't delete `yarn.lock` before installation. See more in [Yarn docs](https://classic.yarnpkg.com/en/docs/yarn-lock/)
 
-### Database
+## Database Configuration
 
-> Note: Awesome NestJS Boilerplate uses [TypeORM](https://github.com/typeorm/typeorm) with Data Mapper pattern.
+The project uses [TypeORM](https://github.com/typeorm/typeorm) with the Data Mapper pattern and supports multiple database types.
 
-### Configuration
+### PostgreSQL (Default)
 
-Before start install PostgreSQL and fill correct configurations in `.env` file
+1. Install and start PostgreSQL
+2. Create a database for your application
+3. Configure your `.env` file:
 
 ```env
+# Database Configuration
+DB_TYPE=postgres
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_DATABASE=nest_boilerplate
+
+# Enable ORM logging (development only)
+ENABLE_ORM_LOGS=true
 ```
 
-Some helper script to work with database
+### MySQL/MariaDB Alternative
 
-```bash
-# To create new migration file
-yarn migration:create migration_name
+If you prefer MySQL/MariaDB over PostgreSQL:
 
-# Truncate full database (note: it isn't deleting the database)
-yarn schema:drop
-
-# Generate migration from update of entities
-yarn migration:generate migration_name
-```
-
-#### MySQL
-
-If you need to use MySQL / MariaDB instead of PostgreSQL, follow the steps below:
-> (assuming you have installed mysql in your system and it is running on port 3306)
-1. Make the following entries in the #DB section in `.env` file
-
+1. Update your `.env` file:
 ```env
-#== DB
+# Database Configuration
 DB_TYPE=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -76,102 +80,319 @@ DB_DATABASE=nest_boilerplate
 DB_ROOT_PASSWORD=mysql
 DB_ALLOW_EMPTY_PASSWORD=yes
 ```
-2. Change the DB in TypeORM to MySQL. You can do that by heading over to the file `ormconfig.ts`.
-```
-...
+
+2. Update `ormconfig.ts`:
+```typescript
 export const dataSource = new DataSource({
-  type: 'mysql', // <-- Just write mysql here
+  type: 'mysql', // Change from 'postgres' to 'mysql'
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  namingStrategy: new SnakeNamingStrategy(),
-  subscribers: [UserSubscriber],
-  entities: [
-    'src/modules/**/*.entity{.ts,.js}',
-    'src/modules/**/*.view-entity{.ts,.js}',
-  ],
-  migrations: ['src/database/migrations/*{.ts,.js}'],
+  // ... rest of configuration
 });
 ```
-3. Delete all the files in migrations folder (`src/database/migrations`)
-4. Run the following commands in the root folder of the project, to regenerate the migrations:
+
+3. Clear existing migrations and regenerate:
+```bash
+# Remove existing migrations
+rm -rf src/database/migrations/*
+
+# Generate new migrations for MySQL
+yarn migration:generate ./src/database/migrations/InitialMigration
 ```
-yarn typeorm migration:generate ./src/database/migrations/MySQLMigrations
-```
 
-These steps may work for [other databases](https://typeorm.io/#features) supported by TypeORM. If they work, let us know and we'll add it to the docs!
-
-##### Docker Compose
-After completing the steps above, you can use [this docker-compose file](../docker-compose_mysql.yml) for awesome-nest-boilerplate with MySQL (instead of PostgreSQL).
-
-### Dev server
-
-> Note: If you're on Linux and see an `ENOSPC` error when running the commands below, you must [increase the number of available file watchers](https://stackoverflow.com/questions/22475849/node-js-error-enospc#answer-32600959).
+### Database Operations
 
 ```bash
-# Launch the dev server
+# Create a new migration file
+yarn migration:create MigrationName
+
+# Generate migration from entity changes
+yarn migration:generate MigrationName
+
+# Run pending migrations
+yarn typeorm migration:run
+
+# Revert the last migration
+yarn migration:revert
+
+# Drop entire database schema (⚠️ destructive)
+yarn schema:drop
+```
+
+## Development Server
+
+The project uses Vite for fast development with hot module replacement:
+
+```bash
+# Start development server with Vite (recommended)
 yarn start:dev
 
-# Launch the dev server with file watcher
+# Alternative: Start with NestJS CLI
+yarn nest:start:dev
+
+# Start with file watching
 yarn watch:dev
 
-# Launch the dev server and enable remote debugger with file watcher
-yarn debug:dev
+# Start with debugger enabled
+yarn nest:start:debug
 ```
 
-## Generators
+> **Note**: If you're on Linux and see an `ENOSPC` error, you must [increase the number of available file watchers](https://stackoverflow.com/questions/22475849/node-js-error-enospc#answer-32600959).
 
-This project includes generators to speed up common development tasks. Commands include:
+The development server will be available at:
+- **Application**: `http://localhost:3000`
+- **API Documentation**: `http://localhost:3000/documentation`
 
-> Note: Make sure you already have the nest-cli globally installed
+## Project Structure
+
+```
+src/
+├── common/                 # Shared DTOs, utilities, and base classes
+│   ├── dto/               # Common data transfer objects
+│   └── abstract.entity.ts # Base entity class
+├── constants/             # Application-wide constants
+├── database/              # Database configuration and migrations
+│   └── migrations/        # TypeORM migration files
+├── decorators/            # Custom decorators
+├── entity-subscribers/    # TypeORM entity subscribers
+├── exceptions/            # Custom exception classes
+├── filters/               # Exception filters
+├── guards/                # Authentication and authorization guards
+├── i18n/                  # Internationalization files
+│   ├── en_US/            # English translations
+│   └── ru_RU/            # Russian translations
+├── interceptors/          # Request/Response interceptors
+├── interfaces/            # TypeScript interfaces
+├── modules/               # Feature modules
+│   ├── auth/             # Authentication module
+│   ├── user/             # User management module
+│   ├── post/             # Post management module
+│   └── health-checker/   # Health check module
+├── providers/             # Custom providers
+├── shared/                # Shared services and utilities
+│   └── services/         # Global services
+└── validators/            # Custom validators
+```
+
+## Code Generation
+
+Use NestJS CLI for rapid development:
 
 ```bash
-# Install nest-cli globally
+# Install NestJS CLI globally (if not already installed)
 yarn global add @nestjs/cli
 
+# Generate a new module
+nest generate module feature-name
+
 # Generate a new service
-nest generate service users
+nest generate service feature-name
 
-# Generate a new class
-nest g class users
+# Generate a new controller
+nest generate controller feature-name
 
+# Generate a complete resource (module, service, controller, DTOs)
+nest generate resource feature-name
+
+# Use project-specific generator
+yarn generate service feature-name
+yarn g controller feature-name
 ```
-> Note: if you love generators then you can find full list of command in official [Nest-cli Docs](https://docs.nestjs.com/cli/usages#generate-alias-g).
 
-## Docker
+> **Note**: The project includes custom schematics via `awesome-nestjs-schematics` for enhanced code generation.
 
-if you are familiar with [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose) then you can run built in docker-compose file, which will install and configure application and database for you.
+## Environment Variables
 
-### Docker installation
+Create a `.env` file based on `.env.example`:
 
-Download docker from Official website
+```env
+# Application
+NODE_ENV=development
+PORT=3000
 
-- Mac <https://docs.docker.com/docker-for-mac/install/>
-- Windows <https://docs.docker.com/docker-for-windows/install/>
-- Ubuntu <https://docs.docker.com/install/linux/docker-ce/ubuntu/>
+# Database
+DB_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=nest_boilerplate
+ENABLE_ORM_LOGS=true
 
-### Docker-compose installation
+# JWT Authentication
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRATION_TIME=3600
 
-Download docker from [Official website](https://docs.docker.com/compose/install)
+# CORS
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
 
-### Run
+# API Documentation
+ENABLE_DOCUMENTATION=true
 
-Open terminal and navigate to project directory and run the following command.
+# Throttling
+THROTTLE_TTL=60
+THROTTLE_LIMIT=10
+
+# NATS (optional)
+NATS_ENABLED=false
+NATS_HOST=localhost
+NATS_PORT=4222
+```
+
+## Docker Development
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Running with Docker
 
 ```bash
+# Start all services (app + database)
 PORT=3000 docker-compose up
+
+# Start in detached mode
+PORT=3000 docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild and start
+docker-compose up --build
 ```
 
-> Note: application will run on port 3000 (<http://localhost:3000>)
+### Docker Compose Services
 
-Navigate to <http://localhost:8080> and connect to you database with the following configurations
+The `docker-compose.yml` includes:
 
-```text
-host: postgres
-user: postgres
-pass: postgres
+- **app**: NestJS application
+- **postgres**: PostgreSQL database
+- **adminer**: Database administration tool (available at `http://localhost:8080`)
+
+For MySQL development, use:
+```bash
+docker-compose -f docker-compose_mysql.yml up
 ```
 
-create database `nest_boilerplate` and your application fully is ready to use.
+## Development Workflow
+
+1. **Feature Development**:
+   ```bash
+   # Create feature branch
+   git checkout -b feature/new-feature
+
+   # Generate module structure
+   yarn g resource feature-name
+
+   # Implement feature
+   # Write tests
+   # Update documentation
+   ```
+
+2. **Code Quality**:
+   ```bash
+   # Run linting
+   yarn lint
+
+   # Fix linting issues
+   yarn lint:fix
+
+   # Run tests
+   yarn test
+
+   # Check test coverage
+   yarn test:cov
+   ```
+
+3. **Database Changes**:
+   ```bash
+   # Create/modify entities
+   # Generate migration
+   yarn migration:generate FeatureName
+
+   # Review generated migration
+   # Run migration
+   yarn typeorm migration:run
+   ```
+
+## Debugging
+
+### VS Code Configuration
+
+Create `.vscode/launch.json`:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug NestJS",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/main.ts",
+      "runtimeArgs": ["--loader", "ts-node/esm"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}
+```
+
+### Debug Commands
+
+```bash
+# Start with debugger
+yarn nest:start:debug
+
+# Debug tests
+yarn test:debug
+
+# Debug specific test file
+yarn test:debug -- user.service.spec.ts
+```
+
+## Performance Optimization
+
+### Development Performance
+
+1. **Use Vite for Development**:
+   - Faster startup times
+   - Hot module replacement
+   - Optimized bundling
+
+2. **Database Query Optimization**:
+   ```bash
+   # Enable query logging
+   ENABLE_ORM_LOGS=true
+
+   # Monitor slow queries
+   # Add database indexes
+   # Use query builders for complex queries
+   ```
+
+3. **Memory Management**:
+   ```bash
+   # Monitor memory usage
+   node --inspect src/main.ts
+
+   # Increase Node.js memory limit if needed
+   node --max-old-space-size=4096 src/main.ts
+   ```
+
+### Production Considerations
+
+- Use `yarn build:prod` for optimized builds
+- Enable compression middleware
+- Configure proper caching strategies
+- Set up monitoring and logging
+- Use environment-specific configurations
