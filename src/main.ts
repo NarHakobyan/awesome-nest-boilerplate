@@ -64,6 +64,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       transform: true,
       dismissDefaultMessages: true,
+      forbidNonWhitelisted: true,
       exceptionFactory: (errors) => new UnprocessableEntityException(errors),
     }),
   );

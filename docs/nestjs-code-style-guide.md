@@ -95,13 +95,13 @@ import { UserService } from './user.service.ts';
 import type { RoleType } from '../constants/role-type.ts';
 import type { Reference } from '../types.ts';
 
-// Use readonly for DTO properties
+// Do not use readonly for DTO properties
 export class UserLoginDto {
   @EmailField()
-  readonly email!: string;
+  email!: string;
 
   @StringField()
-  readonly password!: string;
+  password!: string;
 }
 
 // Use definite assignment assertion for decorated properties
@@ -246,7 +246,7 @@ import { UserService } from './user.service.ts';
 export class UserController {
   constructor(
     private userService: UserService,
-    private readonly translationService: TranslationService,
+    private translationService: TranslationService,
   ) {}
 
   @Post()
@@ -286,7 +286,7 @@ export class UserController {
 ### Controller Best Practices
 
 1. **Use dependency injection via constructor**
-2. **Mark injected services as `private` or `private readonly`**
+2. **Mark injected services as `private`**
 3. **Use specific HTTP status codes with `@HttpCode()`**
 4. **Apply authentication/authorization with `@Auth()` decorator**
 5. **Use comprehensive Swagger documentation**
@@ -388,19 +388,19 @@ import {
 
 export class CreateUserDto {
   @StringField()
-  readonly firstName!: string;
+  firstName!: string;
 
   @StringField()
-  readonly lastName!: string;
+  lastName!: string;
 
   @EmailField()
-  readonly email!: string;
+  email!: string;
 
   @PasswordField({ minLength: 6 })
-  readonly password!: string;
+  password!: string;
 
   @PhoneFieldOptional()
-  readonly phone?: string;
+  phone?: string;
 }
 ```
 
@@ -505,11 +505,26 @@ The project uses custom field decorators that combine validation and Swagger doc
 // Enum fields
 @EnumField(() => RoleType)               // Required enum
 @EnumFieldOptional(() => RoleType)       // Optional enum
+
+// Array Fields
+@StringField({ each: true })
+@StringFieldOptional({ each: true })
+@StringField({ each: true, minLength: 3, maxLength: 50 })
+@StringFieldOptional({ each: true, minLength: 3, maxLength: 50 })
+@ClassField(() => UserDto, { each: true })
+@ClassFieldOptional(() => TokenPayloadDto, { each: true })
+@EnumField(() => RoleType, { each: true })
+@EnumFieldOptional(() => RoleType, { each: true })
+@NumberField({ each: true })
+@NumberFieldOptional({ each: true })
+@NumberField({ each: true, min: 0, max: 100, int: true })
+@NumberFieldOptional({ each: true, min: 0, max: 100, int: true })
+@DateField({ each: true })
 ```
 
 ### DTO Best Practices
 
-1. **Use `readonly` for all input DTO properties**
+1. **Do not use `readonly` for all input DTO properties**
 2. **Extend `AbstractDto` for response DTOs**
 3. **Use custom field decorators for validation and Swagger documentation**
 4. **Use optional fields with proper typing (`?` and `| null`)**
@@ -592,8 +607,8 @@ import type { CreatePostDto } from '../dtos/create-post.dto.ts';
 
 export class CreatePostCommand implements ICommand {
   constructor(
-    public readonly userId: Uuid,
-    public readonly createPostDto: CreatePostDto,
+    public userId: Uuid,
+    public createPostDto: CreatePostDto,
   ) {}
 }
 ```
@@ -636,7 +651,7 @@ export class CreatePostHandler
 import type { IQuery } from '@nestjs/cqrs';
 
 export class GetUserQuery implements IQuery {
-  constructor(public readonly userId: Uuid) {}
+  constructor(public userId: Uuid) {}
 }
 
 // Query handler
