@@ -30,8 +30,8 @@ export class ApiConfigService {
     const num = Number(value);
 
     if (Number.isNaN(num)) {
-      throw new Error(
-        `Environment variable ${key} must be a number. Received: ${value}`
+      throw new TypeError(
+        `Environment variable ${key} must be a number. Received: ${value}`,
       );
     }
 
@@ -47,7 +47,7 @@ export class ApiConfigService {
 
     if (duration === null) {
       throw new Error(
-        `Environment variable ${key} must be a valid duration. Received: ${value}`
+        `Environment variable ${key} must be a valid duration. Received: ${value}`,
       );
     }
 
@@ -61,14 +61,23 @@ export class ApiConfigService {
       return Boolean(JSON.parse(value));
     } catch {
       throw new Error(
-        `Environment variable ${key} must be a boolean. Received: ${value}`
+        `Environment variable ${key} must be a boolean. Received: ${value}`,
       );
     }
   }
 
-  private getString(key: string): string {
-    const value = this.get(key);
-    return value.replaceAll(String.raw`\n`, '\n');
+  private getString(key: string, defaultValue?: string): string {
+    const value = this.configService.get<string>(key);
+
+    if (value === undefined) {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      }
+
+      throw new Error(`${key} environment variable doesn't exist`);
+    }
+
+    return value.toString().replaceAll(String.raw`\n`, '\n');
   }
 
   get nodeEnv(): string {

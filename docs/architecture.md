@@ -106,11 +106,13 @@ Each feature module follows a consistent structure based on Domain-Driven Design
 ```
 modules/feature/
 ├── commands/                  # CQRS command handlers
-│   ├── create-feature.command.ts
-│   └── create-feature.handler.ts
+│   └── create-feature/
+│       ├── create-feature.command.ts
+│       └── create-feature.handler.ts
 ├── queries/                   # CQRS query handlers
-│   ├── get-feature.query.ts
-│   └── get-feature.handler.ts
+│   └── get-feature/
+│       ├── get-feature.query.ts
+│       └── get-feature.handler.ts
 ├── dtos/                     # Data Transfer Objects
 │   ├── create-feature.dto.ts
 │   ├── update-feature.dto.ts

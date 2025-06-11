@@ -12,9 +12,7 @@ import importPlugin from 'eslint-plugin-import';
 import unicornPlugin from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import github from 'eslint-plugin-github';
 
-const  githubFlatConfig = github.getFlatConfigs();
 export default tseslint.config(
   eslint.configs.recommended,
   promisePlugin.configs['flat/recommended'],
@@ -55,14 +53,12 @@ export default tseslint.config(
   },
   {
     extends: [
-      githubFlatConfig.recommended,
-      ...githubFlatConfig.typescript,
       importPlugin.flatConfigs.typescript,
     ],
     rules: {
       'eslintComments/no-use': 'off',
-      'import/extensions': ['error', 'always', {ignorePackages: true}],
-      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+      // 'import/extensions': ['error', 'always', {ignorePackages: true}],
+      // 'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
       // "importPlugin/no-unresolved": ["error", {
       //   ignore: ["^@hr-drone/*", "^firebase-admin/.+"],
       // }],

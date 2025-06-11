@@ -123,7 +123,9 @@ phone?: string;
 ```
 modules/feature-name/
 ├── commands/           # CQRS command handlers
+│   └── create-feature/
 ├── queries/           # CQRS query handlers
+│   └── get-feature/
 ├── dto/              # Data Transfer Objects
 ├── exceptions/       # Module-specific exceptions
 ├── feature.controller.ts
