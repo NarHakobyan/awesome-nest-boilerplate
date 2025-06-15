@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import type { ApiPropertyOptions } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -16,6 +16,7 @@ import {
   IsString,
   IsUrl,
   IsUUID,
+  Matches,
   Max,
   MaxLength,
   Min,
@@ -24,23 +25,25 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { supportedLanguageCount } from '../constants/language-code.ts';
+import { supportedLanguageCount } from '../constants/language-code';
 import type { Constructor } from '../types';
-import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators.ts';
+import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators';
 import {
+  LinkCleanupTransform,
   PhoneNumberSerializer,
   ToArray,
   ToBoolean,
   ToLowerCase,
   ToUpperCase,
-} from './transform.decorators.ts';
+  Trim,
+} from './transform.decorators';
 import {
   IsNullable,
   IsPassword,
   IsPhoneNumber,
   IsTmpKey as IsTemporaryKey,
   IsUndefinable,
-} from './validator.decorators.ts';
+} from './validator.decorators';
 
 type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
@@ -63,6 +66,7 @@ interface IStringFieldOptions extends IFieldOptions {
   maxLength?: number;
   toLowerCase?: boolean;
   toUpperCase?: boolean;
+  trimNewLines?: boolean;
 }
 
 type IClassFieldOptions = IFieldOptions;
@@ -81,7 +85,9 @@ export function NumberField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: Number, ...(options as ApiPropertyOptions) }));
+    decorators.push(
+      ApiProperty({ type: Number, ...(options as ApiPropertyOptions) }),
+    );
   }
 
   if (options.each) {
@@ -122,7 +128,11 @@ export function NumberFieldOptional(
 export function StringField(
   options: Omit<ApiPropertyOptions, 'type'> & IStringFieldOptions = {},
 ): PropertyDecorator {
-  const decorators = [Type(() => String), IsString({ each: options.each })];
+  const decorators = [
+    Type(() => String),
+    IsString({ each: options.each }),
+    Trim(options.trimNewLines ?? true),
+  ];
 
   if (options.nullable) {
     decorators.push(IsNullable({ each: options.each }));
@@ -132,7 +142,11 @@ export function StringField(
 
   if (options.swagger !== false) {
     decorators.push(
-      ApiProperty({ type: String, ...(options as ApiPropertyOptions), isArray: options.each }),
+      ApiProperty({
+        type: String,
+        ...(options as ApiPropertyOptions),
+        isArray: options.each,
+      }),
     );
   }
 
@@ -155,6 +169,16 @@ export function StringField(
   return applyDecorators(...decorators);
 }
 
+export function TextAreaField(
+  options: Omit<ApiPropertyOptions, 'type'> &
+    Omit<IStringFieldOptions, 'trimNewLines'> = {},
+) {
+  return StringField({
+    ...options,
+    trimNewLines: false,
+  });
+}
+
 export function StringFieldOptional(
   options: Omit<ApiPropertyOptions, 'type' | 'required'> &
     IStringFieldOptions = {},
@@ -163,6 +187,16 @@ export function StringFieldOptional(
     IsUndefinable(),
     StringField({ required: false, ...options }),
   );
+}
+
+export function TextAreaFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> &
+    Omit<IStringFieldOptions, 'trimNewLines'> = {},
+) {
+  return StringFieldOptional({
+    ...options,
+    trimNewLines: false,
+  });
 }
 
 export function PasswordField(
@@ -202,7 +236,9 @@ export function BooleanField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: Boolean, ...(options as ApiPropertyOptions) }));
+    decorators.push(
+      ApiProperty({ type: Boolean, ...(options as ApiPropertyOptions) }),
+    );
   }
 
   return applyDecorators(...decorators);
@@ -238,7 +274,9 @@ export function TranslationsField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ isArray: true, ...(options as ApiPropertyOptions) }));
+    decorators.push(
+      ApiProperty({ isArray: true, ...(options as ApiPropertyOptions) }),
+    );
   }
 
   return applyDecorators(...decorators);
@@ -270,7 +308,11 @@ export function TmpKeyField(
 
   if (options.swagger !== false) {
     decorators.push(
-      ApiProperty({ type: String, ...(options as ApiPropertyOptions), isArray: options.each }),
+      ApiProperty({
+        type: String,
+        ...(options as ApiPropertyOptions),
+        isArray: options.each,
+      }),
     );
   }
 
@@ -392,7 +434,9 @@ export function EmailField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: String, ...(options as ApiPropertyOptions) }));
+    decorators.push(
+      ApiProperty({ type: String, ...(options as ApiPropertyOptions) }),
+    );
   }
 
   return applyDecorators(...decorators);
@@ -419,7 +463,9 @@ export function PhoneField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: String, ...(options as ApiPropertyOptions) }));
+    decorators.push(
+      ApiProperty({ type: String, ...(options as ApiPropertyOptions) }),
+    );
   }
 
   return applyDecorators(...decorators);
@@ -502,7 +548,9 @@ export function DateField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(ApiProperty({ type: Date, ...(options as ApiPropertyOptions) }));
+    decorators.push(
+      ApiProperty({ type: Date, ...(options as ApiPropertyOptions) }),
+    );
   }
 
   return applyDecorators(...decorators);
@@ -515,4 +563,167 @@ export function DateFieldOptional(
     IsUndefinable(),
     DateField({ ...options, required: false }),
   );
+}
+
+export function LinkedinField(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  const decorators = [
+    Expose({ groups: options.groups, name: options.name }),
+    Type(() => String),
+    ApiProperty({ type: String }),
+    LinkCleanupTransform({
+      removeQueryParams: true,
+      removeTrailingSlash: true,
+    }),
+    Matches(/^(https:\/\/)?(www\.)?linkedin\.com([\w!#%&()+./:=?@~-]*)$/),
+  ];
+
+  if (options.nullable) {
+    decorators.push(IsNullable());
+  } else {
+    decorators.push(NotEquals(null));
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function FacebookField(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  const decorators = [
+    Expose({ groups: options.groups, name: options.name }),
+    Type(() => String),
+    ApiProperty({ type: String }),
+    LinkCleanupTransform(),
+    Matches(/^(https:\/\/)?(www\.)?facebook\.com([\w!#%&()+./:=?@~-]*)$/),
+  ];
+
+  if (options.nullable) {
+    decorators.push(IsNullable());
+  } else {
+    decorators.push(NotEquals(null));
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function InstagramField(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  const decorators = [
+    Expose({ groups: options.groups, name: options.name }),
+    Type(() => String),
+    ApiProperty({ type: String }),
+    LinkCleanupTransform(),
+    Matches(/^(https:\/\/)?(www\.)?instagram\.com([\w!#%&()+./:=?@~-]*)$/),
+  ];
+
+  if (options.nullable) {
+    decorators.push(IsNullable());
+  } else {
+    decorators.push(NotEquals(null));
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function TwitterField(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  const decorators = [
+    Expose({ groups: options.groups, name: options.name }),
+    Type(() => String),
+    ApiProperty({ type: String }),
+    LinkCleanupTransform(),
+    Matches(/^(https:\/\/)?(www\.)?twitter\.com([\w!#%&()+./:=?@~-]*)$/),
+  ];
+
+  if (options.nullable) {
+    decorators.push(IsNullable());
+  } else {
+    decorators.push(NotEquals(null));
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function WebsiteField(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  // FIXME: replace trailing slash with a regex, .replace(/\/+$/, '')
+  const decorators = [
+    Expose({ groups: options.groups, name: options.name }),
+    Type(() => String),
+    ApiProperty({ type: String }),
+    LinkCleanupTransform(),
+    Matches(
+      /^(https:\/\/)?(www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}([\w!#%&()+./:=?@~-]*)$/,
+    ),
+  ];
+
+  if (options.nullable) {
+    decorators.push(IsNullable());
+  } else {
+    decorators.push(NotEquals(null));
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function YoutubeField(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  // FIXME: replace trailing slash with a regex, .replace(/\/+$/, '')
+  const decorators = [
+    Expose({ groups: options.groups, name: options.name }),
+    Type(() => String),
+    ApiProperty({ type: String }),
+    LinkCleanupTransform(),
+    Matches(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/),
+  ];
+
+  if (options.nullable) {
+    decorators.push(IsNullable());
+  } else {
+    decorators.push(NotEquals(null));
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function LinkedinFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  return applyDecorators(LinkedinField(options), IsUndefinable());
+}
+
+export function FacebookFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  return applyDecorators(FacebookField(options), IsUndefinable());
+}
+
+export function InstagramFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  return applyDecorators(InstagramField(options), IsUndefinable());
+}
+
+export function TwitterFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  return applyDecorators(TwitterField(options), IsUndefinable());
+}
+
+export function WebsiteFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  return applyDecorators(WebsiteField(options), IsUndefinable());
+}
+
+export function YoutubeFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
+) {
+  return applyDecorators(YoutubeField(options), IsUndefinable());
 }

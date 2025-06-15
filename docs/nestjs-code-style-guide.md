@@ -4,21 +4,50 @@ This document serves as the definitive guide for code style, patterns, and conve
 
 ## Table of Contents
 
-- [Project Overview](#project-overview)
-- [General TypeScript Guidelines](#general-typescript-guidelines)
-- [File and Directory Structure](#file-and-directory-structure)
-- [Module Architecture](#module-architecture)
-- [Controllers](#controllers)
-- [Services](#services)
-- [DTOs and Validation](#dtos-and-validation)
-- [Entities](#entities)
-- [CQRS Pattern](#cqrs-pattern)
-- [Authentication and Authorization](#authentication-and-authorization)
-- [Exception Handling](#exception-handling)
-- [API Documentation](#api-documentation)
-- [Configuration and Environment](#configuration-and-environment)
-- [Testing Patterns](#testing-patterns)
-- [Code Quality and Linting](#code-quality-and-linting)
+- [NestJS Code Style Guide](#nestjs-code-style-guide)
+  - [Table of Contents](#table-of-contents)
+  - [Project Overview](#project-overview)
+  - [General TypeScript Guidelines](#general-typescript-guidelines)
+    - [Basic Principles](#basic-principles)
+    - [Naming Conventions](#naming-conventions)
+    - [Import Organization](#import-organization)
+    - [TypeScript Conventions](#typescript-conventions)
+  - [File and Directory Structure](#file-and-directory-structure)
+    - [Project Structure](#project-structure)
+    - [Module Structure](#module-structure)
+    - [File Naming Conventions](#file-naming-conventions)
+  - [Module Architecture](#module-architecture)
+    - [Module Definition Pattern](#module-definition-pattern)
+  - [Controllers](#controllers)
+    - [Controller Structure Pattern](#controller-structure-pattern)
+    - [Controller Best Practices](#controller-best-practices)
+    - [REST API Standards](#rest-api-standards)
+  - [Services](#services)
+    - [Service Structure Pattern](#service-structure-pattern)
+    - [Service Best Practices](#service-best-practices)
+  - [DTOs and Validation](#dtos-and-validation)
+    - [Input DTO Pattern](#input-dto-pattern)
+    - [Response DTO Pattern](#response-dto-pattern)
+    - [Custom Field Decorators](#custom-field-decorators)
+    - [DTO Best Practices](#dto-best-practices)
+  - [Entities](#entities)
+    - [Entity Structure Pattern](#entity-structure-pattern)
+    - [Entity Best Practices](#entity-best-practices)
+    - [Entity Module Ownership Rules](#entity-module-ownership-rules)
+  - [CQRS Pattern](#cqrs-pattern)
+    - [Command Structure](#command-structure)
+    - [Command Handler Structure](#command-handler-structure)
+    - [Query Structure](#query-structure)
+    - [CQRS Best Practices](#cqrs-best-practices)
+  - [Authentication and Authorization](#authentication-and-authorization)
+    - [Auth Decorator Usage](#auth-decorator-usage)
+    - [JWT Token Structure](#jwt-token-structure)
+  - [Exception Handling](#exception-handling)
+    - [Custom Exception Pattern](#custom-exception-pattern)
+  - [Configuration and Environment](#configuration-and-environment)
+    - [Environment Variables Pattern](#environment-variables-pattern)
+    - [Configuration Service Pattern](#configuration-service-pattern)
+  - [Summary](#summary)
 
 ## Project Overview
 
@@ -295,6 +324,111 @@ export class UserController {
 8. **Keep controllers thin - delegate business logic to services**
 9. **Use versioning when needed with `@Version()`**
 10. **Return DTOs, not entities**
+11. **🚨 CRITICAL: Follow REST API standards strictly for all endpoints**
+
+### REST API Standards
+
+All controllers MUST follow these REST API conventions:
+
+**HTTP Methods & Status Codes:**
+```typescript
+// Resource Creation
+@Post()                    // 201 Created
+@HttpCode(HttpStatus.CREATED)
+
+// Resource Retrieval
+@Get()                     // 200 OK (list)
+@Get(':id')               // 200 OK (single)
+@HttpCode(HttpStatus.OK)
+
+// Resource Update
+@Put(':id')               // 200 OK (full update)
+@Patch(':id')             // 200 OK (partial update)
+@HttpCode(HttpStatus.OK)
+
+// Resource Deletion
+@Delete(':id')            // 204 No Content
+@HttpCode(HttpStatus.NO_CONTENT)
+```
+
+**URL Naming Conventions:**
+```typescript
+// ✅ CORRECT: Use plural nouns
+@Controller('users')         // /users
+@Controller('posts')         // /posts
+@Controller('categories')    // /categories
+
+// ❌ WRONG: Don't use verbs or singular
+@Controller('user')          // ❌ singular
+@Controller('getUsers')      // ❌ verb in URL
+@Controller('userManagement') // ❌ management suffix
+```
+
+**Endpoint Patterns:**
+```typescript
+// ✅ CORRECT REST endpoints
+GET    /users              // List all users
+POST   /users              // Create new user
+GET    /users/{id}         // Get specific user
+PUT    /users/{id}         // Update entire user
+PATCH  /users/{id}         // Partially update user
+DELETE /users/{id}         // Delete user
+
+// Nested resources
+GET    /users/{id}/posts   // Get user's posts
+POST   /users/{id}/posts   // Create post for user
+
+// ❌ WRONG: Non-RESTful endpoints
+POST   /users/create       // ❌ verb in URL
+GET    /users/list         // ❌ unnecessary action
+POST   /deleteUser         // ❌ wrong method + verb
+GET    /users/getById/{id} // ❌ unnecessary action
+```
+
+**Query Parameters for Filtering & Pagination:**
+```typescript
+// ✅ CORRECT: Use query parameters
+GET /users?page=1&limit=10&role=admin&search=john
+
+@Get()
+async getUsers(
+  @Query() pageOptions: UsersPageOptionsDto,
+): Promise<PageDto<UserDto>> {
+  return this.userService.getUsers(pageOptions);
+}
+```
+
+**Response Format Standards:**
+```typescript
+// ✅ CORRECT: Consistent response structure
+// Single resource
+{
+  "id": "uuid",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john@example.com"
+}
+
+// List with pagination
+{
+  "data": [...],
+  "meta": {
+    "page": 1,
+    "take": 10,
+    "itemCount": 50,
+    "pageCount": 5,
+    "hasPreviousPage": false,
+    "hasNextPage": true
+  }
+}
+
+// Error responses
+{
+  "statusCode": 404,
+  "message": "User not found",
+  "error": "Not Found"
+}
+```
 
 ## Services
 
@@ -595,6 +729,39 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
 6. **Use `@VirtualColumn` for computed fields**
 7. **Define relationships with proper decorators**
 8. **Use table names in plural: `{ name: 'users' }`**
+9. **🚨 CRITICAL: Each entity must belong to only ONE module - do not share entities across multiple modules**
+
+### Entity Module Ownership Rules
+
+- **One entity per module**: Every entity must be owned by exactly one feature module
+- **No cross-module entity sharing**: Do not import or use entities from other modules
+- **Use services for cross-module communication**: If you need data from another module, use their service methods
+- **Create dedicated entities**: If similar data structures are needed, create separate entities per module
+- **Exception for shared entities**: Only `AbstractEntity` and entities in `src/common/` can be shared
+
+Example of correct entity organization:
+```
+modules/user/
+├── user.entity.ts          ✅ Owned by user module
+└── user-settings.entity.ts ✅ Owned by user module
+
+modules/post/
+├── post.entity.ts          ✅ Owned by post module
+└── post-category.entity.ts ✅ Owned by post module
+
+// ❌ WRONG: Don't do this
+modules/post/
+├── post.entity.ts
+└── user.entity.ts          ❌ User entity belongs to user module
+
+// ✅ CORRECT: Use services for cross-module data
+@Injectable()
+export class PostService {
+  constructor(
+    private userService: UserService, // ✅ Use service, not entity
+  ) {}
+}
+```
 
 ## CQRS Pattern
 

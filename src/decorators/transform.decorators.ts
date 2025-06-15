@@ -1,5 +1,5 @@
 import { Transform, TransformationType } from 'class-transformer';
-import { parsePhoneNumber } from 'libphonenumber-js';
+import { parsePhoneNumberWithError } from 'libphonenumber-js';
 import _ from 'lodash';
 
 import { GeneratorProvider } from '../providers/generator.provider.ts';
@@ -14,15 +14,33 @@ import { GeneratorProvider } from '../providers/generator.provider.ts';
  * @returns PropertyDecorator
  * @constructor
  */
-export function Trim(): PropertyDecorator {
-  return Transform((params) => {
+export function Trim(trimNewLines: boolean): PropertyDecorator {
+  return Transform((params): string[] | string => {
     const value = params.value as string[] | string;
 
-    if (Array.isArray(value)) {
-      return value.map((v) => v.trim().replaceAll(/\s\s+/g, ' '));
+    if (!value) {
+      return value;
     }
 
-    return value.trim().replaceAll(/\s\s+/g, ' ');
+    if (Array.isArray(value)) {
+      return value.map((v) => {
+        const trimmedValue = v.trim();
+
+        if (trimNewLines) {
+          return trimmedValue.replaceAll(/\s\s+/g, ' ');
+        }
+
+        return trimmedValue;
+      });
+    }
+
+    const trimmedValue = value.trim();
+
+    if (trimNewLines) {
+      return trimmedValue.replaceAll(/\s\s+/g, ' ');
+    }
+
+    return trimmedValue;
   });
 }
 
@@ -153,5 +171,30 @@ export function S3UrlParser(): PropertyDecorator {
 }
 
 export function PhoneNumberSerializer(): PropertyDecorator {
-  return Transform((params) => parsePhoneNumber(params.value as string).number);
+  return Transform(
+    (params) => parsePhoneNumberWithError(params.value as string).number,
+  );
+}
+
+export function LinkCleanupTransform(options?: {
+  removeTrailingSlash?: boolean;
+  removeQueryParams?: boolean;
+}): PropertyDecorator {
+  return Transform((params) => {
+    let value = params.value as string;
+
+    if (!value) {
+      return value;
+    }
+
+    if (options?.removeQueryParams) {
+      value = value.replace(/\?.*$/, '');
+    }
+
+    if (options?.removeTrailingSlash ?? true) {
+      value = value.replace(/\/+$/, '');
+    }
+
+    return value;
+  });
 }

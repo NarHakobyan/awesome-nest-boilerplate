@@ -5,8 +5,10 @@ export default defineConfig({
   exclude: [
     'typeorm',
   ],
-  // fetch latest package info from registry without cache
+  // fetch the latest package info from registry without cache
   force: true,
+  // bumping mode, can be 'latest', 'major', 'minor', 'patch', 'ignore'
+  mode: 'latest',
   // write to package.json
   write: true,
   // run `npm install` or `yarn install` right after bumping
