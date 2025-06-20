@@ -31,7 +31,7 @@
     "lint:fix": "eslint --fix .",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
-    "test:cov": "NODE_ENV=test jest --coverage",
+    "test:cov": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:debug": "NODE_ENV=test node --inspect-brk -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "NODE_ENV=test jest --config ./test/jest-e2e.json",
     "docs:dev": "vuepress dev -p 7070",
@@ -157,13 +157,20 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
     },
+    "extensionsToTreatAsEsm": [".ts"],
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageReporters": ["json", "text", "lcov", "clover", "json-summary"]
   },
   "packageManager": "yarn@1.22.22"
 }
