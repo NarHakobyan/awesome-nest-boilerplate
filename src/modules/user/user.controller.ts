@@ -6,10 +6,11 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/page.dto.ts';
 import { RoleType } from '../../constants/role-type.ts';
+import { Order } from '../../constants/order.ts';
 import { ApiPageResponse } from '../../decorators/api-page-response.decorator.ts';
 import { AuthUser } from '../../decorators/auth-user.decorator.ts';
 import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
@@ -49,6 +50,10 @@ export class UserController {
     description: 'Get users list',
     type: PageDto,
   })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'take', required: false, type: Number })
+  @ApiQuery({ name: 'order', required: false, enum: Order })
+  @ApiQuery({ name: 'q', required: false, type: String })
   getUsers(
     @Query(new ValidationPipe({ transform: true }))
     pageOptionsDto: UsersPageOptionsDto,

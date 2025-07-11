@@ -85,22 +85,14 @@ export function NumberField(
   }
 
   if (options.swagger !== false) {
-    // Filter out custom properties that shouldn't appear in Swagger
-    const swaggerOptions = { 
-      ...options as ApiPropertyOptions,
-      type: Number,
-    };
-    
-    // Remove custom field options from Swagger schema
-    delete (swaggerOptions as any).min;
-    delete (swaggerOptions as any).max;
-    delete (swaggerOptions as any).int;
-    delete (swaggerOptions as any).isPositive;
-    delete (swaggerOptions as any).nullable;
-    delete (swaggerOptions as any).each;
-    delete (swaggerOptions as any).swagger;
-    
-    decorators.push(ApiProperty(swaggerOptions));
+    // ADD THIS LINE - filter out custom properties
+    const { int, isPositive, each, swagger, ...apiPropertyOptions } = options;
+    decorators.push(
+      ApiProperty({
+        type: Number,
+        ...apiPropertyOptions,
+      } as ApiPropertyOptions),
+    );
   }
 
   if (options.each) {
@@ -154,22 +146,15 @@ export function StringField(
   }
 
   if (options.swagger !== false) {
-    // Filter out custom properties that shouldn't appear in Swagger
-    const swaggerOptions = { 
-      ...options as ApiPropertyOptions,
-      type: String,
-      isArray: options.each,
-    };
-    
-    // Remove custom field options from Swagger schema
-    delete (swaggerOptions as any).toLowerCase;
-    delete (swaggerOptions as any).toUpperCase;
-    delete (swaggerOptions as any).trimNewLines;
-    delete (swaggerOptions as any).nullable;
-    delete (swaggerOptions as any).each;
-    delete (swaggerOptions as any).swagger;
-    
-    decorators.push(ApiProperty(swaggerOptions));
+    // ADD THIS LINE - filter out custom properties
+    const { toLowerCase, toUpperCase, trimNewLines, each, swagger, ...swaggerOptions } = options;
+    decorators.push(
+      ApiProperty({
+        type: String,
+        ...swaggerOptions,
+        isArray: options.each,
+      } as ApiPropertyOptions),
+    );
   }
 
   const minLength = options.minLength ?? 1;
@@ -258,18 +243,14 @@ export function BooleanField(
   }
 
   if (options.swagger !== false) {
-    // Filter out custom properties that shouldn't appear in Swagger
-    const swaggerOptions = { 
-      ...options as ApiPropertyOptions,
-      type: Boolean,
-    };
-    
-    // Remove custom field options from Swagger schema
-    delete (swaggerOptions as any).nullable;
-    delete (swaggerOptions as any).each;
-    delete (swaggerOptions as any).swagger;
-    
-    decorators.push(ApiProperty(swaggerOptions));
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...apiPropertyOptions } = options;
+    decorators.push(
+      ApiProperty({
+        type: Boolean,
+        ...apiPropertyOptions,
+      } as ApiPropertyOptions),
+    );
   }
 
   return applyDecorators(...decorators);
@@ -305,8 +286,13 @@ export function TranslationsField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ isArray: true, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        isArray: true,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -338,12 +324,14 @@ export function TmpKeyField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { toLowerCase, toUpperCase, trimNewLines, nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
       ApiProperty({
         type: String,
-        ...(options as ApiPropertyOptions),
+        ...swaggerOptions,
         isArray: options.each,
-      }),
+      } as ApiPropertyOptions),
     );
   }
 
@@ -411,11 +399,13 @@ export function ClassField<TClass extends Constructor>(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
       ApiProperty({
         type: () => entity,
-        ...(options as ApiPropertyOptions),
-      }),
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -465,8 +455,13 @@ export function EmailField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { toLowerCase, toUpperCase, trimNewLines, nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ type: String, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: String,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -494,8 +489,13 @@ export function PhoneField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ type: String, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: String,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -579,8 +579,13 @@ export function DateField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ type: Date, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: Date,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
