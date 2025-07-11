@@ -69,6 +69,7 @@ ENABLE_ORM_LOGS=true
 If you prefer MySQL/MariaDB over PostgreSQL:
 
 1. Update your `.env` file:
+
 ```env
 # Database Configuration
 DB_TYPE=mysql
@@ -82,6 +83,7 @@ DB_ALLOW_EMPTY_PASSWORD=yes
 ```
 
 2. Update `ormconfig.ts`:
+
 ```typescript
 export const dataSource = new DataSource({
   type: 'mysql', // Change from 'postgres' to 'mysql'
@@ -95,6 +97,7 @@ export const dataSource = new DataSource({
 ```
 
 3. Clear existing migrations and regenerate:
+
 ```bash
 # Remove existing migrations
 rm -rf src/database/migrations/*
@@ -124,10 +127,10 @@ yarn schema:drop
 
 ## Development Server
 
-The project uses Vite for fast development with hot module replacement:
+The project uses NestJS CLI for development with file watching:
 
 ```bash
-# Start development server with Vite (recommended)
+# Start development server (recommended)
 yarn start:dev
 
 # Alternative: Start with NestJS CLI
@@ -143,6 +146,7 @@ yarn nest:start:debug
 > **Note**: If you're on Linux and see an `ENOSPC` error, you must [increase the number of available file watchers](https://stackoverflow.com/questions/22475849/node-js-error-enospc#answer-32600959).
 
 The development server will be available at:
+
 - **Application**: `http://localhost:3000`
 - **API Documentation**: `http://localhost:3000/documentation`
 
@@ -277,6 +281,7 @@ The `docker-compose.yml` includes:
 - **adminer**: Database administration tool (available at `http://localhost:8080`)
 
 For MySQL development, use:
+
 ```bash
 docker-compose -f docker-compose_mysql.yml up
 ```
@@ -284,6 +289,7 @@ docker-compose -f docker-compose_mysql.yml up
 ## Development Workflow
 
 1. **Feature Development**:
+
    ```bash
    # Create feature branch
    git checkout -b feature/new-feature
@@ -297,6 +303,7 @@ docker-compose -f docker-compose_mysql.yml up
    ```
 
 2. **Code Quality**:
+
    ```bash
    # Run linting
    yarn lint
@@ -312,6 +319,7 @@ docker-compose -f docker-compose_mysql.yml up
    ```
 
 3. **Database Changes**:
+
    ```bash
    # Create/modify entities
    # Generate migration
@@ -365,12 +373,13 @@ yarn test:debug -- user.service.spec.ts
 
 ### Development Performance
 
-1. **Use Vite for Development**:
-   - Faster startup times
-   - Hot module replacement
-   - Optimized bundling
+1. **Use NestJS CLI for Development**:
+   - File watching for automatic restarts
+   - Built-in TypeScript compilation
+   - Optimized for NestJS applications
 
 2. **Database Query Optimization**:
+
    ```bash
    # Enable query logging
    ENABLE_ORM_LOGS=true
@@ -381,6 +390,7 @@ yarn test:debug -- user.service.spec.ts
    ```
 
 3. **Memory Management**:
+
    ```bash
    # Monitor memory usage
    node --inspect src/main.ts

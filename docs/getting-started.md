@@ -24,6 +24,7 @@
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - [Node.js](https://nodejs.org/en/) (LTS version 18+ recommended)
 - [Yarn](https://yarnpkg.com/getting-started/install) (v1.22.22+ recommended)
 - [Git](https://git-scm.com/)
@@ -60,8 +61,9 @@ Your application will be available at `http://localhost:3000` and API documentat
 ## Available Scripts
 
 ### Development
+
 ```bash
-# Start development server with Vite
+# Start development server
 yarn start:dev
 
 # Start with NestJS CLI (alternative)
@@ -75,6 +77,7 @@ yarn nest:start:debug
 ```
 
 ### Production
+
 ```bash
 # Build for production
 yarn build:prod
@@ -84,6 +87,7 @@ yarn start:prod
 ```
 
 ### Testing
+
 ```bash
 # Run unit tests
 yarn test
@@ -102,6 +106,7 @@ yarn test:debug
 ```
 
 ### Database Operations
+
 ```bash
 # Generate new migration
 yarn migration:generate migration_name
@@ -117,6 +122,7 @@ yarn schema:drop
 ```
 
 ### Code Quality
+
 ```bash
 # Run ESLint
 yarn lint
@@ -133,6 +139,7 @@ yarn taze
 This boilerplate supports multiple JavaScript runtimes for maximum flexibility:
 
 ### Node.js (Default)
+
 The traditional and most stable runtime environment with full ecosystem support.
 
 ```bash
@@ -144,6 +151,7 @@ yarn build:prod && yarn start:prod
 ```
 
 ### Bun
+
 High-performance JavaScript runtime with built-in bundler and package manager.
 
 ```bash
@@ -161,6 +169,7 @@ bun build:bun
 ```
 
 ### Deno
+
 Secure runtime for JavaScript and TypeScript with built-in tooling.
 
 ```bash
@@ -182,13 +191,16 @@ deno task buildr
 After creating your project, complete these steps:
 
 ### 1. Project Configuration
+
 - [ ] Update `package.json` with your project details (name, description, author)
 - [ ] Modify `LICENSE` with your name/organization
 - [ ] Update `README.md` with project-specific information
 - [ ] Remove `.github` folder if not needed
 
 ### 2. Environment Setup
+
 - [ ] Configure `.env` with your environment variables:
+
   ```env
   # Database
   DB_HOST=localhost
@@ -210,11 +222,13 @@ After creating your project, complete these steps:
   ```
 
 ### 3. Database Setup
+
 - [ ] Set up your PostgreSQL database
 - [ ] Update database configurations in `.env`
 - [ ] Run initial migrations: `yarn migration:generate initial`
 
 ### 4. Development Environment
+
 - [ ] Configure your IDE/editor with TypeScript support
 - [ ] Install recommended extensions (ESLint, Prettier)
 - [ ] Set up git hooks (Husky is pre-configured)
