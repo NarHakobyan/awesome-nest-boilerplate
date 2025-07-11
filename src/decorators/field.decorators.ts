@@ -85,9 +85,22 @@ export function NumberField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(
-      ApiProperty({ type: Number, ...(options as ApiPropertyOptions) }),
-    );
+    // Filter out custom properties that shouldn't appear in Swagger
+    const swaggerOptions = { 
+      ...options as ApiPropertyOptions,
+      type: Number,
+    };
+    
+    // Remove custom field options from Swagger schema
+    delete (swaggerOptions as any).min;
+    delete (swaggerOptions as any).max;
+    delete (swaggerOptions as any).int;
+    delete (swaggerOptions as any).isPositive;
+    delete (swaggerOptions as any).nullable;
+    delete (swaggerOptions as any).each;
+    delete (swaggerOptions as any).swagger;
+    
+    decorators.push(ApiProperty(swaggerOptions));
   }
 
   if (options.each) {
@@ -141,13 +154,22 @@ export function StringField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(
-      ApiProperty({
-        type: String,
-        ...(options as ApiPropertyOptions),
-        isArray: options.each,
-      }),
-    );
+    // Filter out custom properties that shouldn't appear in Swagger
+    const swaggerOptions = { 
+      ...options as ApiPropertyOptions,
+      type: String,
+      isArray: options.each,
+    };
+    
+    // Remove custom field options from Swagger schema
+    delete (swaggerOptions as any).toLowerCase;
+    delete (swaggerOptions as any).toUpperCase;
+    delete (swaggerOptions as any).trimNewLines;
+    delete (swaggerOptions as any).nullable;
+    delete (swaggerOptions as any).each;
+    delete (swaggerOptions as any).swagger;
+    
+    decorators.push(ApiProperty(swaggerOptions));
   }
 
   const minLength = options.minLength ?? 1;
@@ -236,9 +258,18 @@ export function BooleanField(
   }
 
   if (options.swagger !== false) {
-    decorators.push(
-      ApiProperty({ type: Boolean, ...(options as ApiPropertyOptions) }),
-    );
+    // Filter out custom properties that shouldn't appear in Swagger
+    const swaggerOptions = { 
+      ...options as ApiPropertyOptions,
+      type: Boolean,
+    };
+    
+    // Remove custom field options from Swagger schema
+    delete (swaggerOptions as any).nullable;
+    delete (swaggerOptions as any).each;
+    delete (swaggerOptions as any).swagger;
+    
+    decorators.push(ApiProperty(swaggerOptions));
   }
 
   return applyDecorators(...decorators);

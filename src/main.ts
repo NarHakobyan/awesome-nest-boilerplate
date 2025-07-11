@@ -11,6 +11,8 @@ import { Transport } from '@nestjs/microservices';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import compression from 'compression';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { initializeTransactionalContext } from 'typeorm-transactional';
@@ -26,12 +28,42 @@ import { SharedModule } from './shared/shared.module.ts';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   initializeTransactionalContext();
+  
+  // HTTPS Configuration
+  const useHttps = process.env.USE_HTTPS === 'true';
+  let httpsOptions;
+  
+  if (useHttps) {
+    try {
+      const keyPath = join(process.cwd(), process.env.SSL_KEY_PATH || 'ssl/private-key.pem');
+      const certPath = join(process.cwd(), process.env.SSL_CERT_PATH || 'ssl/certificate.pem');
+      
+      httpsOptions = {
+        key: readFileSync(keyPath),
+        cert: readFileSync(certPath),
+      };
+      
+      console.log('🔐 HTTPS enabled for development');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('❌ Failed to load SSL certificates:', error.message);
+      } else {
+        console.error('❌ Failed to load SSL certificates:', error);
+      }
+      console.error('   Run: yarn ssl:generate');
+      process.exit(1);
+    }
+  }
+  
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(),
     {
+      httpsOptions,
       cors: {
-        origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+        origin: process.env.CORS_ORIGINS?.split(',') || [
+          useHttps ? 'https://localhost:3443' : 'http://localhost:3000'
+        ],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true,
       }
@@ -94,11 +126,19 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     app.enableShutdownHooks();
   }
 
-  const port = configService.appConfig.port;
+  // Port configuration with HTTPS support
+  const port = useHttps 
+    ? process.env.HTTPS_PORT || 3443 
+    : configService.appConfig.port;
 
   if ((<any>import.meta).env.PROD) {
     await app.listen(port);
-    console.info(`server running on ${await app.getUrl()}`);
+    const protocol = useHttps ? 'https' : 'http';
+    console.info(`server running on ${protocol}://localhost:${port}`);
+    
+    if (configService.documentationEnabled) {
+      console.info(`API documentation: ${protocol}://localhost:${port}/documentation`);
+    }
   }
 
   return app;
