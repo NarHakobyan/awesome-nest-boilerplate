@@ -52,6 +52,7 @@ This document serves as the definitive guide for code style, patterns, and conve
 ## Project Overview
 
 This is a modern NestJS boilerplate built with:
+
 - **NestJS 11.x** - Progressive Node.js framework
 - **TypeScript 5.x** - Strict type checking enabled
 - **TypeORM 0.3.x** - Database ORM with PostgreSQL
@@ -59,7 +60,6 @@ This is a modern NestJS boilerplate built with:
 - **JWT Authentication** - JSON Web Token based auth
 - **Swagger/OpenAPI** - API documentation
 - **ESM Modules** - ES Module support with .ts extensions
-- **Vite** - Fast development server
 - **Jest** - Testing framework
 
 ## General TypeScript Guidelines
@@ -331,6 +331,7 @@ export class UserController {
 All controllers MUST follow these REST API conventions:
 
 **HTTP Methods & Status Codes:**
+
 ```typescript
 // Resource Creation
 @Post()                    // 201 Created
@@ -352,6 +353,7 @@ All controllers MUST follow these REST API conventions:
 ```
 
 **URL Naming Conventions:**
+
 ```typescript
 // ✅ CORRECT: Use plural nouns
 @Controller('users')         // /users
@@ -365,6 +367,7 @@ All controllers MUST follow these REST API conventions:
 ```
 
 **Endpoint Patterns:**
+
 ```typescript
 // ✅ CORRECT REST endpoints
 GET    /users              // List all users
@@ -386,6 +389,7 @@ GET    /users/getById/{id} // ❌ unnecessary action
 ```
 
 **Query Parameters for Filtering & Pagination:**
+
 ```typescript
 // ✅ CORRECT: Use query parameters
 GET /users?page=1&limit=10&role=admin&search=john
@@ -399,6 +403,7 @@ async getUsers(
 ```
 
 **Response Format Standards:**
+
 ```typescript
 // ✅ CORRECT: Consistent response structure
 // Single resource
@@ -740,6 +745,7 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
 - **Exception for shared entities**: Only `AbstractEntity` and entities in `src/common/` can be shared
 
 Example of correct entity organization:
+
 ```
 modules/user/
 ├── user.entity.ts          ✅ Owned by user module
@@ -933,7 +939,6 @@ export class ApiConfigService {
   }
 }
 ```
-
 
 ## Summary
 

@@ -127,6 +127,7 @@ modules/feature/
 ```
 
 **Example: User Module Structure**
+
 ```typescript
 // user.entity.ts
 @Entity({ name: 'users' })
@@ -149,6 +150,7 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
 ### Design Patterns
 
 #### 1. CQRS (Command Query Responsibility Segregation)
+
 Separates read and write operations for better scalability and maintainability:
 
 ```typescript
@@ -167,6 +169,7 @@ export class GetPostQuery implements IQuery {
 ```
 
 #### 2. Repository Pattern
+
 Implemented through TypeORM repositories with dependency injection:
 
 ```typescript
@@ -188,9 +191,11 @@ export class PostService {
 ```
 
 #### 3. Dependency Injection
+
 Leverages NestJS's powerful DI container for loose coupling and testability.
 
 #### 4. Entity-DTO Mapping
+
 Uses custom decorators for automatic entity-to-DTO conversion:
 
 ```typescript
@@ -204,12 +209,14 @@ export class PostEntity extends AbstractEntity<PostDto> {
 ### Database Layer
 
 #### TypeORM Configuration
+
 - **Data Mapper Pattern**: Separates entity definition from persistence logic
 - **Snake Case Naming Strategy**: Converts camelCase to snake_case for database columns
 - **Migration System**: Version-controlled database schema changes
 - **Entity Subscribers**: Automatic operations (e.g., password hashing)
 
 #### Entity Relationships
+
 ```typescript
 // One-to-Many relationship
 @OneToMany(() => PostEntity, (postEntity) => postEntity.user)
@@ -225,6 +232,7 @@ user!: Relation<UserEntity>;
 ```
 
 #### Transaction Support
+
 ```typescript
 @Transactional()
 async createPost(userId: Uuid, createPostDto: CreatePostDto): Promise<PostEntity> {
@@ -235,11 +243,13 @@ async createPost(userId: Uuid, createPostDto: CreatePostDto): Promise<PostEntity
 ### Authentication & Authorization
 
 #### JWT-based Authentication
+
 - Stateless authentication using JSON Web Tokens
 - Configurable expiration times
 - Secure token signing and verification
 
 #### Role-based Access Control (RBAC)
+
 ```typescript
 @Auth([RoleType.ADMIN, RoleType.USER])
 @Get(':id')
@@ -249,6 +259,7 @@ async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
 ```
 
 #### Custom Decorators
+
 ```typescript
 // Extract authenticated user from request
 @AuthUser() user: UserEntity
@@ -260,6 +271,7 @@ async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
 ### API Documentation
 
 #### Swagger Integration
+
 - Auto-generated API documentation
 - Request/response examples
 - DTO validation documentation
@@ -277,6 +289,7 @@ async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
 ### Error Handling
 
 #### Global Exception Filters
+
 ```typescript
 // HTTP exception handling with i18n support
 @Catch(HttpException)
@@ -288,6 +301,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 ```
 
 #### Custom Exceptions
+
 ```typescript
 export class UserNotFoundException extends NotFoundException {
   constructor(error?: string) {
@@ -299,6 +313,7 @@ export class UserNotFoundException extends NotFoundException {
 ### Validation
 
 #### DTO Validation with Custom Decorators
+
 ```typescript
 export class CreateUserDto {
   @EmailField()
@@ -313,6 +328,7 @@ export class CreateUserDto {
 ```
 
 #### Custom Validation Decorators
+
 - `@EmailField()`: Email validation with Swagger documentation
 - `@StringField()`: String validation with length constraints
 - `@NumberField()`: Number validation with range constraints
@@ -322,6 +338,7 @@ export class CreateUserDto {
 ### Internationalization (i18n)
 
 #### Multi-language Support
+
 - Nested translation files
 - Dynamic language switching via headers/query parameters
 - Translation interpolation and formatting
@@ -338,11 +355,13 @@ title?: string;
 ### Testing
 
 #### Testing Strategy
+
 1. **Unit Tests**: Individual component testing with mocks
 2. **Integration Tests**: Module-level testing with real dependencies
 3. **E2E Tests**: Full application flow testing
 
 #### Test Structure
+
 ```typescript
 describe('UserService', () => {
   let service: UserService;
@@ -367,6 +386,7 @@ describe('UserService', () => {
 ### Security
 
 #### Built-in Security Features
+
 1. **CORS Configuration**: Configurable cross-origin resource sharing
 2. **Helmet Middleware**: Security headers protection
 3. **Rate Limiting**: Request throttling with configurable limits
@@ -374,6 +394,7 @@ describe('UserService', () => {
 5. **SQL Injection Prevention**: TypeORM query parameterization
 
 #### Environment-based Configuration
+
 ```typescript
 export class ApiConfigService {
   get corsOrigins(): string[] {
@@ -392,19 +413,21 @@ export class ApiConfigService {
 ## Technology Stack
 
 ### Core Technologies
+
 - **NestJS**: Progressive Node.js framework
 - **TypeScript**: Type-safe JavaScript development
 - **TypeORM**: Object-relational mapping with PostgreSQL
-- **Vite**: Fast development build tool
 - **Jest**: Testing framework
 
 ### Development Tools
+
 - **ESLint + Prettier**: Code linting and formatting
 - **Husky**: Git hooks for code quality
 - **Docker**: Containerized development environment
 - **Swagger**: API documentation generation
 
 ### Runtime Support
+
 - **Node.js**: Primary runtime environment
 - **Bun**: High-performance alternative runtime
 - **Deno**: Secure TypeScript runtime
@@ -412,18 +435,21 @@ export class ApiConfigService {
 ## Best Practices
 
 ### Code Organization
+
 1. **Single Responsibility Principle**: Each class/module has one clear purpose
 2. **Dependency Injection**: Use NestJS DI for loose coupling
 3. **Type Safety**: Leverage TypeScript features extensively
 4. **Consistent Naming**: Follow established naming conventions
 
 ### Performance
+
 1. **Database Optimization**: Use indexes, query optimization, and pagination
 2. **Caching Strategies**: Implement appropriate caching layers
 3. **Lazy Loading**: Load related entities only when needed
 4. **Connection Pooling**: Efficient database connection management
 
 ### Code Quality Standards
+
 1. **Remove Unused Code**: Eliminate dead code and unused imports
 2. **Simple Code Style**: Write clear, readable code (KISS principle)
 3. **No Passthrough Functions**: Avoid unnecessary function wrappers
@@ -432,6 +458,7 @@ export class ApiConfigService {
 6. **Explicit Error Handling**: Handle errors explicitly and meaningfully
 
 ### Security
+
 1. **Input Validation**: Validate all incoming data
 2. **Authentication**: Secure JWT implementation
 3. **Authorization**: Role-based access control
@@ -440,18 +467,21 @@ export class ApiConfigService {
 ## Development Workflow
 
 ### Version Control
+
 1. **Feature Branch Workflow**: Develop features in separate branches
 2. **Conventional Commits**: Use meaningful commit messages
 3. **Pull Request Reviews**: Code review process
 4. **Automated CI/CD**: Continuous integration and deployment
 
 ### Code Quality
+
 1. **Pre-commit Hooks**: Automated linting and formatting
 2. **Test Coverage**: Maintain high test coverage
 3. **Documentation**: Keep documentation up-to-date
 4. **Performance Monitoring**: Track application performance
 
 ### Deployment
+
 1. **Docker Support**: Containerized deployment
 2. **Environment Configurations**: Environment-specific settings
 3. **Database Migrations**: Automated schema updates

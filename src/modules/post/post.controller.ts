@@ -14,10 +14,12 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import type { PageDto } from '../../common/dto/page.dto.ts';
 import { RoleType } from '../../constants/role-type.ts';
+import { Order } from '../../constants/order.ts';
 import { ApiPageResponse } from '../../decorators/api-page-response.decorator.ts';
 import { AuthUser } from '../../decorators/auth-user.decorator.ts';
 import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
@@ -54,6 +56,10 @@ export class PostController {
   @Auth([RoleType.USER])
   @UseLanguageInterceptor()
   @ApiPageResponse({ type: PostDto })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'take', required: false, type: Number })
+  @ApiQuery({ name: 'order', required: false, enum: Order })
+  @ApiQuery({ name: 'q', required: false, type: String })
   async getPosts(
     @Query() postsPageOptionsDto: PostPageOptionsDto,
   ): Promise<PageDto<PostDto>> {

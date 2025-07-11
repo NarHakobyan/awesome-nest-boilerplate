@@ -100,6 +100,7 @@ function ApiFileDecorator(
       properties,
       type: 'object',
     };
+    
     const body = explore(target, propertyKey);
 
     if (body) {
@@ -108,9 +109,15 @@ function ApiFileDecorator(
           {
             $ref: getSchemaPath(body),
           },
-          { properties, type: 'object' },
+          { 
+            properties, 
+            type: 'object',
+            required: isRequired ? Object.keys(properties) : undefined,
+          },
         ],
       };
+    } else if (isRequired) {
+      schema.required = Object.keys(properties);
     }
 
     return ApiBody({

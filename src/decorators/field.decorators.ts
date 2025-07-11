@@ -85,8 +85,13 @@ export function NumberField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { int, isPositive, each, swagger, ...apiPropertyOptions } = options;
     decorators.push(
-      ApiProperty({ type: Number, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: Number,
+        ...apiPropertyOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -141,12 +146,14 @@ export function StringField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { toLowerCase, toUpperCase, trimNewLines, each, swagger, ...swaggerOptions } = options;
     decorators.push(
       ApiProperty({
         type: String,
-        ...(options as ApiPropertyOptions),
+        ...swaggerOptions,
         isArray: options.each,
-      }),
+      } as ApiPropertyOptions),
     );
   }
 
@@ -236,8 +243,13 @@ export function BooleanField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...apiPropertyOptions } = options;
     decorators.push(
-      ApiProperty({ type: Boolean, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: Boolean,
+        ...apiPropertyOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -274,8 +286,13 @@ export function TranslationsField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ isArray: true, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        isArray: true,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -307,12 +324,14 @@ export function TmpKeyField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { toLowerCase, toUpperCase, trimNewLines, nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
       ApiProperty({
         type: String,
-        ...(options as ApiPropertyOptions),
+        ...swaggerOptions,
         isArray: options.each,
-      }),
+      } as ApiPropertyOptions),
     );
   }
 
@@ -380,11 +399,13 @@ export function ClassField<TClass extends Constructor>(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
       ApiProperty({
         type: () => entity,
-        ...(options as ApiPropertyOptions),
-      }),
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -434,8 +455,13 @@ export function EmailField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { toLowerCase, toUpperCase, trimNewLines, nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ type: String, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: String,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -463,8 +489,13 @@ export function PhoneField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ type: String, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: String,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
@@ -548,8 +579,13 @@ export function DateField(
   }
 
   if (options.swagger !== false) {
+    // ADD THIS LINE - filter out custom properties
+    const { nullable, each, swagger, ...swaggerOptions } = options;
     decorators.push(
-      ApiProperty({ type: Date, ...(options as ApiPropertyOptions) }),
+      ApiProperty({
+        type: Date,
+        ...swaggerOptions,
+      } as ApiPropertyOptions),
     );
   }
 
