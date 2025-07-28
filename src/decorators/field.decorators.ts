@@ -25,9 +25,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { supportedLanguageCount } from '../constants/language-code';
+import { supportedLanguageCount } from '../constants/language-code.ts';
 import type { Constructor } from '../types';
-import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators';
+import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators.ts';
 import {
   LinkCleanupTransform,
   PhoneNumberSerializer,
@@ -36,16 +36,21 @@ import {
   ToLowerCase,
   ToUpperCase,
   Trim,
-} from './transform.decorators';
+} from './transform.decorators.ts';
 import {
   IsNullable,
   IsPassword,
   IsPhoneNumber,
   IsTmpKey as IsTemporaryKey,
   IsUndefinable,
-} from './validator.decorators';
+} from './validator.decorators.ts';
 
 type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
+
+interface INumberOptions {
+  min?: number;
+  max?: number;
+}
 
 interface IFieldOptions {
   each?: boolean;
@@ -69,9 +74,19 @@ interface IStringFieldOptions extends IFieldOptions {
   trimNewLines?: boolean;
 }
 
-type IClassFieldOptions = IFieldOptions;
+type IClassFieldOptions = IFieldOptions & INumberOptions;
 type IBooleanFieldOptions = IFieldOptions;
 type IEnumFieldOptions = IFieldOptions;
+
+function isPrimitive(getClass: () => unknown): boolean {
+  try {
+    const type = getClass();
+
+    return type === String || type === Number || type === Boolean;
+  } catch {
+    return false;
+  }
+}
 
 export function NumberField(
   options: Omit<ApiPropertyOptions, 'type'> & INumberFieldOptions = {},
@@ -362,12 +377,13 @@ export function ClassField<TClass extends Constructor>(
   getClass: () => TClass,
   options: Omit<ApiPropertyOptions, 'type'> & IClassFieldOptions = {},
 ): PropertyDecorator {
-  const entity = getClass();
+  const decorators: PropertyDecorator[] = [];
 
-  const decorators = [
-    Type(() => entity),
-    ValidateNested({ each: options.each }),
-  ];
+  const isPrimitiveType = isPrimitive(getClass);
+
+  if (!isPrimitiveType) {
+    decorators.push(Type(getClass), ValidateNested({ each: options.each }));
+  }
 
   if (options.required !== false) {
     decorators.push(IsDefined());
@@ -379,18 +395,33 @@ export function ClassField<TClass extends Constructor>(
     decorators.push(NotEquals(null));
   }
 
+  if (options.each) {
+    if (typeof options.min === 'number') {
+      decorators.push(
+        ArrayMinSize(options.min, {
+          message: `At least ${options.min} item(s) required`,
+        }),
+      );
+    }
+
+    if (typeof options.max === 'number') {
+      decorators.push(
+        ArrayMaxSize(options.max, {
+          message: `No more than ${options.max} item(s) allowed`,
+        }),
+      );
+    }
+  }
+
   if (options.swagger !== false) {
     decorators.push(
       ApiProperty({
-        type: () => entity,
+        type: () => getClass(),
+        isArray: options.each,
         ...(options as ApiPropertyOptions),
       }),
     );
   }
-
-  // if (options.each) {
-  //   decorators.push(ToArray());
-  // }
 
   return applyDecorators(...decorators);
 }

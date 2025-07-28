@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions
 import './boilerplate.polyfill';
 
 import {
@@ -31,10 +32,12 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     new ExpressAdapter(),
     {
       cors: {
-        origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+        origin: process.env.CORS_ORIGINS?.split(',') ?? [
+          'http://localhost:3000',
+        ],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true,
-      }
+      },
     },
   );
   app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
@@ -96,12 +99,11 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   const port = configService.appConfig.port;
 
-  if ((<any>import.meta).env.PROD) {
-    await app.listen(port);
-    console.info(`server running on ${await app.getUrl()}`);
-  }
+  await app.listen(port, () => {
+    console.info(`server running on http://localhost:${port}`);
+  });
 
   return app;
 }
 
-export const viteNodeApp = bootstrap();
+export const viteNodeApp = await bootstrap();

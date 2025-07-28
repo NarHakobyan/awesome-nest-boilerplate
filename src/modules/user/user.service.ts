@@ -9,7 +9,7 @@ import { Transactional } from 'typeorm-transactional';
 import type { PageDto } from '../../common/dto/page.dto.ts';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception.ts';
 import { UserNotFoundException } from '../../exceptions/user-not-found.exception.ts';
-import type { IFile } from '../../interfaces/IFile.ts';
+import type { IFile } from '../../interfaces/i-file.ts';
 import { AwsS3Service } from '../../shared/services/aws-s3.service.ts';
 import { ValidatorService } from '../../shared/services/validator.service.ts';
 import type { Reference } from '../../types.ts';
@@ -94,6 +94,7 @@ export class UserService {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
     const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
 
+    // eslint-disable-next-line sonarjs/argument-type
     return items.toPageDto(pageMetaDto);
   }
 

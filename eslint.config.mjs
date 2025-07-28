@@ -4,7 +4,8 @@ import eslint from '@eslint/js';
 import stylisticPlugin from '@stylistic/eslint-plugin';
 import canonicalPlugin from 'eslint-plugin-canonical';
 import nPlugin from 'eslint-plugin-n';
-import prettierPlugin from 'eslint-plugin-prettier/recommended';
+import prettier from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
 import promisePlugin from 'eslint-plugin-promise';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
@@ -53,15 +54,16 @@ export default tseslint.config(
   },
   {
     extends: [
+      importPlugin.flatConfigs.recommended,
       importPlugin.flatConfigs.typescript,
     ],
     rules: {
       'eslintComments/no-use': 'off',
-      // 'import/extensions': ['error', 'always', {ignorePackages: true}],
-      // 'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
-      // "importPlugin/no-unresolved": ["error", {
-      //   ignore: ["^@hr-drone/*", "^firebase-admin/.+"],
-      // }],
+      'import/extensions': ['error', 'always', {ignorePackages: true}],
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+      "import/no-unresolved": ["error", {
+        ignore: ["^firebase-admin/.+"],
+      }],
 
       // "importPlugin/no-duplicates": ["error"],
       // "importPlugin/consistent-type-specifier-style": ["error", "prefer-top-level"],
@@ -117,6 +119,7 @@ export default tseslint.config(
     ],
     rules: {
       'sonarjs/no-duplicate-string': 'off',
+      'sonarjs/fixme-tag': 'off',
     },
   },
   {
@@ -126,10 +129,11 @@ export default tseslint.config(
         ...globals.node,
       },
     },
-    extends: [
-      prettierPlugin,
-    ],
+    plugins: {
+      prettier: prettier,
+    },
     rules: {
+      ...prettierConfig.rules,
       'prettier/prettier': [
         'error',
         {
@@ -202,7 +206,6 @@ export default tseslint.config(
       '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-angle-bracket-type-assertion': 'off',
       '@typescript-eslint/no-empty-function': 'error',
-      '@typescript-eslint/no-unnecessary-condition': 'error',
       '@typescript-eslint/no-confusing-non-null-assertion': 'warn',
       '@typescript-eslint/no-duplicate-enum-values': 'error',
       '@typescript-eslint/no-empty-interface': 'error',
@@ -449,4 +452,9 @@ export default tseslint.config(
       },
     },
   },
+  {
+    ignores: [
+      "src/metadata.ts"
+    ]
+  }
 );
