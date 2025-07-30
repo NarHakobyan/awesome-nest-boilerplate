@@ -30,7 +30,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./pgadmin-data:/root/.pgadmin
+      - /data/pgadmin:/root/.pgadmin
     env_file:
       - .env
     links:
