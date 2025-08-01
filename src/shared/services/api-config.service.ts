@@ -1,4 +1,5 @@
 import path from 'node:path';
+import type { TlsOptions } from 'node:tls';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -66,7 +67,11 @@ export class ApiConfigService {
     }
   }
 
-  private getString(key: string, defaultValue?: string): string {
+  private getString(
+    key: string,
+    defaultValue?: string,
+    removeLineBreaks?: true,
+  ): string {
     const value = this.configService.get<string>(key);
 
     if (value === undefined) {
@@ -77,7 +82,13 @@ export class ApiConfigService {
       throw new Error(`${key} environment variable doesn't exist`);
     }
 
-    return value.toString().replaceAll(String.raw`\n`, '\n');
+    const str = value.toString().replaceAll(String.raw`\n`, '\n');
+
+    if (removeLineBreaks) {
+      return str.replaceAll(String.raw`\n`, '');
+    }
+
+    return str.toString().replaceAll(String.raw`\n`, '\n');
   }
 
   get nodeEnv(): string {
@@ -104,6 +115,14 @@ export class ApiConfigService {
     const migrations = [
       path.join(import.meta.dirname, `../../database/migrations/*{.ts,.js}`),
     ];
+    const isSSL: boolean = this.getBoolean('DB_SSL');
+    const dbSSLCa = this.getString('DB_SSL_CA', '', true);
+    const ssl: TlsOptions = isSSL
+      ? {
+          rejectUnauthorized: true,
+          ca: dbSSLCa,
+        }
+      : {};
 
     return {
       entities,
@@ -119,6 +138,7 @@ export class ApiConfigService {
       migrationsRun: true,
       logging: this.getBoolean('ENABLE_ORM_LOGS'),
       namingStrategy: new SnakeNamingStrategy(),
+      ...(isSSL ? { ssl } : {}),
     };
   }
 

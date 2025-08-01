@@ -171,9 +171,13 @@ export function S3UrlParser(): PropertyDecorator {
 }
 
 export function PhoneNumberSerializer(): PropertyDecorator {
-  return Transform(
-    (params) => parsePhoneNumberWithError(params.value as string).number,
-  );
+  return Transform((params) => {
+    if (!params.value) {
+      return null;
+    }
+
+    return parsePhoneNumberWithError(params.value as string).number;
+  });
 }
 
 export function LinkCleanupTransform(options?: {

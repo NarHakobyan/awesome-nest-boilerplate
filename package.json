@@ -25,7 +25,7 @@
     "generate": "nest g -c awesome-nestjs-schematics --no-spec",
     "g": "yarn generate",
     "migration:revert": "yarn run typeorm migration:revert",
-    "schema:drop": "yarn run typeorm schema:drop",
+    "schema:drop": "yarn run typeorm schema:drop -d ormconfig.ts",
     "watch:dev": "nest start --watch ./src/main.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -38,7 +38,8 @@
     "docs:build": "DEPLOY_ENV=gh-pages vuepress build",
     "docs:deploy": "yarn docs:build && gh-pages -d .vuepress/dist",
     "prepare": "husky",
-    "release": "release-it"
+    "release": "release-it",
+    "format": "npx prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.826.0",

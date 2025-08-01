@@ -31,15 +31,17 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     new ExpressAdapter(),
     {
       cors: {
-        origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+        origin: process.env.CORS_ORIGINS?.split(',') ?? [
+          'http://localhost:3000',
+        ],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true,
-      }
+      },
     },
   );
   app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
   app.use(helmet());
-  // app.setGlobalPrefix('/api'); use api as global prefix if you don't have subdomain
+  app.setGlobalPrefix('/api'); //use api as global prefix if you don't have subdomain
   app.use(compression());
   app.use(morgan('combined'));
   app.enableVersioning();
@@ -96,12 +98,12 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   const port = configService.appConfig.port;
 
-  if ((<any>import.meta).env.PROD) {
-    await app.listen(port);
-    console.info(`server running on ${await app.getUrl()}`);
-  }
+  // if ((<any>import.meta).env.PROD) {
+  await app.listen(port);
+  console.info(`server running on ${await app.getUrl()}`);
+  // }
 
   return app;
 }
 
-export const viteNodeApp = bootstrap();
+export const viteNodeApp = await bootstrap();
