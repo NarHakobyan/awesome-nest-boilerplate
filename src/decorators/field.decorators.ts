@@ -25,9 +25,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { supportedLanguageCount } from '../constants/language-code';
-import type { Constructor } from '../types';
-import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators';
+import { supportedLanguageCount } from '../constants/language-code.ts';
+import type { Constructor } from '../types.ts';
+import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators.ts';
 import {
   LinkCleanupTransform,
   PhoneNumberSerializer,
@@ -36,14 +36,14 @@ import {
   ToLowerCase,
   ToUpperCase,
   Trim,
-} from './transform.decorators';
+} from './transform.decorators.ts';
 import {
   IsNullable,
   IsPassword,
   IsPhoneNumber,
   IsTmpKey as IsTemporaryKey,
   IsUndefinable,
-} from './validator.decorators';
+} from './validator.decorators.ts';
 
 type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
 

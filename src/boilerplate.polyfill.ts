@@ -2,14 +2,14 @@ import _ from 'lodash';
 import type { ObjectLiteral } from 'typeorm';
 import { Brackets, SelectQueryBuilder } from 'typeorm';
 
-import type { AbstractEntity } from './common/abstract.entity';
-import type { AbstractDto } from './common/dto/abstract.dto';
-import type { CreateTranslationDto } from './common/dto/create-translation.dto';
+import type { AbstractEntity } from './common/abstract.entity.ts';
+import type { AbstractDto } from './common/dto/abstract.dto.ts';
+import type { CreateTranslationDto } from './common/dto/create-translation.dto.ts';
 import { PageDto } from './common/dto/page.dto.ts';
 import { PageMetaDto } from './common/dto/page-meta.dto.ts';
-import type { PageOptionsDto } from './common/dto/page-options.dto';
-import type { LanguageCode } from './constants/language-code';
-import type { KeyOfType } from './types';
+import type { PageOptionsDto } from './common/dto/page-options.dto.ts';
+import type { LanguageCode } from './constants/language-code.ts';
+import type { KeyOfType } from './types.ts';
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };

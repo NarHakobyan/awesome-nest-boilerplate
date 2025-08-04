@@ -13,6 +13,7 @@
     "build:prod": "nest build",
     "start:dev": "vite",
     "nest:start": "nest start ./src/main.ts",
+    "deno:start": "deno run --allow-read --allow-env --allow-ffi --allow-net ./src/main.ts",
     "nest:start:dev": "nest start --watch",
     "nest:start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
