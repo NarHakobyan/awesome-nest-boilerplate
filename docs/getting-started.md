@@ -104,10 +104,16 @@ yarn test:debug
 ### Database Operations
 ```bash
 # Generate new migration
-yarn migration:generate migration_name
+yarn migration:generate src/database/migrations/migration_name
 
 # Create empty migration
-yarn migration:create migration_name
+yarn migration:create src/database/migrations/migration_name
+
+# Run pending migrations
+yarn migration:run
+
+# Show migration status
+yarn migration:show
 
 # Revert last migration
 yarn migration:revert
@@ -212,7 +218,7 @@ After creating your project, complete these steps:
 ### 3. Database Setup
 - [ ] Set up your PostgreSQL database
 - [ ] Update database configurations in `.env`
-- [ ] Run initial migrations: `yarn migration:generate initial`
+- [ ] Run initial migrations: `yarn migration:generate src/database/migrations/initial`
 
 ### 4. Development Environment
 - [ ] Configure your IDE/editor with TypeScript support

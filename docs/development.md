@@ -7,6 +7,7 @@
     - [PostgreSQL (Default)](#postgresql-default)
     - [MySQL/MariaDB Alternative](#mysqlmariadb-alternative)
     - [Database Operations](#database-operations)
+      - [Migration Examples](#migration-examples)
   - [Development Server](#development-server)
   - [Project Structure](#project-structure)
   - [Code Generation](#code-generation)
@@ -100,26 +101,60 @@ export const dataSource = new DataSource({
 rm -rf src/database/migrations/*
 
 # Generate new migrations for MySQL
-yarn migration:generate ./src/database/migrations/InitialMigration
+yarn migration:generate src/database/migrations/InitialMigration
 ```
 
 ### Database Operations
 
+> **Note**: For TypeORM v0.3+, the migration commands have changed:
+> - `migration:create` now requires the full path to the migration file
+> - `migration:generate` requires the `-d` flag to specify the DataSource configuration
+> - All commands now use the DataSource configuration instead of the old ormconfig.ts format
+
+#### Migration Examples
+
+**Creating a new migration manually:**
 ```bash
 # Create a new migration file
-yarn migration:create MigrationName
+yarn migration:create src/database/migrations/add-gifts-table
 
-# Generate migration from entity changes
-yarn migration:generate MigrationName
+# This generates: 1754340825698-add-gifts-table.ts
+```
 
-# Run pending migrations
-yarn typeorm migration:run
+**Generating migration from entity changes:**
+```bash
+# 1. Create or modify your entity (e.g., src/modules/gift/gift.entity.ts)
+# 2. Generate migration based on entity changes
+yarn migration:generate src/database/migrations/add-gifts-table
+
+# 3. Review the generated migration file
+# 4. Run the migration
+yarn migration:run
+```
+
+**Complete workflow example:**
+```bash
+# 1. Create entity
+# Edit: src/modules/gift/gift.entity.ts
+
+# 2. Generate migration
+yarn migration:generate src/database/migrations/gifts-table
+
+# 3. Review generated migration
+# File: src/database/migrations/1754340825698-gifts-table.ts
+
+# 4. Run migration
+yarn migration:run
+
+# 5. Verify migration status
+yarn migration:show
 
 # Revert the last migration
 yarn migration:revert
 
 # Drop entire database schema (⚠️ destructive)
 yarn schema:drop
+
 ```
 
 ## Development Server
@@ -315,11 +350,11 @@ docker-compose -f docker-compose_mysql.yml up
    ```bash
    # Create/modify entities
    # Generate migration
-   yarn migration:generate FeatureName
+   yarn migration:generate src/database/migrations/FeatureName
 
    # Review generated migration
    # Run migration
-   yarn typeorm migration:run
+   yarn migration:run
    ```
 
 ## Debugging
