@@ -20,7 +20,11 @@ import type { PageDto } from '../../common/dto/page.dto.ts';
 import { RoleType } from '../../constants/role-type.ts';
 import { ApiPageResponse } from '../../decorators/api-page-response.decorator.ts';
 import { AuthUser } from '../../decorators/auth-user.decorator.ts';
-import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import {
+  ApiUUIDParam,
+  Auth,
+  UUIDParam,
+} from '../../decorators/http.decorators.ts';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service.ts';
 import { UserEntity } from '../user/user.entity.ts';
 import { CreatePostDto } from './dtos/create-post.dto.ts';
@@ -63,6 +67,7 @@ export class PostController {
   @Get(':id')
   @Auth([])
   @HttpCode(HttpStatus.OK)
+  @ApiUUIDParam('id')
   @ApiOkResponse({ type: PostDto })
   async getSinglePost(@UUIDParam('id') id: Uuid): Promise<PostDto> {
     const entity = await this.postService.getSinglePost(id);
@@ -72,6 +77,7 @@ export class PostController {
 
   @Put(':id')
   @HttpCode(HttpStatus.ACCEPTED)
+  @ApiUUIDParam('id')
   @ApiAcceptedResponse()
   updatePost(
     @UUIDParam('id') id: Uuid,
@@ -82,6 +88,7 @@ export class PostController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.ACCEPTED)
+  @ApiUUIDParam('id')
   @ApiAcceptedResponse()
   async deletePost(@UUIDParam('id') id: Uuid): Promise<void> {
     await this.postService.deletePost(id);

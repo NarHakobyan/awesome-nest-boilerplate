@@ -12,7 +12,11 @@ import { PageDto } from '../../common/dto/page.dto.ts';
 import { RoleType } from '../../constants/role-type.ts';
 import { ApiPageResponse } from '../../decorators/api-page-response.decorator.ts';
 import { AuthUser } from '../../decorators/auth-user.decorator.ts';
-import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
+import {
+  ApiUUIDParam,
+  Auth,
+  UUIDParam,
+} from '../../decorators/http.decorators.ts';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service.ts';
 import { TranslationService } from '../../shared/services/translation.service.ts';
 import { UserDto } from './dtos/user.dto.ts';
@@ -59,6 +63,7 @@ export class UserController {
   @Get(':id')
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
+  @ApiUUIDParam('id')
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Get users list',

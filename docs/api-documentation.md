@@ -47,6 +47,7 @@ This guide covers the API documentation practices and standards used in the Awes
   - [Best Practices](#best-practices)
     - [API Design](#api-design)
     - [Documentation](#documentation)
+      - [Swagger @ApiOperation Requirement](#swagger-apioperation-requirement)
     - [Security](#security-1)
     - [Performance](#performance)
     - [Error Handling](#error-handling-1)
@@ -588,6 +589,62 @@ curl -X POST http://localhost:3000/posts \
 2. **Examples**: Provide request/response examples
 3. **Descriptions**: Write clear endpoint descriptions
 4. **Tags**: Group related endpoints with tags
+5. **Required @ApiOperation**: **ALWAYS** include `@ApiOperation()` decorator with meaningful description for every controller endpoint
+
+#### Swagger @ApiOperation Requirement
+
+Every controller endpoint **MUST** include an `@ApiOperation()` decorator with both `summary` and `description` properties. These descriptions will be used for semantic search functionality in the future.
+
+**✅ Required Format:**
+```typescript
+@Controller('users')
+@ApiTags('users')
+export class UserController {
+  @Get(':id')
+  @Auth([RoleType.USER])
+  @ApiOperation({
+    summary: 'Get user by ID',
+    description: 'Retrieves a specific user by their unique identifier. Requires user authentication and returns complete user profile data.'
+  })
+  @ApiOkResponse({ type: UserDto })
+  async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+    return this.userService.getUser(userId);
+  }
+
+  @Post()
+  @Auth([RoleType.ADMIN])
+  @ApiOperation({
+    summary: 'Create new user',
+    description: 'Creates a new user account with the provided data. Validates input, checks for duplicates, and returns the created user with generated ID.'
+  })
+  @ApiCreatedResponse({ type: UserDto })
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+    return this.userService.createUser(createUserDto);
+  }
+}
+```
+
+**❌ Incorrect - Missing @ApiOperation:**
+```typescript
+@Controller('users')
+@ApiTags('users')
+export class UserController {
+  @Get(':id')
+  @Auth([RoleType.USER])
+  @ApiOkResponse({ type: UserDto })
+  async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+    return this.userService.getUser(userId);
+  }
+}
+```
+
+**Description Guidelines:**
+- Start with an action verb (Get, Create, Update, Delete, etc.)
+- Explain what the endpoint does and what it returns
+- Mention authentication/authorization requirements
+- Include relevant business logic context
+- Keep descriptions concise but informative (1-2 sentences)
+- Use present tense and active voice
 
 ### Security
 1. **Authentication**: Require authentication for sensitive endpoints
