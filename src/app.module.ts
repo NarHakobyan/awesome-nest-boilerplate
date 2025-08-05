@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
@@ -11,9 +12,9 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { DataSource } from 'typeorm';
-import { addTransactionalDataSource } from 'typeorm-transactional';
 
+import { dataSourceFactory } from './data-source.factory.ts';
+import { ThrottlerGuard } from './guards/throttler.guard.ts';
 import { AuthModule } from './modules/auth/auth.module.ts';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module.ts';
 import { PostModule } from './modules/post/post.module.ts';
@@ -48,15 +49,7 @@ import { SharedModule } from './shared/shared.module.ts';
       useFactory: (configService: ApiConfigService) =>
         configService.postgresConfig,
       inject: [ApiConfigService],
-      dataSourceFactory: (options) => {
-        if (!options) {
-          throw new Error('Invalid options passed');
-        }
-
-        return Promise.resolve(
-          addTransactionalDataSource(new DataSource(options)),
-        );
-      },
+      dataSourceFactory,
     }),
     // eslint-disable-next-line canonical/id-match
     I18nModule.forRootAsync({
@@ -77,6 +70,11 @@ import { SharedModule } from './shared/shared.module.ts';
     }),
     HealthCheckerModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

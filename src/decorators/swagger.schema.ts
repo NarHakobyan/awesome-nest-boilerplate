@@ -15,7 +15,7 @@ import type {
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import _ from 'lodash';
 
-import type { IApiFile } from '../interfaces/IApiFile.ts';
+import type { IApiFile } from '../interfaces/i-api-file.ts';
 
 const PARAMTYPES_METADATA = 'design:paramtypes';
 
@@ -45,7 +45,7 @@ function explore(instance: object, propertyKey: string | symbol) {
       ROUTE_ARGS_METADATA,
       instance.constructor,
       propertyKey,
-    ) || {};
+    ) ?? {};
 
   const parametersWithType = _.mapValues(
     reverseObjectKeys(routeArgsMetadata),

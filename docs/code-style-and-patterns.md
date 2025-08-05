@@ -231,7 +231,7 @@ import { Repository } from 'typeorm';
 import { PageDto } from '../../common/dto/page.dto.ts';
 import { PageMetaDto } from '../../common/dto/page-meta.dto.ts';
 import { UserNotFoundException } from '../../exceptions/user-not-found.exception.ts';
-import type { IFile } from '../../interfaces/IFile.ts';
+import type { IFile } from '../../interfaces/i-file.ts';
 import type { Reference } from '../../types.ts';
 import { CreateUserDto } from './dtos/create-user.dto.ts';
 import { UserDto } from './dtos/user.dto.ts';

@@ -90,7 +90,7 @@ export class ApiConfigService {
 
   get throttlerConfigs(): ThrottlerOptions {
     return {
-      ttl: this.getDuration('THROTTLER_TTL', 'second'),
+      ttl: this.getDuration('THROTTLER_TTL', 'milliseconds'),
       limit: this.getNumber('THROTTLER_LIMIT'),
       // storage: new ThrottlerStorageRedisService(new Redis(this.redis)),
     };
