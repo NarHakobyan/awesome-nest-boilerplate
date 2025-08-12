@@ -1,7 +1,7 @@
 import type { ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import type { Repository } from 'typeorm';
 
 import { PostEntity } from '../post.entity.ts';
 import { PostTranslationEntity } from '../post-translation.entity.ts';

@@ -1,7 +1,7 @@
 import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import type { Repository } from 'typeorm';
 
 import type { CreateSettingsDto } from '../dtos/create-settings.dto.ts';
 import { UserSettingsEntity } from '../user-settings.entity.ts';

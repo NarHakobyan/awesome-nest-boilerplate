@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import _ from 'lodash';
 import type { TranslateOptions } from 'nestjs-i18n';
-import { I18nService } from 'nestjs-i18n';
+import type { I18nService } from 'nestjs-i18n';
 
 import { AbstractDto } from '../../common/dto/abstract.dto.ts';
 import { STATIC_TRANSLATION_DECORATOR_KEY } from '../../decorators/translate.decorator.ts';

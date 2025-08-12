@@ -2,7 +2,7 @@ import { STATUS_CODES } from 'node:http';
 
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
 import { Catch, HttpStatus } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import type { Reflector } from '@nestjs/core';
 import type { Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 

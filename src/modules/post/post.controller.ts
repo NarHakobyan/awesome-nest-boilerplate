@@ -26,12 +26,12 @@ import {
   UUIDParam,
 } from '../../decorators/http.decorators.ts';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service.ts';
-import { UserEntity } from '../user/user.entity.ts';
-import { CreatePostDto } from './dtos/create-post.dto.ts';
+import type { UserEntity } from '../user/user.entity.ts';
+import type { CreatePostDto } from './dtos/create-post.dto.ts';
 import { PostDto } from './dtos/post.dto.ts';
-import { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
-import { UpdatePostDto } from './dtos/update-post.dto.ts';
-import { PostService } from './post.service.ts';
+import type { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
+import type { UpdatePostDto } from './dtos/update-post.dto.ts';
+import type { PostService } from './post.service.ts';
 
 @Controller('posts')
 @ApiTags('posts')

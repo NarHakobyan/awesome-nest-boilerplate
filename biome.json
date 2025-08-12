@@ -9,7 +9,8 @@
     "ignoreUnknown": false,
     "includes": [
       "**",
-      "!**/.vscode/**/*"
+      "!**/.vscode/**/*",
+      "!**/dist/**/*"
     ]
   },
   "formatter": {

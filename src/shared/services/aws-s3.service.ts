@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import mime from 'mime-types';
 
 import type { IFile } from './../../interfaces/IFile.ts';
-import { ApiConfigService } from './api-config.service.ts';
-import { GeneratorService } from './generator.service.ts';
+import type { ApiConfigService } from './api-config.service.ts';
+import type { GeneratorService } from './generator.service.ts';
 
 @Injectable()
 export class AwsS3Service {

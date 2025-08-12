@@ -6,7 +6,7 @@ import type {
 } from 'class-validator';
 import { registerDecorator, ValidatorConstraint } from 'class-validator';
 import type { EntitySchema, FindOptionsWhere, ObjectType } from 'typeorm';
-import { DataSource } from 'typeorm';
+import type { DataSource } from 'typeorm';
 
 /**
  * @deprecated Don't use this validator until it's fixed in NestJS

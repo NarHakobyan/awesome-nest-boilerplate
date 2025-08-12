@@ -1,6 +1,6 @@
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
 import { Catch, UnprocessableEntityException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import type { Reflector } from '@nestjs/core';
 import type { ValidationError } from 'class-validator';
 import type { Response } from 'express';
 import _ from 'lodash';

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import type { CommandBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import type { Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
 import type { PageDto } from '../../common/dto/page.dto.ts';
 import { CreatePostCommand } from './commands/create-post.command.ts';
-import { CreatePostDto } from './dtos/create-post.dto.ts';
+import type { CreatePostDto } from './dtos/create-post.dto.ts';
 import type { PostDto } from './dtos/post.dto.ts';
 import type { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
 import type { UpdatePostDto } from './dtos/update-post.dto.ts';
