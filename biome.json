@@ -1,29 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
-  "vcs": {
-    "enabled": false,
-    "clientKind": "git",
-    "useIgnoreFile": false
-  },
-  "files": {
-    "ignoreUnknown": false,
-    "includes": [
-      "**",
-      "!**/.vscode/**/*",
-      "!**/dist/**/*"
-    ]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab"
-  },
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  },
+  "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+  "files": { "ignoreUnknown": false, "includes": ["**", "!**/.vscode/**/*"] },
+  "formatter": { "enabled": true, "indentStyle": "tab" },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
@@ -75,9 +55,7 @@
         "useYield": "error",
         "useValidTypeof": "error"
       },
-      "security": {
-        "noGlobalEval": "error"
-      },
+      "security": { "noGlobalEval": "error" },
       "style": {
         "noInferrableTypes": "error",
         "noNamespace": "error",
@@ -93,12 +71,7 @@
         "useExplicitLengthCheck": "error",
         "useFilenamingConvention": {
           "level": "error",
-          "options": {
-            "requireAscii": true,
-            "filenameCases": [
-              "kebab-case"
-            ]
-          }
+          "options": { "requireAscii": true, "filenameCases": ["kebab-case"] }
         },
         "useForOf": "error",
         "useImportType": "error",
@@ -109,42 +82,19 @@
             "strictCase": false,
             "conventions": [
               {
-                "selector": {
-                  "kind": "interface"
-                },
+                "selector": { "kind": "interface" },
                 "match": "(?:I)(.*)",
-                "formats": [
-                  "PascalCase"
-                ]
+                "formats": ["PascalCase"]
               },
               {
-                "selector": {
-                  "kind": "variable"
-                },
-                "formats": [
-                  "camelCase",
-                  "CONSTANT_CASE"
-                ]
+                "selector": { "kind": "variable" },
+                "formats": ["camelCase", "CONSTANT_CASE"]
               },
+              { "selector": { "kind": "typeLike" }, "formats": ["PascalCase"] },
               {
-                "selector": {
-                  "kind": "typeLike"
-                },
-                "formats": [
-                  "PascalCase"
-                ]
-              },
-              {
-                "selector": {
-                  "kind": "classMember",
-                  "modifiers": [
-                    "private"
-                  ]
-                },
+                "selector": { "kind": "classMember", "modifiers": ["private"] },
                 "match": "([^_]*)",
-                "formats": [
-                  "camelCase"
-                ]
+                "formats": ["camelCase"]
               }
             ]
           }
@@ -227,21 +177,15 @@
     }
   },
   "javascript": {
-    "formatter": {
-      "quoteStyle": "double"
-    },
-    "globals": [
-      "exports"
-    ]
+    "formatter": { "quoteStyle": "double" },
+    "globals": ["exports"],
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
   },
   "overrides": [
     {
-      "includes": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "linter": {
         "rules": {
           "complexity": {
@@ -277,12 +221,7 @@
       }
     },
     {
-      "includes": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "linter": {
         "rules": {
           "complexity": {
@@ -318,12 +257,7 @@
       }
     },
     {
-      "includes": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "linter": {
         "rules": {
           "complexity": {
@@ -359,12 +293,7 @@
       }
     },
     {
-      "includes": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "linter": {
         "rules": {
           "complexity": {
