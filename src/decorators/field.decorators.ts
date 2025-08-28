@@ -47,11 +47,6 @@ import {
 
 type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
-interface INumberOptions {
-  min?: number;
-  max?: number;
-}
-
 interface IFieldOptions {
   each?: boolean;
   swagger?: boolean;
@@ -74,19 +69,9 @@ interface IStringFieldOptions extends IFieldOptions {
   trimNewLines?: boolean;
 }
 
-type IClassFieldOptions = IFieldOptions & INumberOptions;
+type IClassFieldOptions = IFieldOptions;
 type IBooleanFieldOptions = IFieldOptions;
 type IEnumFieldOptions = IFieldOptions;
-
-function isPrimitive(getClass: () => unknown): boolean {
-  try {
-    const type = getClass();
-
-    return type === String || type === Number || type === Boolean;
-  } catch {
-    return false;
-  }
-}
 
 export function NumberField(
   options: Omit<ApiPropertyOptions, 'type'> & INumberFieldOptions = {},
@@ -377,13 +362,10 @@ export function ClassField<TClass extends Constructor>(
   getClass: () => TClass,
   options: Omit<ApiPropertyOptions, 'type'> & IClassFieldOptions = {},
 ): PropertyDecorator {
-  const decorators: PropertyDecorator[] = [];
-
-  const isPrimitiveType = isPrimitive(getClass);
-
-  if (!isPrimitiveType) {
-    decorators.push(Type(getClass), ValidateNested({ each: options.each }));
-  }
+  const decorators: PropertyDecorator[] = [
+    Type(getClass),
+    ValidateNested({ each: options.each }),
+  ];
 
   if (options.required !== false) {
     decorators.push(IsDefined());
@@ -393,24 +375,6 @@ export function ClassField<TClass extends Constructor>(
     decorators.push(IsNullable());
   } else {
     decorators.push(NotEquals(null));
-  }
-
-  if (options.each) {
-    if (typeof options.min === 'number') {
-      decorators.push(
-        ArrayMinSize(options.min, {
-          message: `At least ${options.min} item(s) required`,
-        }),
-      );
-    }
-
-    if (typeof options.max === 'number') {
-      decorators.push(
-        ArrayMaxSize(options.max, {
-          message: `No more than ${options.max} item(s) allowed`,
-        }),
-      );
-    }
   }
 
   if (options.swagger !== false) {
