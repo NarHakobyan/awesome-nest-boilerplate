@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { CommandBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import type { FindOptionsWhere } from 'typeorm';
@@ -10,8 +10,8 @@ import type { PageDto } from '../../common/dto/page.dto.ts';
 import { FileNotImageException } from '../../exceptions/file-not-image.exception.ts';
 import { UserNotFoundException } from '../../exceptions/user-not-found.exception.ts';
 import type { IFile } from '../../interfaces/IFile.ts';
-import type { AwsS3Service } from '../../shared/services/aws-s3.service.ts';
-import type { ValidatorService } from '../../shared/services/validator.service.ts';
+import { AwsS3Service } from '../../shared/services/aws-s3.service.ts';
+import { ValidatorService } from '../../shared/services/validator.service.ts';
 import type { Reference } from '../../types.ts';
 import type { UserRegisterDto } from '../auth/dto/user-register.dto.ts';
 import { CreateSettingsCommand } from './commands/create-settings.command.ts';
@@ -25,10 +25,10 @@ import type { UserSettingsEntity } from './user-settings.entity.ts';
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
-    private validatorService: ValidatorService,
-    private awsS3Service: AwsS3Service,
-    private commandBus: CommandBus,
+    private readonly userRepository: Repository<UserEntity>,
+    private readonly validatorService: ValidatorService,
+    private readonly awsS3Service: AwsS3Service,
+    private readonly commandBus: CommandBus,
   ) {}
 
   /**

@@ -32,11 +32,11 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
   @Column({ nullable: true, type: 'varchar' })
   avatar!: string | null;
 
-  @VirtualColumn({
-    query: (alias) =>
-      `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
-  })
-  fullName!: string;
+//   @VirtualColumn({
+//     query: (alias) =>
+//       `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
+//   })
+//   fullName!: string;
 
   @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
   settings?: UserSettingsEntity;

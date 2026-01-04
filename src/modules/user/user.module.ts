@@ -6,13 +6,19 @@ import { UserController } from './user.controller.ts';
 import { UserEntity } from './user.entity.ts';
 import { UserService } from './user.service.ts';
 import { UserSettingsEntity } from './user-settings.entity.ts';
+import { SharedModule } from '../../shared/shared.module.ts';
 
 const handlers = [CreateSettingsHandler];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, UserSettingsEntity])],
-  controllers: [UserController],
-  exports: [UserService],
-  providers: [UserService, ...handlers],
+	imports: [
+        SharedModule,
+		TypeOrmModule.forFeature([
+			UserEntity, UserSettingsEntity
+		]),
+	],
+	controllers: [UserController],
+	providers: [UserService, ...handlers],
+	exports: [UserService],
 })
-export class UserModule {}
+export class UserModule { }

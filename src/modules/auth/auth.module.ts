@@ -1,17 +1,21 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { ApiConfigService } from '../../shared/services/api-config.service.ts';
-import { UserModule } from '../user/user.module.ts';
+// import { UserModule } from '../user/user.module.ts';
 import { AuthController } from './auth.controller.ts';
 import { AuthService } from './auth.service.ts';
 import { JwtStrategy } from './jwt.strategy.ts';
 import { PublicStrategy } from './public.strategy.ts';
+import { SharedModule } from '../../shared/shared.module.ts';
+import { UserModule } from '../user/user.module.ts';
 
 @Module({
   imports: [
-    forwardRef(() => UserModule),
+    // forwardRef(() => UserModule),
+    UserModule, // we do not need forwardRef here because UserModule does not import AuthModule
+    SharedModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: (configService: ApiConfigService) => ({
@@ -19,7 +23,7 @@ import { PublicStrategy } from './public.strategy.ts';
         publicKey: configService.authConfig.publicKey,
         signOptions: {
           algorithm: 'RS256',
-          //     expiresIn: configService.getNumber('JWT_EXPIRATION_TIME'),
+            //   expiresIn: configService.getNumber('JWT_EXPIRATION_TIME'),
         },
         verifyOptions: {
           algorithms: ['RS256'],

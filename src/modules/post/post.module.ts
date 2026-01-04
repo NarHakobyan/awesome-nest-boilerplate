@@ -7,12 +7,16 @@ import { PostEntity } from './post.entity.ts';
 import { PostService } from './post.service.ts';
 import { PostTranslationEntity } from './post-translation.entity.ts';
 import { GetPostHandler } from './queries/get-post.handler.ts';
+import { SharedModule } from '../../shared/shared.module.ts';
 
 const handlers = [CreatePostHandler, GetPostHandler];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PostEntity, PostTranslationEntity])],
-  providers: [PostService, ...handlers],
-  controllers: [PostController],
+    imports: [
+        SharedModule,
+        TypeOrmModule.forFeature([PostEntity, PostTranslationEntity]),
+    ],
+    providers: [PostService, ...handlers],
+    controllers: [PostController],
 })
-export class PostModule {}
+export class PostModule { }

@@ -23,9 +23,11 @@ import { SharedModule } from './shared/shared.module.ts';
 
 @Module({
   imports: [
-    AuthModule,
-    UserModule,
-    PostModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    SharedModule,
     ClsModule.forRoot({
       global: true,
       middleware: {
@@ -38,10 +40,6 @@ import { SharedModule } from './shared/shared.module.ts';
         throttlers: [configService.throttlerConfigs],
       }),
       inject: [ApiConfigService],
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [SharedModule],
@@ -58,7 +56,6 @@ import { SharedModule } from './shared/shared.module.ts';
         );
       },
     }),
-    // eslint-disable-next-line canonical/id-match
     I18nModule.forRootAsync({
       useFactory: (configService: ApiConfigService) => ({
         fallbackLanguage: configService.fallbackLanguage,
@@ -75,6 +72,9 @@ import { SharedModule } from './shared/shared.module.ts';
       imports: [SharedModule],
       inject: [ApiConfigService],
     }),
+    AuthModule,
+    UserModule,
+    PostModule,
     HealthCheckerModule,
   ],
   providers: [],
