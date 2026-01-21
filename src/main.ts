@@ -1,4 +1,4 @@
-import './boilerplate.polyfill.ts';
+import './boilerplate.polyfill';
 
 import {
   ClassSerializerInterceptor,
