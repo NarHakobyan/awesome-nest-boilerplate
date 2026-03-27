@@ -26,9 +26,7 @@ export function validateHash(
   return bcrypt.compare(password, hash);
 }
 
-export function getVariableName<TResult>(
-  getVar: () => TResult,
-): string | undefined {
+export function getVariableName(getVar: () => unknown): string {
   const m = /\(\)=>(.*)/.exec(
     getVar.toString().replaceAll(/(\r\n|\n|\r|\s)/gm, ''),
   );
@@ -43,5 +41,5 @@ export function getVariableName<TResult>(
 
   const memberParts = fullMemberName.split('.');
 
-  return memberParts.at(-1);
+  return memberParts.at(-1)!;
 }

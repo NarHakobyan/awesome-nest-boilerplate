@@ -92,8 +92,14 @@ export class UserService {
     pageOptionsDto: UsersPageOptionsDto,
   ): Promise<PageDto<UserDto>> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
+
+    if (pageOptionsDto.q) {
+      queryBuilder.searchByString(pageOptionsDto.q, ['firstName', 'email']);
+    }
+
     const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
 
+    // eslint-disable-next-line sonarjs/argument-type
     return items.toPageDto(pageMetaDto);
   }
 

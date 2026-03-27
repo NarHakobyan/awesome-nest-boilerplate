@@ -34,24 +34,22 @@ export function ApiUUIDPropertyOptional(
   return ApiUUIDProperty({ required: false, ...options });
 }
 
-export function ApiEnumProperty<TEnum>(
-  getEnum: () => TEnum,
+export function ApiEnumProperty(
+  getEnum: () => unknown,
   options: Omit<ApiPropertyOptions, 'type'> & { each?: boolean } = {},
 ): PropertyDecorator {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const enumValue = getEnum() as any;
+  const enumValue = getEnum();
 
   return ApiProperty({
-    // throw error during the compilation of swagger
-    // isArray: options.each,
-    enum: enumValue,
+    /* isArray: options.each, — throws error during swagger compilation */
+    enum: enumValue as object,
     enumName: getVariableName(getEnum),
     ...(options as ApiPropertyOptions),
   });
 }
 
-export function ApiEnumPropertyOptional<TEnum>(
-  getEnum: () => TEnum,
+export function ApiEnumPropertyOptional(
+  getEnum: () => unknown,
   options: Omit<ApiPropertyOptions, 'type' | 'required'> & {
     each?: boolean;
   } = {},

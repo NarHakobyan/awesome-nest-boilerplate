@@ -14,6 +14,7 @@ export class PostDto extends AbstractDto {
   title?: string;
 
   @ApiPropertyOptional()
+  @DynamicTranslate()
   description?: string;
 
   @ApiPropertyOptional()

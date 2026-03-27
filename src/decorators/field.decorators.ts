@@ -172,7 +172,7 @@ export function StringField(
 export function TextAreaField(
   options: Omit<ApiPropertyOptions, 'type'> &
     Omit<IStringFieldOptions, 'trimNewLines'> = {},
-) {
+): PropertyDecorator {
   return StringField({
     ...options,
     trimNewLines: false,
@@ -192,7 +192,7 @@ export function StringFieldOptional(
 export function TextAreaFieldOptional(
   options: Omit<ApiPropertyOptions, 'type' | 'required'> &
     Omit<IStringFieldOptions, 'trimNewLines'> = {},
-) {
+): PropertyDecorator {
   return StringFieldOptional({
     ...options,
     trimNewLines: false,
@@ -329,14 +329,13 @@ export function TmpKeyFieldOptional(
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-export function EnumField<TEnum extends object>(
-  getEnum: () => TEnum,
+export function EnumField(
+  getEnum: () => unknown,
   options: Omit<ApiPropertyOptions, 'type' | 'enum' | 'enumName' | 'isArray'> &
     IEnumFieldOptions = {},
 ): PropertyDecorator {
   const enumValue = getEnum();
-  const decorators = [IsEnum(enumValue, { each: options.each })];
+  const decorators = [IsEnum(enumValue as object, { each: options.each })];
 
   if (options.nullable) {
     decorators.push(IsNullable());
@@ -388,9 +387,11 @@ export function ClassField<TClass extends Constructor>(
     );
   }
 
-  // if (options.each) {
-  //   decorators.push(ToArray());
-  // }
+  /*
+   * if (options.each) {
+   *   decorators.push(ToArray());
+   * }
+   */
 
   return applyDecorators(...decorators);
 }
@@ -567,7 +568,7 @@ export function DateFieldOptional(
 
 export function LinkedinField(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   const decorators = [
     Expose({ groups: options.groups, name: options.name }),
     Type(() => String),
@@ -590,7 +591,7 @@ export function LinkedinField(
 
 export function FacebookField(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   const decorators = [
     Expose({ groups: options.groups, name: options.name }),
     Type(() => String),
@@ -610,7 +611,7 @@ export function FacebookField(
 
 export function InstagramField(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   const decorators = [
     Expose({ groups: options.groups, name: options.name }),
     Type(() => String),
@@ -630,7 +631,7 @@ export function InstagramField(
 
 export function TwitterField(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   const decorators = [
     Expose({ groups: options.groups, name: options.name }),
     Type(() => String),
@@ -650,8 +651,8 @@ export function TwitterField(
 
 export function WebsiteField(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
-  // FIXME: replace trailing slash with a regex, .replace(/\/+$/, '')
+): PropertyDecorator {
+  // Trailing slash cleanup could be improved with: .replace(/\/+$/, '')
   const decorators = [
     Expose({ groups: options.groups, name: options.name }),
     Type(() => String),
@@ -673,8 +674,8 @@ export function WebsiteField(
 
 export function YoutubeField(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
-  // FIXME: replace trailing slash with a regex, .replace(/\/+$/, '')
+): PropertyDecorator {
+  // Trailing slash cleanup could be improved with: .replace(/\/+$/, '')
   const decorators = [
     Expose({ groups: options.groups, name: options.name }),
     Type(() => String),
@@ -694,36 +695,36 @@ export function YoutubeField(
 
 export function LinkedinFieldOptional(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   return applyDecorators(LinkedinField(options), IsUndefinable());
 }
 
 export function FacebookFieldOptional(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   return applyDecorators(FacebookField(options), IsUndefinable());
 }
 
 export function InstagramFieldOptional(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   return applyDecorators(InstagramField(options), IsUndefinable());
 }
 
 export function TwitterFieldOptional(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   return applyDecorators(TwitterField(options), IsUndefinable());
 }
 
 export function WebsiteFieldOptional(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   return applyDecorators(WebsiteField(options), IsUndefinable());
 }
 
 export function YoutubeFieldOptional(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
-) {
+): PropertyDecorator {
   return applyDecorators(YoutubeField(options), IsUndefinable());
 }
