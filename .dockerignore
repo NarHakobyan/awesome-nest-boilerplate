@@ -2,6 +2,6 @@
 dist
 node_modules
 db-data
-.vuepress
+.vitepress
 .vscode
 docs

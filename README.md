@@ -152,11 +152,12 @@ And you will see the generated file in `dist` that is ready to be served.
 
 This project includes a `docs` folder with more details on:
 
-1.  [Setup and development](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/development.html#first-time-setup)
-1.  [Architecture](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/architecture.html)
-1.  [Naming Cheatsheet](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/naming-cheatsheet.html)
-1.  [Linting](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/linting.html)
-1.  [Code Generation](https://narhakobyan.github.io/awesome-nest-boilerplate/docs/code-generation.html)
+1.  [Getting Started](https://narhakobyan.github.io/awesome-nest-boilerplate/getting-started.html)
+1.  [Setup and development](https://narhakobyan.github.io/awesome-nest-boilerplate/development.html#first-time-setup)
+1.  [Architecture](https://narhakobyan.github.io/awesome-nest-boilerplate/architecture.html)
+1.  [Naming Cheatsheet](https://narhakobyan.github.io/awesome-nest-boilerplate/naming-cheatsheet.html)
+1.  [Linting](https://narhakobyan.github.io/awesome-nest-boilerplate/linting.html)
+1.  [Code Generation](https://narhakobyan.github.io/awesome-nest-boilerplate/code-generation.html)
 
 ## Community
 

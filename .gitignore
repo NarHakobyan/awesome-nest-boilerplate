@@ -77,9 +77,6 @@ mongo
 db-data
 
 
-# Vuepress
-.temp
-.cache
 .DS_Store
 
 
@@ -87,12 +84,9 @@ db-data
 .history
 .swc/
 
-# VuePress default temp directory
-.vuepress/.temp
-# VuePress default cache directory
-.vuepress/.cache
-# VuePress default build output directory
-.vuepress/dist
+# VitePress
+docs/.vitepress/dist
+docs/.vitepress/cache
 
 # Large data files (uncompressed - ignored)
 src/database/data/categories-params.json

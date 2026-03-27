@@ -10,7 +10,7 @@
     "tools/**/*"
   ],
   "exclude": [
-    ".vuepress/**/*",
+    "docs/.vitepress/**/*",
     "node_modules/**/*",
     "dist/**/*",
   ]

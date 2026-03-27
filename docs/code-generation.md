@@ -114,4 +114,4 @@ Generate a new Nest resource, including a controller, service, and module.
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+Nest is [MIT licensed](https://github.com/NarHakobyan/awesome-nest-boilerplate/blob/main/LICENSE).

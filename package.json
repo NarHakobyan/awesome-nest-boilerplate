@@ -41,9 +41,9 @@
     "test:cov": "NODE_OPTIONS='--experimental-vm-modules' NODE_ENV=test jest --coverage",
     "test:debug": "NODE_ENV=test node --inspect-brk -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "NODE_ENV=test jest --config ./test/jest-e2e.json",
-    "docs:dev": "vuepress dev -p 7070",
-    "docs:build": "DEPLOY_ENV=gh-pages vuepress build",
-    "docs:deploy": "pnpm run docs:build && gh-pages -d .vuepress/dist",
+    "docs:dev": "vitepress dev docs --port 7070",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "prepare": "husky",
     "release": "release-it"
   },
@@ -133,6 +133,7 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.39.1",
     "@typescript-eslint/parser": "^8.39.1",
+    "vitepress": "^1.6.3",
     "awesome-nestjs-schematics": "^10.1.1",
     "concurrently": "^9.2.1",
     "cross-env": "^10.0.0",
@@ -150,7 +151,6 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-sonarjs": "^3.0.4",
     "eslint-plugin-unicorn": "^60.0.0",
-    "gh-pages": "^6.3.0",
     "globals": "^16.3.0",
     "http-proxy": "^1.18.1",
     "husky": "^9.1.7",
@@ -165,9 +165,7 @@
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.1",
     "vite": "7.1.2",
-    "vite-plugin-node": "^7.0.0",
-    "vue": "^3.5.16",
-    "vuepress": "2.0.0-rc.19"
+    "vite-plugin-node": "^7.0.0"
   },
   "lint-staged": {
     "src/**/*.ts": [
