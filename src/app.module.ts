@@ -12,7 +12,10 @@ import {
   QueryResolver,
 } from 'nestjs-i18n';
 import { DataSource } from 'typeorm';
-import { addTransactionalDataSource } from 'typeorm-transactional';
+import {
+  addTransactionalDataSource,
+  getDataSourceByName,
+} from 'typeorm-transactional';
 
 import { AuthModule } from './modules/auth/auth.module.ts';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module.ts';
@@ -51,6 +54,12 @@ import { SharedModule } from './shared/shared.module.ts';
       dataSourceFactory: (options) => {
         if (!options) {
           throw new Error('Invalid options passed');
+        }
+
+        // Reuse existing DataSource on Vite HMR hot reload
+        const existingDs = getDataSourceByName('default');
+        if (existingDs) {
+          return Promise.resolve(existingDs);
         }
 
         return Promise.resolve(

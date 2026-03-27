@@ -1,23 +1,37 @@
+import { jest } from '@jest/globals';
+import { Reflector } from '@nestjs/core';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
+import { RolesGuard } from '../../guards/roles.guard.ts';
+import { AuthService } from './auth.service.ts';
 import { AuthController } from './auth.controller.ts';
+import { UserService } from '../user/user.service.ts';
 
 describe('AuthController', () => {
-  let app: TestingModule;
+  let controller: AuthController;
 
   beforeAll(async () => {
-    app = await Test.createTestingModule({
+    const app: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [],
-      imports: [],
+      providers: [
+        Reflector,
+        {
+          provide: AuthService,
+          useValue: { validateUser: jest.fn(), createAccessToken: jest.fn() },
+        },
+        { provide: UserService, useValue: { createUser: jest.fn() } },
+        {
+          provide: RolesGuard,
+          useValue: { canActivate: jest.fn().mockReturnValue(true) },
+        },
+      ],
     }).compile();
+
+    controller = app.get<AuthController>(AuthController);
   });
 
-  describe('root', () => {
-    it('should return "http://localhost"', () => {
-      const appController = app.get<AuthController>(AuthController);
-      expect(appController).toBe('http://localhost');
-    });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
   });
 });

@@ -1,5 +1,4 @@
 #!/bin/bash
-123
 set -e;
 if [ -n "${DB_USERNAME:-}" ] && [ -n "${DB_PASSWORD:-}" ]; then
 	psql -v ON_ERROR_STOP=1 --username "$DB_USERNAME"  <<-EOSQL

@@ -31,13 +31,15 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     new ExpressAdapter(),
     {
       cors: {
-        origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+        origin: process.env.CORS_ORIGINS?.split(',') || [
+          'http://localhost:3000',
+        ],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true,
-      }
+      },
     },
   );
-  app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+  app.enable('trust proxy');
   app.use(helmet());
   // app.setGlobalPrefix('/api'); use api as global prefix if you don't have subdomain
   app.use(compression());
@@ -96,9 +98,15 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   const port = configService.appConfig.port;
 
-  if ((<any>import.meta).env?.PROD) {
+  /*
+   * Vite plugin binds the server in dev mode (PROD===false); in all other runtimes import.meta.env is undefined.
+   * biome-ignore lint/style/useNamingConvention: PROD is Vite's injected env key
+   */
+  const viteEnv = (import.meta as unknown as { env?: { PROD?: boolean } }).env;
+
+  if (viteEnv?.PROD) {
     await app.listen(port);
-    console.info(`server running on ${await app.getUrl()}`);
+    console.info(`server running on http://localhost:${port}`);
   }
 
   return app;

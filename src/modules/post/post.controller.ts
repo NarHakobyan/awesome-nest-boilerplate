@@ -31,7 +31,7 @@ import type { CreatePostDto } from './dtos/create-post.dto.ts';
 import { PostDto } from './dtos/post.dto.ts';
 import type { PostPageOptionsDto } from './dtos/post-page-options.dto.ts';
 import type { UpdatePostDto } from './dtos/update-post.dto.ts';
-import type { PostService } from './post.service.ts';
+import { PostService } from './post.service.ts';
 
 @Controller('posts')
 @ApiTags('posts')

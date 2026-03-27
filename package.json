@@ -36,9 +36,9 @@
     "lint": "eslint .",
     "lint:changes": "biome check --staged",
     "lint:fix": "eslint --fix .",
-    "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watch",
-    "test:cov": "NODE_ENV=test jest --coverage",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' NODE_ENV=test jest",
+    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' NODE_ENV=test jest --watch",
+    "test:cov": "NODE_OPTIONS='--experimental-vm-modules' NODE_ENV=test jest --coverage",
     "test:debug": "NODE_ENV=test node --inspect-brk -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "NODE_ENV=test jest --config ./test/jest-e2e.json",
     "docs:dev": "vuepress dev -p 7070",
@@ -184,8 +184,22 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": {
+            "verbatimModuleSyntax": false
+          }
+        }
+      ]
+    },
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.+)\\.ts$": "$1"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

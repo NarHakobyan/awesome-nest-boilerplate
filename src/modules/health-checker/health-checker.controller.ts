@@ -2,11 +2,11 @@ import { Controller, Get } from '@nestjs/common';
 import type { HealthCheckResult } from '@nestjs/terminus';
 import {
   HealthCheck,
-  type HealthCheckService,
-  type TypeOrmHealthIndicator,
+  HealthCheckService,
+  TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
 
-import type { ServiceHealthIndicator } from './health-indicators/service.indicator.ts';
+import { ServiceHealthIndicator } from './health-indicators/service.indicator.ts';
 
 @Controller('health')
 export class HealthCheckerController {
