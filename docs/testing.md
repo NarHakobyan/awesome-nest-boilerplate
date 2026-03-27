@@ -710,25 +710,25 @@ describe('Authentication (e2e)', () => {
 
 ```bash
 # Run all unit tests
-yarn test
+pnpm test
 
 # Run tests in watch mode
-yarn test:watch
+pnpm test:watch
 
 # Run tests with coverage
-yarn test:cov
+pnpm test:cov
 
 # Run e2e tests
-yarn test:e2e
+pnpm test:e2e
 
 # Run specific test file
-yarn test user.service.spec.ts
+pnpm test user.service.spec.ts
 
 # Run tests with debugging
-yarn test:debug
+pnpm test:debug
 
 # Run tests matching pattern
-yarn test --testNamePattern="should create"
+pnpm test --testNamePattern="should create"
 ```
 
 ## Test Database Setup
@@ -892,20 +892,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: '18'
-          cache: 'yarn'
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Run unit tests
-        run: yarn test:cov
+        run: pnpm test:cov
 
       - name: Run e2e tests
-        run: yarn test:e2e
+        run: pnpm test:e2e
         env:
           DB_HOST: localhost
           DB_PORT: 5432

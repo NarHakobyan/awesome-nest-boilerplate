@@ -1,0 +1,244 @@
+---
+description: Clean code principles for writing maintainable, readable, and high-quality code
+globs: **/*.ts
+alwaysApply: true
+---
+
+# Clean Code Guidelines
+
+## Core Principles
+
+1. **Clarity First**
+   ```ts
+   // ✅ Clear and intention-revealing
+   const isUserEligible = age >= 18 && hasValidId;
+
+   // ❌ Cryptic and unclear
+   const check = a >= 18 && v;
+   ```
+
+2. **Single Responsibility**
+   ```ts
+   // ✅ Single responsibility
+   class UserAuthentication {
+     async authenticate(credentials: Credentials): Promise<AuthResult>
+   }
+
+   // ❌ Multiple responsibilities
+   class UserManager {
+     authenticate() {}
+     updateProfile() {}
+     sendEmail() {}
+   }
+   ```
+
+3. **DRY (Don't Repeat Yourself)**
+   ```ts
+   // ✅ Reusable function
+   const formatCurrency = (amount: number): string =>
+     new Intl.NumberFormat('en-US', {
+       style: 'currency',
+       currency: 'USD'
+     }).format(amount);
+
+   // ❌ Repeated code
+   price1.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+   price2.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+   ```
+
+## Naming Conventions
+
+1. **Variables**
+   ```ts
+   // ✅ Clear and descriptive
+   const userCount = users.length;
+   const isActive = user.status === 'active';
+   const MAX_RETRIES = 3;
+
+   // ❌ Unclear or abbreviated
+   const n = users.length;
+   const check = user.status === 'active';
+   const max = 3;
+   ```
+
+2. **Functions**
+   ```ts
+   // ✅ Action-based names
+   async function fetchUserProfile(userId: string): Promise<Profile>
+   function calculateTotalPrice(items: Item[]): number
+
+   // ❌ Unclear names
+   async function userData(id: string): Promise<any>
+   function process(items: Item[]): number
+   ```
+
+## Function Design
+
+1. **Small and Focused**
+   ```ts
+   // ✅ Small, focused function
+   function validateEmail(email: string): boolean {
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+     return emailRegex.test(email);
+   }
+
+   // ❌ Too many responsibilities
+   function processUser(user: User) {
+     validateEmail(user.email);
+     checkPassword(user.password);
+     saveToDatabase(user);
+     sendWelcomeEmail(user);
+   }
+   ```
+
+2. **Parameter Objects**
+   ```ts
+   // ✅ Using parameter object
+   interface UserCreateConfig {
+     name: string;
+     email: string;
+     role: UserRole;
+   }
+
+   function createUser(config: UserCreateConfig): User
+
+   // ❌ Too many parameters
+   function createUser(
+     name: string,
+     email: string,
+     role: UserRole,
+     department: string,
+     manager: string
+   ): User
+   ```
+
+## Error Handling
+
+1. **Explicit Error Types**
+   ```ts
+   // ✅ Custom error types
+   class ValidationError extends Error {
+     constructor(message: string) {
+       super(`Validation failed: ${message}`);
+     }
+   }
+
+   // ❌ Generic errors
+   throw new Error('Something went wrong');
+   ```
+
+2. **Meaningful Error Messages**
+   ```ts
+   // ✅ Descriptive error
+   throw new ValidationError(
+     `User email ${email} is invalid. Expected format: user@domain.com`
+   );
+
+   // ❌ Vague error
+   throw new Error('Invalid input');
+   ```
+
+## Comments and Documentation
+
+1. **Self-Documenting Code**
+   ```ts
+   // ✅ Clear without comments
+   const isWorkingHours =
+     currentTime.getHours() >= 9 &&
+     currentTime.getHours() <= 17;
+
+   // ❌ Needs comment to understand
+   const isValid = h >= 9 && h <= 17; // check working hours
+   ```
+
+2. **API Documentation**
+   ```ts
+   /**
+    * Processes a payment transaction.
+    * @param {PaymentDetails} payment - Payment information
+    * @returns {Promise<TransactionResult>} Transaction result
+    * @throws {PaymentError} If payment processing fails
+    */
+   async function processPayment(
+     payment: PaymentDetails
+   ): Promise<TransactionResult>
+   ```
+
+## Testing
+
+1. **Arrange-Act-Assert**
+   ```ts
+   describe('UserService', () => {
+     it('should create user', async () => {
+       // Arrange
+       const userData = { name: 'Test User' };
+
+       // Act
+       const user = await userService.create(userData);
+
+       // Assert
+       expect(user.name).toBe(userData.name);
+     });
+   });
+   ```
+
+2. **Test Naming**
+   ```ts
+   // ✅ Clear test names
+   it('should throw error when email is invalid', () => {});
+   it('should successfully create user with valid data', () => {});
+
+   // ❌ Unclear test names
+   it('test email validation', () => {});
+   it('user creation', () => {});
+   ```
+
+## Constants Over Magic Numbers
+- Replace hard-coded values with named constants
+- Use descriptive constant names that explain the value's purpose
+- Keep constants at the top of the file or in a dedicated constants file
+
+## Meaningful Names
+- Variables, functions, and classes should reveal their purpose
+- Names should explain why something exists and how it's used
+- Avoid abbreviations unless they're universally understood
+
+## Smart Comments
+- Don't comment on what the code does - make the code self-documenting
+- Use comments to explain why something is done a certain way
+- Document complex algorithms, and non-obvious side effects
+
+## Single Responsibility
+- Each function should do exactly one thing
+- Functions should be small and focused
+- If a function needs a comment to explain what it does, it should be split
+
+## DRY (Don't Repeat Yourself)
+- Extract repeated code into reusable functions
+- Share common logic through proper abstraction
+- Maintain single sources of truth
+
+## Clean Structure
+- Keep related code together
+- Organize code in a logical hierarchy
+- Use consistent file and folder naming conventions
+
+## Encapsulation
+- Hide implementation details
+- Expose clear interfaces
+- Move nested conditionals into well-named functions
+
+## Code Quality Maintenance
+- Refactor continuously
+- Fix technical debt early
+- Leave code cleaner than you found it
+
+## Testing
+- Write tests before fixing bugs
+- Keep tests readable and maintainable
+- Test edge cases and error conditions
+
+## Version Control
+- Write clear commit messages
+- Make small, focused commits
+- Use meaningful branch names

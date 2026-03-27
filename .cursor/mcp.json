@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "API specification": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "apidog-mcp-server@latest",
+        "--oas=http://localhost:3000/documentation-json"
+      ]
+    },
+    "cursor-rules-mcp": {
+      "command": "npx",
+      "args": ["-y", "cursor-rules-mcp"]
+    }
+  }
+}

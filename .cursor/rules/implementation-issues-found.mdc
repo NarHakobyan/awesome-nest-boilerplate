@@ -1,0 +1,235 @@
+---
+description: Critical issues found in current implementation that need to be addressed
+globs:
+alwaysApply: true
+---
+
+# 🚨 CRITICAL IMPLEMENTATION ISSUES FOUND
+
+## Issues That Must Be Fixed
+
+### 1. Missing @ApiOperation Decorators
+**ALL controller endpoints are missing @ApiOperation decorators!**
+
+❌ **Current Implementation:**
+```ts
+@Get(':id')
+@Auth([RoleType.USER])
+@HttpCode(HttpStatus.OK)
+@ApiUUIDParam('id')
+@ApiResponse({
+  status: HttpStatus.OK,
+  description: 'Get users list',
+  type: UserDto,
+})
+getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+  return this.userService.getUser(userId);
+}
+```
+
+✅ **Required Implementation:**
+```ts
+@Get(':id')
+@Auth([RoleType.USER])
+@HttpCode(HttpStatus.OK)
+@ApiOperation({
+  summary: 'Get user by ID',
+  description: 'Retrieves a specific user by their unique identifier. Requires user authentication and returns complete user profile data.'
+})
+@ApiUUIDParam('id')
+@ApiOkResponse({ type: UserDto })
+getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+  return this.userService.getUser(userId);
+}
+```
+
+### 2. Entity Ownership Violation
+**PostEntity imports UserEntity from another module - VIOLATION of entity ownership rules!**
+
+❌ **Current Implementation:**
+```ts
+// src/modules/post/post.entity.ts
+import { UserEntity } from '../user/user.entity.ts'; // ❌ WRONG!
+
+@Entity({ name: 'posts' })
+export class PostEntity extends AbstractEntity<PostDto> {
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.posts)
+  user!: Relation<UserEntity>; // ❌ Cross-module entity usage
+}
+```
+
+✅ **Required Implementation:**
+```ts
+// src/modules/post/post.entity.ts
+// Remove UserEntity import and relationship
+// Use UserService for cross-module communication instead
+
+@Entity({ name: 'posts' })
+export class PostEntity extends AbstractEntity<PostDto> {
+  @Column({ type: 'uuid' })
+  userId!: Uuid; // ✅ Keep only the foreign key
+  
+  // Remove direct entity relationship
+}
+```
+
+### 3. CQRS Handler Return Types
+**Command handlers missing explicit return types**
+
+❌ **Current Implementation:**
+```ts
+@CommandHandler(CreatePostCommand)
+export class CreatePostHandler implements ICommandHandler<CreatePostCommand, PostEntity> {
+  async execute(command: CreatePostCommand) { // ❌ Missing return type
+    // ...
+  }
+}
+```
+
+✅ **Required Implementation:**
+```ts
+@CommandHandler(CreatePostCommand)
+export class CreatePostHandler implements ICommandHandler<CreatePostCommand, PostEntity> {
+  async execute(command: CreatePostCommand): Promise<PostEntity> { // ✅ Explicit return type
+    // ...
+  }
+}
+```
+
+### 4. Inconsistent API Response Types
+**Using generic @ApiResponse instead of specific response decorators**
+
+❌ **Current Implementation:**
+```ts
+@ApiResponse({
+  status: HttpStatus.OK,
+  description: 'Get users list',
+  type: UserDto,
+})
+```
+
+✅ **Required Implementation:**
+```ts
+@ApiOkResponse({ type: UserDto })
+// or
+@ApiCreatedResponse({ type: UserDto })
+// or  
+@ApiAcceptedResponse()
+```
+
+### 5. Service Method Inconsistencies
+**PostService.updatePost has a bug - saving updatePostDto instead of postEntity**
+
+❌ **Current Implementation:**
+```ts
+async updatePost(id: Uuid, updatePostDto: UpdatePostDto): Promise<void> {
+  // ...
+  this.postRepository.merge(postEntity, updatePostDto);
+  await this.postRepository.save(updatePostDto); // ❌ WRONG! Should save postEntity
+}
+```
+
+✅ **Required Implementation:**
+```ts
+async updatePost(id: Uuid, updatePostDto: UpdatePostDto): Promise<void> {
+  // ...
+  this.postRepository.merge(postEntity, updatePostDto);
+  await this.postRepository.save(postEntity); // ✅ CORRECT!
+}
+```
+
+## Patterns Found in Implementation
+
+### Controller Patterns
+```ts
+// ✅ Actual successful patterns found:
+@Controller('posts')
+@ApiTags('posts')
+export class PostController {
+  constructor(private postService: PostService) {}
+
+  @Post()
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: PostDto })
+  async createPost(
+    @Body() createPostDto: CreatePostDto,
+    @AuthUser() user: UserEntity,
+  ) {
+    const postEntity = await this.postService.createPost(user.id, createPostDto);
+    return postEntity.toDto();
+  }
+}
+```
+
+### Service Patterns
+```ts
+// ✅ Actual patterns found:
+@Injectable()
+export class PostService {
+  constructor(
+    @InjectRepository(PostEntity)
+    private postRepository: Repository<PostEntity>,
+    private commandBus: CommandBus,
+  ) {}
+
+  @Transactional()
+  createPost(userId: Uuid, createPostDto: CreatePostDto): Promise<PostEntity> {
+    return this.commandBus.execute<CreatePostCommand, PostEntity>(
+      new CreatePostCommand(userId, createPostDto),
+    );
+  }
+}
+```
+
+### Entity Patterns
+```ts
+// ✅ Actual patterns found:
+@Entity({ name: 'users' })
+@UseDto(UserDto)
+export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
+  @Column({ nullable: true, type: 'varchar' })
+  firstName!: string | null;
+
+  @Column({ type: 'enum', enum: RoleType, default: RoleType.USER })
+  role!: RoleType;
+
+  @VirtualColumn({
+    query: (alias) => `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
+  })
+  fullName!: string;
+}
+```
+
+### DTO Patterns
+```ts
+// ✅ Input DTO pattern found:
+export class UserLoginDto {
+  @EmailField()
+  readonly email!: string; // ✅ Uses readonly
+
+  @StringField()
+  readonly password!: string; // ✅ Uses readonly
+}
+
+// ✅ Response DTO pattern found:
+export class UserDto extends AbstractDto {
+  @StringFieldOptional({ nullable: true })
+  firstName?: string | null; // ✅ No readonly
+
+  constructor(user: UserEntity, options?: UserDtoOptions) {
+    super(user);
+    this.firstName = user.firstName;
+    // ...
+  }
+}
+```
+
+## Immediate Actions Required
+
+1. **Add @ApiOperation to ALL controller endpoints**
+2. **Fix entity ownership violation in PostEntity**
+3. **Add explicit return types to CQRS handlers**
+4. **Fix PostService.updatePost bug**
+5. **Use specific API response decorators**
+6. **Follow entity ownership rules consistently**

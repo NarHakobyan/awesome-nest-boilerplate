@@ -1,0 +1,326 @@
+---
+description: Development workflow including scripts, debugging, database operations, and environment setup
+globs: 
+alwaysApply: false
+---
+
+# Development Workflow Guidelines
+
+## Available Scripts
+
+### Development
+```bash
+# Start development server with Vite (recommended)
+pnpm start:dev
+
+# Alternative: Start with NestJS CLI
+pnpm nest:start:dev
+
+# Start with file watching
+pnpm watch:dev
+
+# Start with debugger enabled
+pnpm nest:start:debug
+```
+
+### Production
+```bash
+# Build for production
+pnpm build:prod
+
+# Start production server
+pnpm start:prod
+```
+
+### Testing
+```bash
+# Run unit tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run e2e tests
+pnpm test:e2e
+
+# Run test coverage
+pnpm test:cov
+
+# Run tests with debugger
+pnpm test:debug
+```
+
+### Database Operations
+```bash
+# Generate new migration
+pnpm migration:generate -- --name=migration_name
+
+# Create empty migration
+pnpm migration:create src/database/migrations/migration_name
+
+# Run pending migrations
+pnpm migration:run
+
+# Show migration status
+pnpm migration:show
+
+# Revert last migration
+pnpm migration:revert
+
+# Drop database schema
+pnpm schema:drop
+```
+
+### Code Quality
+```bash
+# Run ESLint
+pnpm lint
+
+# Fix ESLint issues
+pnpm lint:fix
+
+# Update dependencies
+pnpm taze
+```
+
+## Runtime Support
+
+### Node.js (Default)
+```bash
+# Development
+pnpm start:dev
+
+# Production
+pnpm build:prod && pnpm start:prod
+```
+
+### Bun
+```bash
+# Start development server with Bun
+bun start:dev:bun
+
+# Watch mode with Bun
+bun watch:bun
+
+# Build with Bun
+bun build:bun
+```
+
+### Deno
+```bash
+# Start development server with Deno
+deno task start
+
+# Watch mode with Deno
+deno task watch
+```
+
+## Code Generation
+
+```bash
+# Install NestJS CLI globally (if not already installed)
+pnpm add -g @nestjs/cli
+
+# Generate a new module
+nest generate module feature-name
+
+# Generate a new service
+nest generate service feature-name
+
+# Generate a new controller
+nest generate controller feature-name
+
+# Generate a complete resource (module, service, controller, DTOs)
+nest generate resource feature-name
+
+# Use project-specific generator
+pnpm generate service feature-name
+pnpm g controller feature-name
+```
+
+## Environment Variables
+
+### Development Environment
+```env
+# Application
+NODE_ENV=development
+PORT=3000
+
+# Database
+DB_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=nest_boilerplate
+ENABLE_ORM_LOGS=true
+
+# JWT Authentication (RSA key pair — RS256 algorithm)
+JWT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
+
+# CORS
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+
+# API Documentation
+ENABLE_DOCUMENTATION=true
+
+# Throttling
+THROTTLE_TTL=60
+THROTTLE_LIMIT=10
+```
+
+## Database Configuration
+
+### PostgreSQL Setup
+1. Install and start PostgreSQL
+2. Create a database for your application
+3. Configure your `.env` file with database credentials
+
+### Migration Workflow
+```bash
+# 1. Create or modify your entity (e.g., src/modules/user/user.entity.ts)
+# 2. Generate migration based on entity changes
+pnpm migration:generate -- --name=add-user-table
+
+# 3. Review the generated migration file
+# 4. Run the migration
+pnpm migration:run
+
+# 5. Verify migration status
+pnpm migration:show
+```
+
+## Development Workflow
+
+### Feature Development
+```bash
+# Create feature branch
+git checkout -b feature/new-feature
+
+# Generate module structure
+pnpm g resource feature-name
+
+# Implement feature
+# Write tests
+# Update documentation
+```
+
+### Code Quality Checks
+```bash
+# Run linting
+pnpm lint
+
+# Fix linting issues
+pnpm lint:fix
+
+# Run tests
+pnpm test
+
+# Check test coverage
+pnpm test:cov
+```
+
+## Debugging
+
+### VS Code Configuration
+Create `.vscode/launch.json`:
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug NestJS",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/main.ts",
+      "runtimeArgs": ["--loader", "ts-node/esm"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}
+```
+
+### Debug Commands
+```bash
+# Start with debugger
+pnpm nest:start:debug
+
+# Debug tests
+pnpm test:debug
+
+# Debug specific test file
+pnpm test:debug -- user.service.spec.ts
+```
+
+## Docker Development
+
+```bash
+# Start all services (app + database)
+PORT=3000 docker-compose up
+
+# Start in detached mode
+PORT=3000 docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild and start
+docker-compose up --build
+```
+
+## Performance Optimization
+
+### Development Performance
+1. **Use Vite for Development**:
+   - Faster startup times
+   - Hot module replacement
+   - Optimized bundling
+
+2. **Database Query Optimization**:
+   ```bash
+   # Enable query logging
+   ENABLE_ORM_LOGS=true
+   
+   # Monitor slow queries
+   # Add database indexes
+   # Use query builders for complex queries
+   ```
+
+3. **Memory Management**:
+   ```bash
+   # Monitor memory usage
+   node --inspect src/main.ts
+   
+   # Increase Node.js memory limit if needed
+   node --max-old-space-size=4096 src/main.ts
+   ```
+
+## Best Practices
+
+1. **Database Changes**:
+   - Always generate migrations for entity changes
+   - Review generated migrations before running
+   - Test migrations on development data first
+
+2. **Code Quality**:
+   - Run linting before committing
+   - Write tests for new features
+   - Keep test coverage high
+
+3. **Environment Setup**:
+   - Use proper environment variables
+   - Never commit sensitive data
+   - Use different configurations for different environments
+
+4. **Development Tools**:
+   - Use Vite for fast development
+   - Enable ORM logging in development
+   - Use VS Code debugging configuration

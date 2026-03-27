@@ -21,9 +21,9 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "isolatedModules": true,
-//    "exactOptionalPropertyTypes": true,
+    //    "exactOptionalPropertyTypes": true,
     "noImplicitThis": true,
-//    "noPropertyAccessFromIndexSignature": true,
+    //    "noPropertyAccessFromIndexSignature": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "strictPropertyInitialization": true,
@@ -45,6 +45,8 @@
 },
   "include": [
     "src/**/*",
+    "scripts/**/*",
+    "tools/**/*"
   ],
   "exclude": [
     "node_modules",

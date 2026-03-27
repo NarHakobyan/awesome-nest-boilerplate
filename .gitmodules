@@ -1,0 +1,3 @@
+[submodule ".cursor"]
+	path = .cursor
+	url = git@github.com:M-One-Team/nestjs-cursor-rules.git

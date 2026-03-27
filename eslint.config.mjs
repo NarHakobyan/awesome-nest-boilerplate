@@ -19,8 +19,8 @@ export default tseslint.config(
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
-      '@stylistic': stylisticPlugin,
     },
+    extends: [stylisticPlugin.configs.all],
     rules: {
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
@@ -52,9 +52,7 @@ export default tseslint.config(
     },
   },
   {
-    extends: [
-      importPlugin.flatConfigs.typescript,
-    ],
+    extends: [importPlugin.flatConfigs.typescript],
     rules: {
       'eslintComments/no-use': 'off',
       // 'import/extensions': ['error', 'always', {ignorePackages: true}],
@@ -74,11 +72,10 @@ export default tseslint.config(
         ...globals.node,
       },
     },
-    extends: [
-      unicornPlugin.configs['flat/all'],
-    ],
+    extends: [unicornPlugin.configs['flat/all']],
     rules: {
       'unicorn/prevent-abbreviations': 'off',
+      'unicorn/numeric-separators-style': 'off',
       'unicorn/no-abusive-eslint-disable': 'off',
       'unicorn/no-null': 'off',
       'unicorn/no-static-only-class': 'off',
@@ -93,9 +90,7 @@ export default tseslint.config(
         ...globals.node,
       },
     },
-    extends: [
-      canonicalPlugin.configs['flat/recommended'],
-    ],
+    extends: [canonicalPlugin.configs['flat/recommended']],
     rules: {
       'canonical/filename-match-exported': 'error',
       'canonical/import-specifier-newline': 'off',
@@ -112,9 +107,7 @@ export default tseslint.config(
         ...globals.node,
       },
     },
-    extends: [
-      sonarjsPlugin.configs.recommended,
-    ],
+    extends: [sonarjsPlugin.configs.recommended],
     rules: {
       'sonarjs/no-duplicate-string': 'off',
     },
@@ -126,9 +119,7 @@ export default tseslint.config(
         ...globals.node,
       },
     },
-    extends: [
-      prettierPlugin,
-    ],
+    extends: [prettierPlugin],
     rules: {
       'prettier/prettier': [
         'error',
@@ -148,19 +139,19 @@ export default tseslint.config(
         ...globals.node,
       },
     },
-    extends: [
-      nPlugin.configs['flat/recommended'],
-    ],
+    extends: [nPlugin.configs['flat/recommended']],
     rules: {
       'n/no-extraneous-import': 'off',
       'n/no-missing-import': 'off',
     },
   },
   {
-    extends: [...tseslint.configs.strictTypeChecked,
+    extends: [
+      ...tseslint.configs.strictTypeChecked,
       tseslint.configs.eslintRecommended,
       ...tseslint.configs.stylisticTypeChecked,
-      ...tseslint.configs.recommendedTypeChecked],
+      ...tseslint.configs.recommendedTypeChecked,
+    ],
     rules: {
       'no-redeclare': 'off',
       '@typescript-eslint/no-redeclare': 'error',
@@ -176,6 +167,7 @@ export default tseslint.config(
       ],
 
       '@typescript-eslint/adjacent-overload-signatures': 'error',
+      '@typescript-eslint/unified-signatures': 'off',
       'max-params': ['error', 7],
 
       '@typescript-eslint/array-type': [
@@ -233,6 +225,16 @@ export default tseslint.config(
       '@typescript-eslint/prefer-for-of': 'error',
       '@typescript-eslint/prefer-function-type': 'error',
       '@typescript-eslint/prefer-namespace-keyword': 'error',
+      '@typescript-eslint/explicit-function-return-type': [
+        'error',
+        {
+          allowExpressions: true,
+          allowTypedFunctionExpressions: true,
+          allowHigherOrderFunctions: true,
+          allowDirectConstAssertionInArrowFunctions: true,
+          allowConciseArrowFunctionExpressionsStartingWithVoid: true,
+        },
+      ],
       '@typescript-eslint/naming-convention': [
         'error',
         {
@@ -251,7 +253,6 @@ export default tseslint.config(
         {
           selector: 'interface',
           format: ['PascalCase'],
-          prefix: ['I'],
         },
         {
           selector: 'typeLike',
@@ -270,7 +271,6 @@ export default tseslint.config(
           prefix: ['is', 'should', 'has', 'can', 'did', 'will'],
         },
       ],
-      '@typescript-eslint/unified-signatures': 'error',
       '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-shadow': 'error',
@@ -325,7 +325,7 @@ export default tseslint.config(
           paths: [
             {
               name: 'rxjs/Rx',
-              message: 'Please import directly from \'rxjs\' instead',
+              message: "Please import directly from 'rxjs' instead",
             },
           ],
         },

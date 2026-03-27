@@ -1,0 +1,247 @@
+---
+description: NestJS module structure, CQRS implementation, NATS controllers, and Swagger documentation requirements
+globs: **/*.module.ts, **/*.controller.ts, **/*.service.ts
+alwaysApply: true
+---
+
+# NestJS Module Structure Guidelines
+
+## One module per main domain/route.
+
+## Service Module Structure
+```
+src/
+├── modules/           # Feature modules
+│   └── feature/
+│       ├── usecases/  # CQRS handlers
+│       │   ├── create-feature/
+│       │   │   ├── create-feature.handler.ts
+│       │   │   └── create-feature.command.ts
+│       │   └── feature-created/
+│       │       ├── feature-created.handler.ts
+│       │       └── feature-created.event.ts
+│       ├── exceptions/
+│       │   └── feature-not-found.exception.ts
+│       ├── feature.module.ts
+│       ├── feature.command-service.ts
+│       ├── feature.query-service.ts
+│       ├── feature.nats-controller.ts
+│       └── feature.sagas.ts
+├── database/
+│   └── migrations/
+├── filters/
+└── shared/
+```
+
+## Module Implementation
+
+1. **Module Definition**
+```ts
+// feature.module.ts
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([FeatureEntity]),
+  ],
+  controllers: [FeatureNatsController],
+  providers: [
+    FeatureCommandService,
+    FeatureQueryService,
+    FeatureSagas,
+    ...handlers,
+  ],
+})
+export class FeatureModule {}
+```
+
+2. **NATS Controller**
+```ts
+// feature.nats-controller.ts
+@Controller()
+export class FeatureNatsController {
+  constructor(
+    private readonly commandService: FeatureCommandService,
+    private readonly queryService: FeatureQueryService,
+  ) {}
+
+  @MessagePattern('feature.create')
+  async create(@Payload() data: CreateFeatureDto): Promise<Feature> {
+    return this.commandService.create(data);
+  }
+
+  @MessagePattern('feature.find')
+  async find(@Payload() id: string): Promise<Feature> {
+    return this.queryService.find(id);
+  }
+}
+```
+
+3. **Command Service**
+```ts
+// feature.command-service.ts
+@Injectable()
+export class FeatureCommandService {
+  constructor(
+    private readonly commandBus: CommandBus,
+  ) {}
+
+  async create(data: CreateFeatureDto): Promise<Feature> {
+    return this.commandBus.execute(
+      new CreateFeatureCommand(data)
+    );
+  }
+}
+```
+
+4. **Query Service**
+```ts
+// feature.query-service.ts
+@Injectable()
+export class FeatureQueryService {
+  constructor(
+    @InjectRepository(FeatureEntity)
+    private readonly repo: Repository<FeatureEntity>,
+  ) {}
+
+  async find(id: string): Promise<Feature> {
+    const feature = await this.repo.findOne({ where: { id } });
+    if (!feature) {
+      throw new FeatureNotFoundException(id);
+    }
+    return feature;
+  }
+}
+```
+
+5. **Command Handler**
+```ts
+// usecases/create-feature/create-feature.handler.ts
+@CommandHandler(CreateFeatureCommand)
+export class CreateFeatureHandler implements ICommandHandler<CreateFeatureCommand> {
+  constructor(
+    @InjectRepository(FeatureEntity)
+    private readonly repo: Repository<FeatureEntity>,
+    private readonly eventBus: EventBus,
+  ) {}
+
+  async execute(command: CreateFeatureCommand): Promise<Feature> {
+    const feature = await this.repo.save(
+      this.repo.create(command.data)
+    );
+
+    this.eventBus.publish(
+      new FeatureCreatedEvent(feature)
+    );
+
+    return feature;
+  }
+}
+```
+
+6. **Event Handler**
+```ts
+// usecases/feature-created/feature-created.handler.ts
+@EventsHandler(FeatureCreatedEvent)
+export class FeatureCreatedHandler implements IEventHandler<FeatureCreatedEvent> {
+  constructor(private readonly logger: Logger) {}
+
+  handle(event: FeatureCreatedEvent) {
+    this.logger.log(
+      `Feature created: ${event.feature.id}`,
+      'FeatureCreatedEvent'
+    );
+  }
+}
+```
+
+## Best Practices
+
+1. **Module Organization**
+   - One module per domain concept
+   - Separate commands and queries
+   - Use CQRS pattern consistently
+   - Keep handlers focused
+
+2. **NATS Communication**
+   - Use consistent message patterns
+   - Handle timeouts properly
+   - Validate payloads
+   - Document message formats
+
+3. **Error Handling**
+   - Create specific exceptions
+   - Use proper error messages
+   - Handle edge cases
+   - Log errors properly
+
+4. **Testing**
+   - Test each handler independently
+   - Mock dependencies properly
+   - Test error scenarios
+   - Use proper test data
+
+5. **Performance**
+   - Use proper database indexes
+   - Optimize queries
+   - Handle N+1 problems
+   - Use proper caching
+
+6. **Documentation**
+   - Document message patterns
+   - Document DTOs
+   - Document exceptions
+   - Add usage examples
+
+## Swagger Documentation Requirements
+
+1. **Controller Endpoint Documentation**
+   - **ALWAYS** add `@ApiOperation()` decorator with meaningful description to every controller endpoint
+   - Descriptions will be used for semantic search in the future
+   - Use clear, descriptive language that explains what the endpoint does
+
+```ts
+// ✅ Good - Always include ApiOperation with description
+@Controller('users')
+@ApiTags('users')
+export class UserController {
+  @Get(':id')
+  @Auth([RoleType.USER])
+  @ApiOperation({
+    summary: 'Get user by ID',
+    description: 'Retrieves a specific user by their unique identifier. Requires user authentication.'
+  })
+  @ApiOkResponse({ type: UserDto })
+  async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+    return this.userService.getUser(userId);
+  }
+
+  @Post()
+  @Auth([RoleType.USER])
+  @ApiOperation({
+    summary: 'Create new user',
+    description: 'Creates a new user account with the provided user data. Validates input and returns the created user.'
+  })
+  @ApiCreatedResponse({ type: UserDto })
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+    return this.userService.createUser(createUserDto);
+  }
+}
+
+// ❌ Bad - Missing ApiOperation descriptions
+@Controller('users')
+@ApiTags('users')
+export class UserController {
+  @Get(':id')
+  @Auth([RoleType.USER])
+  @ApiOkResponse({ type: UserDto })
+  async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+    return this.userService.getUser(userId);
+  }
+}
+```
+
+2. **Description Guidelines**
+   - Start with action verb (Get, Create, Update, Delete, etc.)
+   - Include what the endpoint does and what it returns
+   - Mention authentication/authorization requirements
+   - Add context about business logic when relevant
+   - Keep descriptions concise but informative (1-2 sentences)

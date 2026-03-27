@@ -1,0 +1,378 @@
+---
+description: Comprehensive TypeScript guidelines for the NestJS boilerplate including type system, naming conventions, imports, and patterns
+globs: **/*.ts
+alwaysApply: true
+---
+
+# TypeScript Guidelines
+
+## Core Principles
+1. **Type Safety First**
+   - Explicit types everywhere
+   - No `any`; use `unknown` for uncertainty
+   - Strict TypeScript configuration enabled
+   - One export per file
+
+2. **Import Organization (CRITICAL - ESM Support)**
+   ```ts
+   // ✅ Correct import order with .ts extensions
+   // 1. Node modules (external dependencies)
+   import { Injectable } from '@nestjs/common';
+   import { Repository } from 'typeorm';
+
+   // 2. Internal imports with absolute paths and .ts extensions
+   import { validateHash } from '../../common/utils.ts';
+   import type { RoleType } from '../../constants/role-type.ts';
+   import { UserNotFoundException } from '../../exceptions/user-not-found.exception.ts';
+
+   // 3. Relative imports with .ts extensions
+   import type { UserEntity } from './user.entity.ts';
+   import { UserService } from './user.service.ts';
+
+   // ❌ Wrong - Missing .ts extensions
+   import { UserService } from './user.service';
+   import type { RoleType } from '../../constants/role-type';
+   ```
+
+## Type System
+
+### Basic Type Usage
+```ts
+// ✅ Good - Explicit types
+interface UserConfig {
+  readonly id: string;
+  name: string;
+  age: number;
+  isActive: boolean;
+}
+
+// ✅ Good - Use type for unions and primitives
+type UserRole = 'admin' | 'user' | 'guest';
+type Status = 'pending' | 'approved' | 'rejected';
+
+// ❌ Bad - Using any
+type AnyUser = any;
+
+// ✅ Good - Use unknown instead of any
+function parseJson(input: string): unknown {
+  return JSON.parse(input);
+}
+```
+
+### Advanced Type Patterns
+```ts
+// Discriminated unions
+type ApiResponse = 
+  | { success: true; data: User[] }
+  | { success: false; error: string };
+
+// Utility types
+type Nullable<T> = T | null;
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+// Mapped types
+type ReadonlyUser = {
+  readonly [K in keyof User]: User[K];
+};
+```
+
+## Naming Conventions
+
+### Classes, Types, and Interfaces
+```ts
+// ✅ PascalCase for classes, types, interfaces, enums
+export class UserService {}
+export interface UserConfig {}
+export type UserRole = 'admin' | 'user';
+export enum RoleType { ADMIN = 'admin', USER = 'user' }
+```
+
+### Variables and Functions
+```ts
+// ✅ camelCase for variables and functions
+const userName = 'john';
+const isLoading = true;
+const hasError = false;
+const canDelete = user.role === RoleType.ADMIN;
+
+async function createUser(config: UserConfig): Promise<User> {
+  // Implementation
+}
+
+// ✅ Boolean variables with auxiliary verbs
+const isValid = validateInput(data);
+const hasPermission = checkPermissions(user);
+const shouldUpdate = lastModified < threshold;
+```
+
+### Constants
+```ts
+// ✅ SCREAMING_SNAKE_CASE for constants
+const MAX_RETRY_ATTEMPTS = 3;
+const DEFAULT_TIMEOUT = 5000;
+const API_BASE_URL = process.env.API_URL;
+```
+
+### File Naming
+```ts
+// ✅ kebab-case for files and directories
+user.service.ts
+create-user.dto.ts
+user-settings.entity.ts
+user-not-found.exception.ts
+```
+
+## Function Design
+
+### Function Structure
+```ts
+// ✅ Good - Explicit types, early returns, single responsibility
+function validateUser({ id, email }: UserInput): ValidationResult {
+  if (!id) {
+    return { isValid: false, error: 'ID is required' };
+  }
+  
+  if (!isValidEmail(email)) {
+    return { isValid: false, error: 'Invalid email format' };
+  }
+  
+  return { isValid: true };
+}
+
+// ✅ Good - Async function with proper typing
+async function fetchUserData(userId: string): Promise<User | null> {
+  try {
+    const response = await api.get(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+// ❌ Bad - No types, multiple responsibilities
+function process(id, email) {
+  // Validate
+  // Transform
+  // Save to database
+  // Send email
+}
+```
+
+### Function Rules
+- Maximum 15 lines per function
+- Single responsibility principle
+- Use early returns for guard clauses
+- Explicit parameter and return types
+- Use parameter objects for multiple arguments
+
+## Error Handling
+
+### Custom Error Types
+```ts
+// ✅ Good - Specific error types
+export class ValidationError extends Error {
+  constructor(message: string, public readonly field?: string) {
+    super(`Validation failed: ${message}`);
+    this.name = 'ValidationError';
+  }
+}
+
+export class UserNotFoundError extends Error {
+  constructor(id: string) {
+    super(`User with ID ${id} not found`);
+    this.name = 'UserNotFoundError';
+  }
+}
+
+// ✅ Good - Result type pattern
+type Result<T, E = Error> = 
+  | { success: true; data: T }
+  | { success: false; error: E };
+
+function parseUser(input: unknown): Result<User, ValidationError> {
+  if (!isValidUser(input)) {
+    return { success: false, error: new ValidationError('Invalid user data') };
+  }
+  return { success: true, data: input };
+}
+```
+
+### Error Handling Patterns
+```ts
+// ✅ Good - Typed error handling
+try {
+  await processData();
+} catch (error) {
+  if (error instanceof ValidationError) {
+    handleValidationError(error);
+  } else if (error instanceof NetworkError) {
+    handleNetworkError(error);
+  } else {
+    handleUnknownError(error);
+  }
+}
+
+// ✅ Good - Promise error handling
+const result = await fetchData().catch((error: Error) => {
+  logger.error('Failed to fetch data', error);
+  return null;
+});
+```
+
+## Code Organization
+
+### Type Definitions
+```ts
+// ✅ Good - Keep types close to usage
+export interface CreateUserDto {
+  email: string;
+  password: string;
+  firstName?: string;
+}
+
+export class UserService {
+  async createUser(dto: CreateUserDto): Promise<User> {
+    // Implementation uses the type right here
+  }
+}
+
+// ✅ Good - Shared types in dedicated files
+// src/types/common.ts
+export type Uuid = string;
+export type Timestamp = Date;
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+}
+```
+
+### Export Patterns
+```ts
+// ✅ Good - Named exports
+export class UserService {}
+export interface UserConfig {}
+export type UserRole = 'admin' | 'user';
+
+// ✅ Good - Barrel exports for modules
+// src/modules/user/index.ts
+export { UserService } from './user.service.ts';
+export { UserController } from './user.controller.ts';
+export type { CreateUserDto } from './dtos/create-user.dto.ts';
+```
+
+## Best Practices
+
+### Immutability
+```ts
+// ✅ Good - Readonly properties
+interface User {
+  readonly id: string;
+  readonly createdAt: Date;
+  name: string;
+  email: string;
+}
+
+// ✅ Good - Readonly arrays
+type UserRoles = readonly RoleType[];
+
+// ✅ Good - Immutable updates
+function updateUser(user: User, updates: Partial<User>): User {
+  return { ...user, ...updates };
+}
+```
+
+### Type Guards
+```ts
+// ✅ Good - Runtime type checking
+function isUser(value: unknown): value is User {
+  return typeof value === 'object' && 
+         value !== null && 
+         'id' in value && 
+         'email' in value;
+}
+
+function processUserData(data: unknown): User {
+  if (!isUser(data)) {
+    throw new ValidationError('Invalid user data');
+  }
+  return data; // TypeScript knows this is User
+}
+```
+
+### Generic Patterns
+```ts
+// ✅ Good - Reusable generic types
+interface Repository<T> {
+  findById(id: string): Promise<T | null>;
+  save(entity: T): Promise<T>;
+  delete(id: string): Promise<void>;
+}
+
+interface ApiResponse<T> {
+  data: T;
+  status: number;
+  message?: string;
+}
+
+// ✅ Good - Constrained generics
+interface Entity {
+  id: string;
+  createdAt: Date;
+}
+
+class BaseRepository<T extends Entity> {
+  async findById(id: string): Promise<T | null> {
+    // Implementation
+  }
+}
+```
+
+## Testing Patterns
+
+### Test Type Definitions
+```ts
+// ✅ Good - Test-specific types
+interface MockRepository<T> {
+  findOne: jest.Mock<Promise<T | null>, [any]>;
+  save: jest.Mock<Promise<T>, [T]>;
+  remove: jest.Mock<Promise<void>, [T]>;
+}
+
+interface TestUser extends User {
+  password?: string; // Allow password in tests
+}
+
+// ✅ Good - Factory functions with types
+function createTestUser(overrides: Partial<TestUser> = {}): TestUser {
+  return {
+    id: 'test-id',
+    email: 'test@example.com',
+    firstName: 'Test',
+    lastName: 'User',
+    createdAt: new Date(),
+    ...overrides,
+  };
+}
+```
+
+## Configuration
+
+### TSConfig Settings
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
+  }
+}
+```
+
+These TypeScript guidelines ensure type safety, consistency, and maintainability across the NestJS boilerplate project.

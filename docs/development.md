@@ -28,19 +28,19 @@
 
 Ensure you have the required tools installed:
 
-- [Node.js](https://nodejs.org/en/) (v18+ LTS recommended)
-- [Yarn](https://yarnpkg.com/lang/en/docs/install/) (v1.22.22+)
-- [PostgreSQL](https://www.postgresql.org/) (v12+)
+- [Node.js](https://nodejs.org/en/) (v24+ required)
+- [pnpm](https://pnpm.io/installation) (v10.26+)
+- [PostgreSQL](https://www.postgresql.org/) (v14+)
 - [Git](https://git-scm.com/)
 
 ## Installation
 
 ```bash
 # Install dependencies from package.json
-yarn install
+pnpm install
 ```
 
-> **Note**: Don't delete `yarn.lock` before installation. See more in [Yarn docs](https://classic.yarnpkg.com/en/docs/yarn-lock/)
+> **Note**: Don't delete `pnpm-lock.yaml` before installation. See more in [pnpm docs](https://pnpm.io/lockfile)
 
 ## Database Configuration
 
@@ -101,7 +101,7 @@ export const dataSource = new DataSource({
 rm -rf src/database/migrations/*
 
 # Generate new migrations for MySQL
-yarn migration:generate src/database/migrations/InitialMigration
+pnpm migration:generate -- --name=initial-migration
 ```
 
 ### Database Operations
@@ -116,7 +116,7 @@ yarn migration:generate src/database/migrations/InitialMigration
 **Creating a new migration manually:**
 ```bash
 # Create a new migration file
-yarn migration:create src/database/migrations/add-gifts-table
+pnpm migration:create src/database/migrations/add-gifts-table
 
 # This generates: 1754340825698-add-gifts-table.ts
 ```
@@ -125,11 +125,11 @@ yarn migration:create src/database/migrations/add-gifts-table
 ```bash
 # 1. Create or modify your entity (e.g., src/modules/gift/gift.entity.ts)
 # 2. Generate migration based on entity changes
-yarn migration:generate src/database/migrations/add-gifts-table
+pnpm migration:generate -- --name=add-gifts-table
 
 # 3. Review the generated migration file
 # 4. Run the migration
-yarn migration:run
+pnpm migration:run
 ```
 
 **Complete workflow example:**
@@ -138,22 +138,22 @@ yarn migration:run
 # Edit: src/modules/gift/gift.entity.ts
 
 # 2. Generate migration
-yarn migration:generate src/database/migrations/gifts-table
+pnpm migration:generate -- --name=gifts-table
 
 # 3. Review generated migration
 # File: src/database/migrations/1754340825698-gifts-table.ts
 
 # 4. Run migration
-yarn migration:run
+pnpm migration:run
 
 # 5. Verify migration status
-yarn migration:show
+pnpm migration:show
 
 # Revert the last migration
-yarn migration:revert
+pnpm migration:revert
 
 # Drop entire database schema (⚠️ destructive)
-yarn schema:drop
+pnpm schema:drop
 
 ```
 
@@ -163,16 +163,16 @@ The project uses Vite for fast development with hot module replacement:
 
 ```bash
 # Start development server with Vite (recommended)
-yarn start:dev
+pnpm start:dev
 
 # Alternative: Start with NestJS CLI
-yarn nest:start:dev
+pnpm nest:start:dev
 
 # Start with file watching
-yarn watch:dev
+pnpm watch:dev
 
 # Start with debugger enabled
-yarn nest:start:debug
+pnpm nest:start:debug
 ```
 
 > **Note**: If you're on Linux and see an `ENOSPC` error, you must [increase the number of available file watchers](https://stackoverflow.com/questions/22475849/node-js-error-enospc#answer-32600959).
@@ -218,7 +218,7 @@ Use NestJS CLI for rapid development:
 
 ```bash
 # Install NestJS CLI globally (if not already installed)
-yarn global add @nestjs/cli
+pnpm add -g @nestjs/cli
 
 # Generate a new module
 nest generate module feature-name
@@ -233,8 +233,8 @@ nest generate controller feature-name
 nest generate resource feature-name
 
 # Use project-specific generator
-yarn generate service feature-name
-yarn g controller feature-name
+pnpm generate service feature-name
+pnpm g controller feature-name
 ```
 
 > **Note**: The project includes custom schematics via `awesome-nestjs-schematics` for enhanced code generation.
@@ -257,9 +257,24 @@ DB_PASSWORD=postgres
 DB_DATABASE=nest_boilerplate
 ENABLE_ORM_LOGS=true
 
-# JWT Authentication
-JWT_SECRET=your-super-secret-jwt-key
-JWT_EXPIRATION_TIME=3600
+# JWT Authentication (RSA key pair — RS256 algorithm)
+# Generate keys: openssl genpkey -algorithm RSA -out private.pem && openssl rsa -pubout -in private.pem -out public.pem
+JWT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# Telegram Bot (for Telegram authentication)
+TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+TELEGRAM_BOT_USERNAME=your-telegram-bot-username
+
+# AWS S3 (optional)
+AWS_S3_BUCKET_NAME=your-bucket-name
+
+# MeiliSearch (optional)
+MEILI_HOST=http://localhost:7700
+MEILI_MASTER_KEY=your-meilisearch-master-key
 
 # CORS
 CORS_ORIGINS=http://localhost:3000,http://localhost:3001
@@ -309,7 +324,8 @@ The `docker-compose.yml` includes:
 
 - **app**: NestJS application
 - **postgres**: PostgreSQL database
-- **adminer**: Database administration tool (available at `http://localhost:8080`)
+- **pgAdmin**: Database administration tool (available at `http://localhost:8080`)
+- **meilisearch**: Meilisearch search engine (available at `http://localhost:7701`)
 
 For MySQL development, use:
 ```bash
@@ -324,7 +340,7 @@ docker-compose -f docker-compose_mysql.yml up
    git checkout -b feature/new-feature
 
    # Generate module structure
-   yarn g resource feature-name
+   pnpm g resource feature-name
 
    # Implement feature
    # Write tests
@@ -334,27 +350,27 @@ docker-compose -f docker-compose_mysql.yml up
 2. **Code Quality**:
    ```bash
    # Run linting
-   yarn lint
+   pnpm lint
 
    # Fix linting issues
-   yarn lint:fix
+   pnpm lint:fix
 
    # Run tests
-   yarn test
+   pnpm test
 
    # Check test coverage
-   yarn test:cov
+   pnpm test:cov
    ```
 
 3. **Database Changes**:
    ```bash
    # Create/modify entities
    # Generate migration
-   yarn migration:generate src/database/migrations/FeatureName
+   pnpm migration:generate -- --name=[migration-name]
 
    # Review generated migration
    # Run migration
-   yarn migration:run
+   pnpm migration:run
    ```
 
 ## Debugging
@@ -387,13 +403,13 @@ Create `.vscode/launch.json`:
 
 ```bash
 # Start with debugger
-yarn nest:start:debug
+pnpm nest:start:debug
 
 # Debug tests
-yarn test:debug
+pnpm test:debug
 
 # Debug specific test file
-yarn test:debug -- user.service.spec.ts
+pnpm test:debug -- user.service.spec.ts
 ```
 
 ## Performance Optimization
@@ -426,7 +442,7 @@ yarn test:debug -- user.service.spec.ts
 
 ### Production Considerations
 
-- Use `yarn build:prod` for optimized builds
+- Use `pnpm build:prod` for optimized builds
 - Enable compression middleware
 - Configure proper caching strategies
 - Set up monitoring and logging

@@ -124,13 +124,13 @@ import { UserService } from './user.service.ts';
 import type { RoleType } from '../constants/role-type.ts';
 import type { Reference } from '../types.ts';
 
-// Do not use readonly for DTO properties
+// Use readonly for input DTO properties
 export class UserLoginDto {
   @EmailField()
-  email!: string;
+  readonly email!: string;
 
   @StringField()
-  password!: string;
+  readonly password!: string;
 }
 
 // Use definite assignment assertion for decorated properties
@@ -347,8 +347,8 @@ All controllers MUST follow these REST API conventions:
 @HttpCode(HttpStatus.OK)
 
 // Resource Deletion
-@Delete(':id')            // 204 No Content
-@HttpCode(HttpStatus.NO_CONTENT)
+@Delete(':id')            // 202 Accepted
+@HttpCode(HttpStatus.ACCEPTED)
 ```
 
 **URL Naming Conventions:**
@@ -462,7 +462,7 @@ export class UserService {
     const userEntity = this.userRepository.create(createUserDto);
 
     if (file) {
-      userEntity.avatar = file.key;
+      this.userRepository.merge(userEntity, { avatar: file.key });
     }
 
     await this.userRepository.save(userEntity);
@@ -470,9 +470,10 @@ export class UserService {
   }
 
   async findOne(findOptions: Partial<UserEntity>): Promise<UserEntity> {
-    const userEntity = await this.userRepository.findOne({
-      where: findOptions,
-    });
+    const userEntity = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id: findOptions.id })
+      .getOne();
 
     if (!userEntity) {
       throw new UserNotFoundException();
@@ -658,7 +659,7 @@ The project uses custom field decorators that combine validation and Swagger doc
 
 ### DTO Best Practices
 
-1. **Do not use `readonly` for all input DTO properties**
+1. **Use `readonly` for input DTO properties; do NOT use `readonly` for response DTO properties**
 2. **Extend `AbstractDto` for response DTOs**
 3. **Use custom field decorators for validation and Swagger documentation**
 4. **Use optional fields with proper typing (`?` and `| null`)**
@@ -769,14 +770,16 @@ export class PostService {
 
 ```typescript
 // Command definition
-import type { ICommand } from '@nestjs/cqrs';
+import { Command } from '@nestjs/cqrs';
 import type { CreatePostDto } from '../dtos/create-post.dto.ts';
 
-export class CreatePostCommand implements ICommand {
+export class CreatePostCommand extends Command {
   constructor(
     public userId: Uuid,
     public createPostDto: CreatePostDto,
-  ) {}
+  ) {
+    super();
+  }
 }
 ```
 
@@ -791,22 +794,23 @@ import { Repository } from 'typeorm';
 
 import { PostEntity } from '../post.entity.ts';
 import { CreatePostCommand } from './create-post.command.ts';
+import { PostDto } from '../dtos/post.dto.ts';
 
 @CommandHandler(CreatePostCommand)
 export class CreatePostHandler
-  implements ICommandHandler<CreatePostCommand, PostEntity>
+  implements ICommandHandler<CreatePostCommand>
 {
   constructor(
     @InjectRepository(PostEntity)
     private postRepository: Repository<PostEntity>,
   ) {}
 
-  async execute(command: CreatePostCommand): Promise<PostEntity> {
+  async execute(command: CreatePostCommand): Promise<PostDto> {
     const { userId, createPostDto } = command;
     const postEntity = this.postRepository.create({ userId });
 
     await this.postRepository.save(postEntity);
-    return postEntity;
+    return postEntity.toDto();
   }
 }
 ```
@@ -899,13 +903,18 @@ export class UserNotFoundException extends NotFoundException {
 
 ```typescript
 // Use UPPERCASE for environment variables
-DATABASE_URL=postgresql://user:pass@localhost:5432/db
-JWT_SECRET=your-secret-key
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=nest_boilerplate
+JWT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
 CORS_ORIGINS=http://localhost:3000,http://localhost:3001
 
-// Access in code
-process.env.DATABASE_URL
-process.env.JWT_SECRET
+// Access in code via ApiConfigService (do not access process.env directly)
+// configService.authConfig.privateKey
+// configService.postgresConfig.host
 ```
 
 ### Configuration Service Pattern

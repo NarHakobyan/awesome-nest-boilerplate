@@ -15,11 +15,13 @@ RUN yarn install --prod
 FROM node:lts
 
 ARG PORT=3000
+ARG secret_manager_arn
 
+ENV SECRET_MANAGER_ARN=$secret_manager_arn
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 RUN mkdir -p /usr/src/app
-
 WORKDIR /usr/src/app
 
 COPY --from=dist dist /usr/src/app/dist

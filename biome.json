@@ -1,15 +1,39 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
-  "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
-  "files": { "ignoreUnknown": false, "includes": ["**", "!**/.vscode/**/*"] },
-  "formatter": { "enabled": true, "indentStyle": "tab" },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": false,
+    "defaultBranch": "develop"
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "*src/**/*",
+      "!src/metadata.ts",
+      "!**/.vscode/**/*"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "useEditorconfig": true
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "linter": {
+    "domains": {
+      "next": "all"
+    },
     "enabled": true,
     "rules": {
       "recommended": false,
       "complexity": {
-        "noExcessiveCognitiveComplexity": "error",
         "noExtraBooleanCast": "error",
         "noForEach": "error",
         "noStaticOnlyClass": "error",
@@ -55,26 +79,31 @@
         "useYield": "error",
         "useValidTypeof": "error"
       },
-      "security": { "noGlobalEval": "error" },
+      "security": {
+        "noGlobalEval": "error"
+      },
       "style": {
         "noInferrableTypes": "error",
         "noNamespace": "error",
         "noNegationElse": "off",
-        "noNonNullAssertion": "error",
+        "noNonNullAssertion": "off",
         "noUselessElse": "error",
         "noYodaExpression": "error",
         "useAsConstAssertion": "error",
         "useBlockStatements": "off",
-        "useConsistentArrayType": "error",
         "useConsistentBuiltinInstantiation": "error",
         "useConst": "error",
         "useExplicitLengthCheck": "error",
         "useFilenamingConvention": {
           "level": "error",
-          "options": { "requireAscii": true, "filenameCases": ["kebab-case"] }
+          "options": {
+            "requireAscii": true,
+            "filenameCases": [
+              "kebab-case"
+            ]
+          }
         },
         "useForOf": "error",
-        "useImportType": "error",
         "useLiteralEnumMembers": "error",
         "useNamingConvention": {
           "level": "error",
@@ -82,19 +111,50 @@
             "strictCase": false,
             "conventions": [
               {
-                "selector": { "kind": "interface" },
+                "selector": {
+                  "kind": "interface"
+                },
                 "match": "(?:I)(.*)",
-                "formats": ["PascalCase"]
+                "formats": [
+                  "PascalCase"
+                ]
               },
               {
-                "selector": { "kind": "variable" },
-                "formats": ["camelCase", "CONSTANT_CASE"]
+                "selector": {
+                  "kind": "enumMember"
+                },
+                "formats": [
+                  "CONSTANT_CASE"
+                ]
               },
-              { "selector": { "kind": "typeLike" }, "formats": ["PascalCase"] },
               {
-                "selector": { "kind": "classMember", "modifiers": ["private"] },
+                "selector": {
+                  "kind": "variable"
+                },
+                "formats": [
+                  "camelCase",
+                  "CONSTANT_CASE"
+                ]
+              },
+              {
+                "selector": {
+                  "kind": "typeLike"
+                },
+                "formats": [
+                  "PascalCase"
+                ]
+              },
+              {
+                "selector": {
+                  "kind": "classMember",
+                  "modifiers": [
+                    "private"
+                  ]
+                },
                 "match": "([^_]*)",
-                "formats": ["camelCase"]
+                "formats": [
+                  "camelCase"
+                ]
               }
             ]
           }
@@ -177,15 +237,29 @@
     }
   },
   "javascript": {
-    "formatter": { "quoteStyle": "double" },
-    "globals": ["exports"],
+    "formatter": {
+      "quoteStyle": "single"
+    },
+    "globals": [
+      "exports"
+    ],
     "parser": {
       "unsafeParameterDecoratorsEnabled": true
     }
   },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
+  },
   "overrides": [
     {
-      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "includes": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mts",
+        "**/*.cts"
+      ],
       "linter": {
         "rules": {
           "complexity": {
@@ -221,7 +295,12 @@
       }
     },
     {
-      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "includes": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mts",
+        "**/*.cts"
+      ],
       "linter": {
         "rules": {
           "complexity": {
@@ -257,7 +336,12 @@
       }
     },
     {
-      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "includes": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mts",
+        "**/*.cts"
+      ],
       "linter": {
         "rules": {
           "complexity": {
@@ -293,7 +377,12 @@
       }
     },
     {
-      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "includes": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mts",
+        "**/*.cts"
+      ],
       "linter": {
         "rules": {
           "complexity": {
@@ -324,6 +413,30 @@
             "useGetterReturn": "off",
             "noWith": "off",
             "noVar": "error"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/shared/services/aws-s3.service.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/constants/credits.constants.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
           }
         }
       }

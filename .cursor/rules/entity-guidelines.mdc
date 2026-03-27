@@ -1,0 +1,395 @@
+---
+description: CRITICAL entity ownership rules, TypeORM patterns, relationships, and database design guidelines
+globs: **/*.entity.ts
+alwaysApply: true
+---
+
+# Entity Guidelines
+
+## 🚨 CRITICAL: Entity Module Ownership Rules
+
+### One Entity Per Module
+- **Every entity must be owned by exactly one feature module**
+- **Do not import or use entities from other modules**
+- **Use services for cross-module communication**
+- **Create dedicated entities if similar data structures are needed**
+- **Exception**: Only `AbstractEntity` and entities in `src/common/` can be shared
+
+### Example: Correct Entity Organization
+```
+modules/user/
+├── user.entity.ts          ✅ Owned by user module
+└── user-settings.entity.ts ✅ Owned by user module
+
+modules/post/
+├── post.entity.ts          ✅ Owned by post module
+└── post-category.entity.ts ✅ Owned by post module
+
+// ❌ WRONG: Don't do this
+modules/post/
+├── post.entity.ts
+└── user.entity.ts          ❌ User entity belongs to user module
+
+// ✅ CORRECT: Use services for cross-module data
+@Injectable()
+export class PostService {
+  constructor(
+    private userService: UserService, // ✅ Use service, not entity
+  ) {}
+}
+```
+
+## Entity Structure Pattern
+
+```ts
+import { Column, Entity, OneToMany, OneToOne, VirtualColumn } from 'typeorm';
+
+import { AbstractEntity } from '../../common/abstract.entity.ts';
+import { RoleType } from '../../constants/role-type.ts';
+import { UseDto } from '../../decorators/use-dto.decorator.ts';
+// NOTE: TypeORM relation decorators require referencing the related entity class.
+// This is the ONLY exception to the "no cross-module entity imports" rule.
+// Do NOT use PostEntity anywhere else in the user module outside of this relation.
+import { PostEntity } from '../post/post.entity.ts';
+import type { UserDtoOptions } from './dtos/user.dto.ts';
+import { UserDto } from './dtos/user.dto.ts';
+import { UserSettingsEntity } from './user-settings.entity.ts';
+
+@Entity({ name: 'users' })
+@UseDto(UserDto)
+export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
+  @Column({ nullable: true, type: 'varchar' })
+  firstName!: string | null;
+
+  @Column({ nullable: true, type: 'varchar' })
+  lastName!: string | null;
+
+  @Column({ type: 'enum', enum: RoleType, default: RoleType.USER })
+  role!: RoleType;
+
+  @Column({ unique: true, nullable: true, type: 'varchar' })
+  email!: string | null;
+
+  @Column({ nullable: true, type: 'varchar' })
+  password!: string | null;
+
+  @Column({ nullable: true, type: 'varchar' })
+  phone!: string | null;
+
+  @Column({ nullable: true, type: 'varchar' })
+  avatar!: string | null;
+
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
+  })
+  fullName!: string;
+
+  @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
+  settings?: UserSettingsEntity;
+
+  @OneToMany(() => PostEntity, (postEntity) => postEntity.user)
+  posts?: PostEntity[];
+}
+```
+
+## Entity Best Practices
+
+### 1. Base Entity Usage
+- **Always extend `AbstractEntity`** for common fields (id, createdAt, updatedAt)
+- Use `@UseDto()` decorator to link entity with its DTO
+- Use explicit table names with `@Entity({ name: 'table_name' })`
+
+### 2. Column Configuration
+```ts
+// ✅ Explicit column types
+@Column({ type: 'varchar', length: 255 })
+name!: string;
+
+@Column({ type: 'int', default: 0 })
+count!: number;
+
+@Column({ type: 'boolean', default: false })
+isActive!: boolean;
+
+@Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+createdAt!: Date;
+
+@Column({ type: 'enum', enum: StatusType, default: StatusType.PENDING })
+status!: StatusType;
+
+// ❌ Avoid implicit types
+@Column()
+name!: string; // Type will be inferred, but better to be explicit
+```
+
+### 3. Nullable and Required Fields
+```ts
+// Required field (not nullable)
+@Column({ type: 'varchar' })
+email!: string;
+
+// Nullable field
+@Column({ nullable: true, type: 'varchar' })
+firstName!: string | null;
+
+// Optional with default
+@Column({ type: 'boolean', default: false })
+isVerified!: boolean;
+```
+
+### 4. Unique Constraints
+```ts
+// Single column unique
+@Column({ unique: true, type: 'varchar' })
+email!: string;
+
+// Multiple column unique constraint
+@Entity({ name: 'user_roles' })
+@Unique(['userId', 'roleId'])
+export class UserRoleEntity extends AbstractEntity {
+  @Column({ type: 'uuid' })
+  userId!: Uuid;
+
+  @Column({ type: 'uuid' })
+  roleId!: Uuid;
+}
+```
+
+## Relationship Patterns
+
+### One-to-One Relationships
+```ts
+// Owner side (has foreign key)
+@Entity({ name: 'user_settings' })
+export class UserSettingsEntity extends AbstractEntity {
+  @Column({ type: 'uuid' })
+  userId!: Uuid;
+
+  @OneToOne(() => UserEntity, (user) => user.settings)
+  @JoinColumn({ name: 'user_id' })
+  user!: Relation<UserEntity>;
+
+  @Column({ type: 'boolean', default: true })
+  emailNotifications!: boolean;
+}
+
+// Inverse side (references the owner)
+@Entity({ name: 'users' })
+export class UserEntity extends AbstractEntity {
+  @OneToOne(() => UserSettingsEntity, (settings) => settings.user)
+  settings?: UserSettingsEntity;
+}
+```
+
+### One-to-Many Relationships
+```ts
+// Parent side (one)
+@Entity({ name: 'users' })
+export class UserEntity extends AbstractEntity {
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts?: PostEntity[];
+}
+
+// Child side (many)
+@Entity({ name: 'posts' })
+export class PostEntity extends AbstractEntity {
+  @Column({ type: 'uuid' })
+  userId!: Uuid;
+
+  @ManyToOne(() => UserEntity, (user) => user.posts, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user!: Relation<UserEntity>;
+}
+```
+
+### Many-to-Many Relationships
+```ts
+// Using junction table entity (recommended for complex scenarios)
+@Entity({ name: 'user_roles' })
+export class UserRoleEntity extends AbstractEntity {
+  @Column({ type: 'uuid' })
+  userId!: Uuid;
+
+  @Column({ type: 'uuid' })
+  roleId!: Uuid;
+
+  @ManyToOne(() => UserEntity, (user) => user.userRoles)
+  @JoinColumn({ name: 'user_id' })
+  user!: Relation<UserEntity>;
+
+  @ManyToOne(() => RoleEntity, (role) => role.userRoles)
+  @JoinColumn({ name: 'role_id' })
+  role!: Relation<RoleEntity>;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  assignedAt!: Date;
+}
+
+// Simple many-to-many (for basic scenarios)
+@Entity({ name: 'posts' })
+export class PostEntity extends AbstractEntity {
+  @ManyToMany(() => TagEntity, (tag) => tag.posts)
+  @JoinTable({
+    name: 'post_tags',
+    joinColumn: { name: 'post_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
+  })
+  tags?: TagEntity[];
+}
+```
+
+## Virtual Columns and Computed Properties
+
+```ts
+@Entity({ name: 'users' })
+export class UserEntity extends AbstractEntity {
+  @Column({ type: 'varchar' })
+  firstName!: string;
+
+  @Column({ type: 'varchar' })
+  lastName!: string;
+
+  // Database-computed virtual column
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
+  })
+  fullName!: string;
+
+  // Application-computed getter (not in database)
+  get displayName(): string {
+    return `${this.firstName} ${this.lastName}`.trim();
+  }
+}
+```
+
+## Entity Subscribers
+
+```ts
+// entity-subscribers/user.subscriber.ts
+import { EventSubscriber, EntitySubscriber, InsertEvent, UpdateEvent } from 'typeorm';
+import { hash } from 'argon2';
+
+import { UserEntity } from '../modules/user/user.entity.ts';
+
+@EventSubscriber()
+export class UserSubscriber implements EntitySubscriber<UserEntity> {
+  listenTo() {
+    return UserEntity;
+  }
+
+  async beforeInsert(event: InsertEvent<UserEntity>) {
+    if (event.entity.password) {
+      event.entity.password = await hash(event.entity.password);
+    }
+  }
+
+  async beforeUpdate(event: UpdateEvent<UserEntity>) {
+    if (event.entity?.password) {
+      event.entity.password = await hash(event.entity.password);
+    }
+  }
+}
+```
+
+## Indexing Guidelines
+
+```ts
+@Entity({ name: 'posts' })
+@Index(['userId', 'createdAt']) // Composite index for common queries
+@Index(['status']) // Single column index
+export class PostEntity extends AbstractEntity {
+  @Column({ type: 'uuid' })
+  @Index() // Index on foreign key
+  userId!: Uuid;
+
+  @Column({ type: 'enum', enum: PostStatus })
+  @Index() // Index on frequently queried enum
+  status!: PostStatus;
+
+  @Column({ type: 'varchar' })
+  @Index('IDX_POST_TITLE_FULLTEXT', { fulltext: true }) // Full-text search index
+  title!: string;
+}
+```
+
+## Common Patterns
+
+### Soft Delete
+```ts
+@Entity({ name: 'posts' })
+export class PostEntity extends AbstractEntity {
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
+  // Custom soft delete methods
+  softDelete(): void {
+    this.deletedAt = new Date();
+  }
+
+  restore(): void {
+    this.deletedAt = undefined;
+  }
+
+  get isDeleted(): boolean {
+    return this.deletedAt !== undefined;
+  }
+}
+```
+
+### Audit Fields
+```ts
+@Entity({ name: 'posts' })
+export class PostEntity extends AbstractEntity {
+  @Column({ type: 'uuid', nullable: true })
+  createdBy?: Uuid;
+
+  @Column({ type: 'uuid', nullable: true })
+  updatedBy?: Uuid;
+
+  @ManyToOne(() => UserEntity)
+  @JoinColumn({ name: 'created_by' })
+  creator?: UserEntity;
+
+  @ManyToOne(() => UserEntity)
+  @JoinColumn({ name: 'updated_by' })
+  updater?: UserEntity;
+}
+```
+
+### Validation and Constraints
+```ts
+@Entity({ name: 'products' })
+@Check('price > 0') // Database-level constraint
+@Unique(['sku']) // Unique constraint
+export class ProductEntity extends AbstractEntity {
+  @Column({ type: 'varchar', length: 100 })
+  @Length(1, 100) // Application-level validation
+  name!: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @IsPositive() // Application-level validation
+  price!: number;
+
+  @Column({ type: 'varchar', length: 50 })
+  @Matches(/^[A-Z0-9-]+$/) // Custom pattern validation
+  sku!: string;
+}
+```
+
+## Best Practices Summary
+
+1. **Entity Ownership**: One entity per module, no cross-module entity imports
+2. **Base Classes**: Always extend `AbstractEntity`
+3. **Table Names**: Use explicit table names in plural form
+4. **Column Types**: Always specify explicit column types
+5. **Relationships**: Use proper cascade options and `Relation<T>` type
+6. **Indexes**: Add indexes for foreign keys and frequently queried columns
+7. **Validation**: Use both database and application-level validation
+8. **Documentation**: Use `@UseDto()` to link entities with DTOs
+9. **Naming**: Use descriptive entity and column names
+10. **Constraints**: Use database constraints for data integrity

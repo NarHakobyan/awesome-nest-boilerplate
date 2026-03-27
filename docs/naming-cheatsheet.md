@@ -244,7 +244,10 @@ Imagine you are a content editor, and there is that notorious post you wish to g
 
 ```js
 function deleteUser(id) {
-   return this.userRepository.delete(id);
+   return this.userRepository.createQueryBuilder()
+   .delete()
+   .where('user.id = :id', { id })
+   .execute();
 }
 ```
 

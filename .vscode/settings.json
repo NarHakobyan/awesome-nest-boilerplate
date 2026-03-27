@@ -1,9 +1,17 @@
 {
     "cSpell.words": [
+        "cooldown",
+        "dtos",
         "Injectable",
+        "Meili",
+        "meilisearch",
+        "microcategory",
         "microservices",
         "nestjs",
-        "postgres"
+        "postgres",
+        "setex",
+        "sonarjs",
+        "usecases"
     ],
     "editor.detectIndentation": false,
     "rift.autostart": false,

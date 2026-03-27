@@ -1,0 +1,277 @@
+---
+description: Core module setup, global filters, interceptors, database configuration, and microservices patterns
+globs: src/app.module.ts, src/main.ts, src/filters/**/*.ts, src/interceptors/**/*.ts
+alwaysApply: false
+---
+
+# NestJS Core Module Guidelines
+
+## Global filters for exception handling.
+
+## Core Functionality Structure
+```
+service/
+├── src/
+│   ├── database/
+│   │   └── migrations/    # TypeORM migrations
+│   ├── filters/          # Global exception filters
+│   ├── interceptors/     # Global interceptors
+│   │   ├── rpc-logging.interceptor.ts
+│   │   └── language.interceptor.ts
+│   ├── entity-subscribers/ # Entity lifecycle hooks
+│   └── shared/           # Service-wide shared code
+```
+
+## Cross-Cutting Concerns
+
+1. **RPC Logging**
+```ts
+@Injectable()
+export class RpcLoggingInterceptor implements NestInterceptor {
+  logger = new Logger(RpcLoggingInterceptor.name);
+
+  intercept(context: ExecutionContext, next: CallHandler) {
+    const now = Date.now();
+    const pattern = context
+      .switchToRpc()
+      .getContext<NatsContext>()
+      .getSubject();
+
+    const data = context.switchToRpc().getData();
+    this.logger.debug(
+      `Received subject: ${pattern}, data: ${JSON.stringify(data)}`,
+    );
+
+    return next.handle().pipe(
+      tap((returnData) =>
+        this.logger.debug(
+          `End subject: ${pattern}, ${Date.now() - now}ms, data: ${JSON.stringify(returnData)}`,
+        ),
+      ),
+    );
+  }
+}
+```
+
+2. **Language Handling**
+```ts
+@Injectable()
+export class LanguageInterceptor implements NestInterceptor {
+  constructor(private readonly cls: ClsService) {}
+
+  intercept(context: ExecutionContext, next: CallHandler) {
+    const type = context.getType<ContextType | 'grammy'>();
+    let language: string | undefined;
+
+    // Extract language from different context types
+    switch (type) {
+      case 'http':
+        language = context.switchToHttp().getRequest().headers['x-language-code'];
+        break;
+      case 'rpc':
+        language = context.switchToRpc().getData().__language;
+        break;
+    }
+
+    // Set language in context
+    this.cls.set(ContextTypeEnum.LANGUAGE,
+      language && LanguageCodeEnum[language]
+        ? language
+        : LanguageCodeEnum.EN
+    );
+
+    return next.handle();
+  }
+}
+```
+
+## Service Configuration
+
+1. **App Module Setup**
+```ts
+@Module({
+  imports: [
+    // Database
+    TypeOrmModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get('DB_HOST'),
+        port: config.get('DB_PORT'),
+        username: config.get('DB_USERNAME'),
+        password: config.get('DB_PASSWORD'),
+        database: config.get('DB_DATABASE'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
+        namingStrategy: new SnakeNamingStrategy(),
+        logging: config.get('NODE_ENV') === 'development',
+      }),
+      inject: [ConfigService],
+    }),
+
+    // Cross-cutting concerns
+    ClsModule.forRoot({
+      global: true,
+      middleware: { mount: true },
+    }),
+  ],
+  providers: [
+    // Global interceptors
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RpcLoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LanguageInterceptor,
+    },
+  ],
+})
+export class AppModule {}
+```
+
+## Database Configuration
+```ts
+// database configuration
+@Module({
+  imports: [
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
+        namingStrategy: new SnakeNamingStrategy(),
+        logging: configService.get('NODE_ENV') === 'development',
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+## Entity Subscribers
+```ts
+// entity-subscribers/user.subscriber.ts
+@EventSubscriber()
+export class UserSubscriber implements EntitySubscriber<UserEntity> {
+  listenTo() {
+    return UserEntity;
+  }
+
+  async beforeInsert(event: InsertEvent<UserEntity>) {
+    if (event.entity.password) {
+      event.entity.password = await hash(event.entity.password);
+    }
+  }
+}
+```
+
+## Global Exception Filter
+```ts
+// filters/all-exceptions.filter.ts
+@Catch()
+export class AllExceptionsFilter implements ExceptionFilter {
+  constructor(private readonly logger: Logger) {}
+
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    const message =
+      exception instanceof Error
+        ? exception.message
+        : 'Internal server error';
+
+    this.logger.error(
+      `${request.method} ${request.url}`,
+      exception instanceof Error ? exception.stack : '',
+    );
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message,
+    });
+  }
+}
+```
+
+## NATS Transport Strategy
+```ts
+// main.ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.NATS,
+    options: {
+      servers: [process.env.NATS_URL],
+      queue: process.env.SERVICE_NAME,
+    },
+  });
+
+  await app.startAllMicroservices();
+}
+```
+
+## Best Practices
+
+1. **Cross-Cutting Concerns**
+   - Use interceptors for cross-cutting functionality
+   - Implement proper logging for RPC calls
+   - Handle i18n consistently
+   - Use CLS for request context
+
+2. **Configuration Management**
+   - Use environment variables
+   - Validate config on startup
+   - Use proper defaults
+   - Document all options
+
+3. **Database Management**
+   - Use TypeORM migrations
+   - Follow naming strategy
+   - Use entity subscribers
+   - Add proper indexes
+
+4. **Error Handling**
+   - Use global exception filter
+   - Log errors with context
+   - Return consistent responses
+   - Handle microservice errors
+
+5. **Microservices**
+   - Use proper transport
+   - Handle timeouts
+   - Implement retries
+   - Use proper serialization
+
+6. **Security**
+   - Implement authentication
+   - Use proper authorization
+   - Handle sensitive data
+   - Implement rate limiting
+
+7. **Monitoring**
+   - Add proper logging
+   - Implement health checks
+   - Add performance metrics
+   - Monitor service status
+
+8. **Internationalization**
+   - Support multiple languages
+   - Use language interceptor
+   - Handle fallback languages
+   - Validate language codes

@@ -93,3 +93,14 @@ db-data
 .vuepress/.cache
 # VuePress default build output directory
 .vuepress/dist
+
+# Large data files (uncompressed - ignored)
+src/database/data/categories-params.json
+src/database/data/values.json
+src/database/data/category-fields.json
+src/database/data/fields.json
+src/database/data/steps.json
+src/database/data/validations.json
+
+
+.agents

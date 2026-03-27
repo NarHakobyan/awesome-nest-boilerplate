@@ -16,8 +16,8 @@ cd my-nest-app
 # 3. Create Environment variables file.
 cp .env.example .env
 
-# 3. Install dependencies. (Make sure yarn is installed: https://yarnpkg.com/lang/en/docs/install)
-yarn
+# 3. Install dependencies. (Make sure pnpm is installed: https://pnpm.io/installation)
+pnpm install
 ```
 
 ## Checklist
@@ -37,7 +37,7 @@ And, enjoy :)
 
 ```bash
 # 4. Run development server and open http://localhost:3000
-yarn start:dev
+pnpm start:dev
 
 # 5. Read the documentation linked below for "Setup and development".
 ```
@@ -47,7 +47,7 @@ yarn start:dev
 To build the App, run
 
 ```bash
-yarn build:prod
+pnpm build:prod
 ```
 
 And you will see the generated file in `dist` that ready to be served.
@@ -145,7 +145,7 @@ And you will see the generated file in `dist` that is ready to be served.
   <dd>Support for Node, Bun, and Deno. You can run, build, and test your application using any of these runtime.</dd>
 
   <dt><b>Linter</b></dt>
-  <dd>eslint + prettier = ❤️</dd>
+  <dd>Biome + ESLint = ❤️</dd>
 </dl>
 
 ## Documentation

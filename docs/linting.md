@@ -1,16 +1,16 @@
 # Linting and Code Quality
 
-This guide covers the linting, formatting, and code quality tools used in the Awesome NestJS Boilerplate to maintain consistent, high-quality code.
+This guide covers the linting, formatting, and code quality tools used in the Awesome NestJS Boilerplate.
 
 - [Linting and Code Quality](#linting-and-code-quality)
   - [Overview](#overview)
-  - [ESLint Configuration](#eslint-configuration)
+  - [Biome (Primary)](#biome-primary)
+    - [Configuration](#configuration)
+    - [Running Biome](#running-biome)
+  - [ESLint (Supplementary)](#eslint-supplementary)
     - [Installed Plugins](#installed-plugins)
     - [Configuration File](#configuration-file)
-    - [Custom Rules](#custom-rules)
-  - [Prettier Configuration](#prettier-configuration)
-    - [Configuration File](#configuration-file-1)
-    - [Integration with ESLint](#integration-with-eslint)
+    - [Prettier via ESLint](#prettier-via-eslint)
   - [TypeScript Configuration](#typescript-configuration)
     - [Compiler Options](#compiler-options)
     - [Strict Mode](#strict-mode)
@@ -26,296 +26,196 @@ This guide covers the linting, formatting, and code quality tools used in the Aw
     - [Import Organization](#import-organization)
     - [Code Complexity](#code-complexity)
   - [Security Linting](#security-linting)
-  - [Performance Linting](#performance-linting)
-  - [Custom Linting Rules](#custom-linting-rules)
   - [Troubleshooting](#troubleshooting)
     - [Common Issues](#common-issues)
-    - [Performance Issues](#performance-issues)
   - [Best Practices](#best-practices)
-    - [1. Consistent Configuration](#1-consistent-configuration)
-    - [2. Gradual Adoption](#2-gradual-adoption)
-    - [3. IDE Integration](#3-ide-integration)
-    - [4. CI/CD Integration](#4-cicd-integration)
-    - [5. Team Guidelines](#5-team-guidelines)
-    - [6. Regular Maintenance](#6-regular-maintenance)
 
 ## Overview
 
-The project uses a comprehensive linting and formatting setup to ensure code quality:
+The project uses a two-layer linting and formatting setup:
 
-- **ESLint**: JavaScript/TypeScript linting with multiple plugins
-- **Prettier**: Code formatting for consistent style
-- **TypeScript**: Strict type checking
-- **Husky**: Git hooks for automated quality checks
-- **Lint-staged**: Run linters on staged files only
+- **Biome**: Primary formatter and linter (runs first — handles most code style and formatting)
+- **ESLint**: Supplementary linter for rules not covered by Biome (runs after Biome)
+- **TypeScript**: Strict type checking (`strict: true`, `verbatimModuleSyntax`, `noUncheckedIndexedAccess`)
+- **Husky + Lint-staged**: Git hooks that run both tools on staged files before every commit
 
-## ESLint Configuration
+There is **no standalone Prettier** — Prettier runs only as an ESLint plugin rule (`prettier/prettier`).
+
+## Biome (Primary)
+
+[Biome](https://biomejs.dev/) is the primary code formatter and linter. It replaces Prettier as the standalone formatter and handles many lint rules faster than ESLint.
+
+### Configuration
+
+**`biome.json`** (key settings):
+
+```json
+{
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  }
+}
+```
+
+Biome enforces naming conventions configured in `biome.json`:
+- `PascalCase` for classes, types, enums
+- `camelCase` for variables and functions
+- `SCREAMING_SNAKE_CASE` for constants and enum members
+- `kebab-case` for file names
+
+### Running Biome
+
+```bash
+# Check all files (lint + format)
+pnpm exec biome check .
+
+# Fix auto-fixable issues
+pnpm exec biome check --write .
+
+# Check only staged files
+pnpm lint:changes
+```
+
+## ESLint (Supplementary)
+
+ESLint runs after Biome for rules that Biome does not cover (import ordering, security scanning, Node.js-specific rules, etc.).
 
 ### Installed Plugins
-
-The project uses multiple ESLint plugins for comprehensive code analysis:
 
 ```json
 {
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
-    "@typescript-eslint/eslint-plugin": "^8.21.0",
-    "@typescript-eslint/parser": "^8.25.0",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-import-resolver-typescript": "^4.3.5",
-    "eslint-plugin-canonical": "^5.1.3",
-    "eslint-plugin-github": "^6.0.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-import-helpers": "^2.0.1",
-    "eslint-plugin-n": "^17.15.1",
-    "eslint-plugin-no-secrets": "^2.2.1",
-    "eslint-plugin-prettier": "^5.4.0",
-    "eslint-plugin-promise": "^7.2.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-sonarjs": "^3.0.2",
-    "eslint-plugin-unicorn": "^59.0.1"
+    "@eslint/js": "^9.x",
+    "@typescript-eslint/eslint-plugin": "^8.x",
+    "@typescript-eslint/parser": "^8.x",
+    "eslint": "^9.x",
+    "eslint-plugin-canonical": "^5.x",
+    "eslint-plugin-import": "^2.x",
+    "eslint-plugin-import-helpers": "^2.x",
+    "eslint-plugin-n": "^17.x",
+    "eslint-plugin-no-secrets": "^2.x",
+    "eslint-plugin-prettier": "^5.x",
+    "eslint-plugin-promise": "^7.x",
+    "eslint-plugin-simple-import-sort": "^12.x",
+    "eslint-plugin-sonarjs": "^3.x",
+    "eslint-plugin-unicorn": "^59.x"
   }
 }
 ```
 
 ### Configuration File
 
-**`eslint.config.mjs`**:
+**`eslint.config.mjs`** uses ESLint 9 flat config format. Key rules enforced:
+
+- `@typescript-eslint/no-explicit-any`: error (use `unknown` instead)
+- `simple-import-sort/imports` + `simple-import-sort/exports`: enforces sorted imports
+- `no-secrets/no-secrets`: prevents committing API keys/tokens
+- `sonarjs/cognitive-complexity`: limits cyclomatic complexity
+- `unicorn/prefer-node-protocol`: enforces `node:` prefix for built-in imports
+- `promise/catch-or-return`: ensures promises are handled
+
+TypeScript rules that overlap with Biome or the TS compiler are disabled to avoid duplicate errors.
+
+### Prettier via ESLint
+
+There is no `.prettierrc` file in the project. Prettier formatting rules are applied through `eslint-plugin-prettier`:
 
 ```javascript
-import { fixupConfigRules } from '@eslint/compat';
-import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import canonical from 'eslint-plugin-canonical';
-import github from 'eslint-plugin-github';
-import _import from 'eslint-plugin-import';
-import importHelpers from 'eslint-plugin-import-helpers';
-import n from 'eslint-plugin-n';
-import noSecrets from 'eslint-plugin-no-secrets';
-import prettier from 'eslint-plugin-prettier';
-import promise from 'eslint-plugin-promise';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import sonarjs from 'eslint-plugin-sonarjs';
-import unicorn from 'eslint-plugin-unicorn';
-import globals from 'globals';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-export default [
-  {
-    ignores: ['**/dist', '**/node_modules', '**/coverage', '**/.vuepress'],
-  },
-  ...fixupConfigRules(
-    compat.extends(
-      'eslint:recommended',
-      '@typescript-eslint/recommended',
-      'plugin:@typescript-eslint/recommended',
-      'plugin:prettier/recommended',
-    ),
-  ),
-  {
-    plugins: {
-      '@typescript-eslint': typescriptEslint,
-      canonical,
-      github,
-      import: _import,
-      'import-helpers': importHelpers,
-      n,
-      'no-secrets': noSecrets,
-      prettier,
-      promise,
-      'simple-import-sort': simpleImportSort,
-      sonarjs,
-      unicorn,
-    },
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.jest,
-      },
-      parser: tsParser,
-      ecmaVersion: 2022,
-      sourceType: 'module',
-      parserOptions: {
-        project: './tsconfig.json',
-      },
-    },
-    rules: {
-      // TypeScript specific rules
-      '@typescript-eslint/interface-name-prefix': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/prefer-nullish-coalescing': 'error',
-      '@typescript-eslint/prefer-optional-chain': 'error',
-      '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/await-thenable': 'error',
-
-      // Import rules
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
-      'import/no-unresolved': 'error',
-      'import/no-cycle': 'error',
-      'import/no-self-import': 'error',
-      'import/no-useless-path-segments': 'error',
-
-      // Code quality rules
-      'no-console': 'warn',
-      'no-debugger': 'error',
-      'no-alert': 'error',
-      'no-var': 'error',
-      'prefer-const': 'error',
-      'prefer-template': 'error',
-      'object-shorthand': 'error',
-
-      // Security rules
-      'no-secrets/no-secrets': 'error',
-
-      // SonarJS rules for code quality
-      'sonarjs/cognitive-complexity': ['error', 15],
-      'sonarjs/no-duplicate-string': 'error',
-      'sonarjs/no-identical-functions': 'error',
-      'sonarjs/prefer-immediate-return': 'error',
-
-      // Unicorn rules for modern JavaScript
-      'unicorn/prefer-node-protocol': 'error',
-      'unicorn/prefer-module': 'error',
-      'unicorn/prefer-ternary': 'error',
-      'unicorn/no-array-for-each': 'error',
-      'unicorn/no-for-loop': 'error',
-
-      // Promise rules
-      'promise/always-return': 'error',
-      'promise/catch-or-return': 'error',
-      'promise/no-nesting': 'error',
-
-      // Prettier integration
-      'prettier/prettier': 'error',
-    },
-  },
-  {
-    files: ['**/*.spec.ts', '**/*.test.ts', '**/test/**/*.ts'],
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      'sonarjs/no-duplicate-string': 'off',
-    },
-  },
-];
-```
-
-### Custom Rules
-
-The configuration includes several custom rule sets:
-
-1. **TypeScript Rules**: Strict type checking and modern TypeScript features
-2. **Import Rules**: Organized imports and dependency management
-3. **Security Rules**: Prevention of secrets and security vulnerabilities
-4. **Code Quality Rules**: Complexity limits and best practices
-5. **Performance Rules**: Optimized code patterns
-
-## Prettier Configuration
-
-### Configuration File
-
-**`.prettierrc`**:
-
-```json
+// Inline Prettier config in eslint.config.mjs
 {
-  "semi": true,
-  "trailingComma": "all",
-  "singleQuote": true,
-  "printWidth": 80,
-  "tabWidth": 2,
-  "useTabs": false,
-  "bracketSpacing": true,
-  "bracketSameLine": false,
-  "arrowParens": "always",
-  "endOfLine": "lf",
-  "quoteProps": "as-needed",
-  "jsxSingleQuote": true,
-  "proseWrap": "preserve"
+  'prettier/prettier': ['error', {
+    singleQuote: true,
+    trailingComma: 'all',
+    tabWidth: 2,
+    bracketSpacing: true,
+  }]
 }
 ```
-
-### Integration with ESLint
-
-Prettier is integrated with ESLint through:
-- `eslint-config-prettier`: Disables conflicting ESLint rules
-- `eslint-plugin-prettier`: Runs Prettier as an ESLint rule
 
 ## TypeScript Configuration
 
 ### Compiler Options
 
-**`tsconfig.json`**:
+**`tsconfig.json`** (key settings):
 
 ```json
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2022",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["ESNext"],
+    "strict": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "strictBindCallApply": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "isolatedModules": true,
+    "baseUrl": "./src",
+    "outDir": "./dist"
   }
 }
 ```
 
 ### Strict Mode
 
-The project uses TypeScript strict mode for enhanced type safety:
+The project enables all TypeScript strict flags plus additional safety checks:
 
-- `strictNullChecks`: Prevents null/undefined errors
-- `noImplicitAny`: Requires explicit type annotations
-- `strictBindCallApply`: Strict function binding
-- `noFallthroughCasesInSwitch`: Prevents switch fallthrough bugs
+- `strict: true`: Enables all strict checks (strictNullChecks, noImplicitAny, etc.)
+- `verbatimModuleSyntax: true`: Requires `import type` for type-only imports
+- `allowImportingTsExtensions: true`: Allows `.ts` extensions in import paths (required for ESM)
+- `noUncheckedIndexedAccess: true`: Array/object access returns `T | undefined`
+- `isolatedModules: true`: Compatible with single-file transpilation
+
+**ESM imports must include `.ts` extension:**
+
+```typescript
+// ✅ Correct
+import { UserService } from './user.service.ts';
+import type { UserDto } from './user.dto.ts';
+
+// ❌ Wrong
+import { UserService } from './user.service';
+```
 
 ## Git Hooks
 
 ### Husky Configuration
 
-**`.husky/pre-commit`**:
+**`.husky/pre-commit`** runs lint-staged on every commit:
 
 ```bash
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-yarn lint-staged
+pnpm exec lint-staged
 ```
 
 ### Lint-Staged
 
-**`package.json`**:
+**`package.json`** lint-staged configuration:
 
 ```json
 {
   "lint-staged": {
     "*.ts": [
+      "npx @biomejs/biome lint --write",
       "eslint --fix",
       "git add"
     ]
@@ -323,83 +223,46 @@ yarn lint-staged
 }
 ```
 
-This configuration:
-- Runs ESLint with auto-fix on staged TypeScript files
-- Automatically stages fixed files
-- Prevents commits with linting errors
+Execution order on every commit:
+1. **Biome** auto-fixes formatting and lint issues on staged `.ts` files
+2. **ESLint** fixes remaining issues (import ordering, security, etc.)
+3. Fixed files are re-staged automatically
+
+This means any commit that passes the hook is guaranteed to meet both Biome and ESLint standards.
 
 ## Available Scripts
 
 ```bash
 # Run ESLint on all files
-yarn lint
+pnpm lint
 
 # Run ESLint with auto-fix
-yarn lint:fix
+pnpm lint:fix
 
-# Check Prettier formatting
-yarn prettier:check
-
-# Format code with Prettier
-yarn prettier:write
-
-# Run TypeScript compiler check
-yarn type-check
-
-# Run all quality checks
-yarn quality:check
+# Check staged files with Biome (pre-commit equivalent)
+pnpm lint:changes
 ```
 
-**Package.json scripts**:
-
-```json
-{
-  "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
-    "prettier:check": "prettier --check \"src/**/*.ts\"",
-    "prettier:write": "prettier --write \"src/**/*.ts\"",
-    "type-check": "tsc --noEmit",
-    "quality:check": "yarn lint && yarn prettier:check && yarn type-check"
-  }
-}
-```
+> **Note**: To run Biome manually on all files, use `pnpm exec biome check --write .`
 
 ## IDE Integration
 
 ### VS Code Setup
 
-**`.vscode/settings.json`**:
+Install the [Biome VS Code extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) and the [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+
+**`.vscode/settings.json`** (recommended):
 
 ```json
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "biomejs.biome",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.organizeImports": true
+    "source.fixAll.eslint": "explicit",
+    "quickfix.biome": "explicit"
   },
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
+  "eslint.validate": ["typescript"],
   "typescript.preferences.importModuleSpecifier": "relative"
-}
-```
-
-**`.vscode/extensions.json`**:
-
-```json
-{
-  "recommendations": [
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "ms-vscode.vscode-typescript-next",
-    "bradlc.vscode-tailwindcss",
-    "ms-vscode.vscode-json"
-  ]
 }
 ```
 
@@ -410,78 +273,69 @@ yarn quality:check
    - Check "Automatic ESLint configuration"
    - Enable "Run eslint --fix on save"
 
-2. **Enable Prettier**:
-   - Go to `Settings > Languages & Frameworks > JavaScript > Prettier`
-   - Set Prettier package path
-   - Enable "On code reformat" and "On save"
+2. **Enable Biome**:
+   - Install the [Biome plugin](https://plugins.jetbrains.com/plugin/22761-biome)
+   - Go to `Settings > Languages & Frameworks > Biome`
+   - Enable "Use Biome as formatter"
 
 ## Code Quality Rules
 
 ### Naming Conventions
 
 ```typescript
-// ✅ Good - PascalCase for classes
+// ✅ PascalCase for classes
 export class UserService {}
 
-// ✅ Good - camelCase for variables and functions
+// ✅ camelCase for variables and functions
 const userName = 'john';
 function getUserById(id: string) {}
 
-// ✅ Good - kebab-case for files
+// ✅ kebab-case for file names
 // user-service.ts, create-user.dto.ts
 
-// ✅ Good - UPPER_CASE for constants
+// ✅ SCREAMING_SNAKE_CASE for constants and enum values
 const MAX_RETRY_ATTEMPTS = 3;
-
-// ❌ Bad - Inconsistent naming
-export class userService {} // Should be PascalCase
-const UserName = 'john'; // Should be camelCase
+enum RoleType { USER = 'USER', ADMIN = 'ADMIN' }
 ```
 
 ### Import Organization
 
 ```typescript
-// ✅ Good - Organized imports
-// 1. Node modules
+// ✅ Correct — .ts extension required for ESM
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-// 2. Internal imports (absolute paths)
-import { UserEntity } from '../../entities/user.entity.ts';
-import { CreateUserDto } from '../dtos/create-user.dto.ts';
+import { UserEntity } from '../../modules/user/user.entity.ts';
+import type { CreateUserDto } from '../dtos/create-user.dto.ts';
 
-// 3. Relative imports
-import { UserRepository } from './user.repository.ts';
-
-// ❌ Bad - Mixed import order
-import { UserRepository } from './user.repository.ts';
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from '../dtos/create-user.dto.ts';
+// ❌ Wrong — missing .ts extension
+import { UserEntity } from '../../modules/user/user.entity';
 ```
 
 ### Code Complexity
 
 ```typescript
-// ✅ Good - Low cognitive complexity
+// ✅ Low cognitive complexity
 function processUser(user: User): ProcessedUser {
   if (!user.isActive) {
     return { ...user, status: 'inactive' };
   }
 
-  if (user.role === 'admin') {
+  if (user.role === RoleType.ADMIN) {
     return { ...user, permissions: getAdminPermissions() };
   }
 
   return { ...user, permissions: getUserPermissions() };
 }
 
-// ❌ Bad - High cognitive complexity
+// ❌ High cognitive complexity (too many nested conditions)
 function processUser(user: User): ProcessedUser {
   if (user.isActive) {
     if (user.role === 'admin') {
       if (user.department === 'IT') {
         if (user.experience > 5) {
-          // Too many nested conditions
+          // Too deeply nested
         }
       }
     }
@@ -494,143 +348,69 @@ function processUser(user: User): ProcessedUser {
 The `no-secrets` plugin prevents committing sensitive information:
 
 ```typescript
-// ❌ Bad - Hardcoded secrets (will be caught by linter)
-const apiKey = 'sk-1234567890abcdef'; // ESLint error
-const password = 'mySecretPassword123'; // ESLint error
+// ❌ Bad — hardcoded secrets will fail the lint check
+const apiKey = 'sk-1234567890abcdef';
+const password = 'mySecretPassword123';
 
-// ✅ Good - Use environment variables
+// ✅ Good — use environment variables
 const apiKey = process.env.API_KEY;
 const password = process.env.DATABASE_PASSWORD;
-```
-
-## Performance Linting
-
-Unicorn plugin enforces performance best practices:
-
-```typescript
-// ✅ Good - Use for...of instead of forEach
-for (const item of items) {
-  processItem(item);
-}
-
-// ❌ Bad - forEach is slower
-items.forEach(item => processItem(item));
-
-// ✅ Good - Use optional chaining
-const email = user?.profile?.email;
-
-// ❌ Bad - Manual null checking
-const email = user && user.profile && user.profile.email;
-```
-
-## Custom Linting Rules
-
-You can add custom ESLint rules for project-specific requirements:
-
-```javascript
-// eslint-local-rules.js
-module.exports = {
-  'no-entity-constructor': {
-    meta: {
-      type: 'problem',
-      docs: {
-        description: 'Disallow constructors in entity classes',
-      },
-    },
-    create(context) {
-      return {
-        MethodDefinition(node) {
-          if (
-            node.kind === 'constructor' &&
-            node.parent.parent.decorators?.some(
-              d => d.expression.name === 'Entity'
-            )
-          ) {
-            context.report({
-              node,
-              message: 'Entity classes should not have constructors',
-            });
-          }
-        },
-      };
-    },
-  },
-};
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
+**Biome and ESLint rules conflict**:
+- Biome takes precedence. ESLint rules that duplicate Biome's formatting rules are disabled in `eslint.config.mjs` via TypeScript-specific overrides.
+
 **ESLint not working in IDE**:
 ```bash
-# Restart TypeScript service
-# VS Code: Ctrl+Shift+P > "TypeScript: Restart TS Server"
+# Restart TypeScript service in VS Code
+# Ctrl+Shift+P > "TypeScript: Restart TS Server"
 
-# Check ESLint output
-yarn lint --debug
-```
-
-**Prettier conflicts with ESLint**:
-```bash
-# Check for conflicting rules
-yarn eslint-config-prettier src/main.ts
+# Verify ESLint can parse the file
+pnpm exec eslint --debug src/main.ts
 ```
 
 **Import resolution errors**:
 ```bash
-# Check TypeScript paths
-yarn tsc --noEmit --listFiles
+# Verify TypeScript paths
+pnpm exec tsc --noEmit --listFiles
 ```
-
-### Performance Issues
 
 **Slow linting**:
 ```bash
 # Use ESLint cache
-yarn lint --cache
-
-# Exclude unnecessary files
-echo "dist/" >> .eslintignore
-echo "node_modules/" >> .eslintignore
+pnpm lint --cache
 ```
 
 ## Best Practices
 
-### 1. Consistent Configuration
-- Use the same linting rules across all team members
-- Include configuration files in version control
-- Document any custom rules or exceptions
+### 1. Let the hooks do the work
+Commit normally — Husky + lint-staged will auto-fix Biome and ESLint issues before the commit lands. You only need to run lint manually when debugging.
 
-### 2. Gradual Adoption
-- Start with basic rules and gradually add stricter ones
-- Use `// eslint-disable-next-line` sparingly and with comments
-- Regular review and update of linting rules
+### 2. Prefer `import type` for type-only imports
+`verbatimModuleSyntax` enforces this. IDE auto-imports will often get it right; lint-staged fixes it otherwise.
 
-### 3. IDE Integration
-- Configure IDE to show linting errors in real-time
-- Enable auto-fix on save
-- Use consistent formatting across the team
-
-### 4. CI/CD Integration
-- Run linting in CI/CD pipeline
-- Fail builds on linting errors
-- Generate linting reports for code review
-
-### 5. Team Guidelines
+### 3. Document ESLint disable comments
 ```typescript
-// ✅ Good - Document exceptions
+// ✅ Good — explain why the disable is needed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// TODO: Replace with proper typing after API update
+// TODO: Replace with proper typing after API update — see issue #123
 const legacyData: any = await getLegacyData();
 
-// ❌ Bad - Unexplained disable
+// ❌ Bad — no explanation
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const data: any = getData();
 ```
 
-### 6. Regular Maintenance
-- Update linting dependencies regularly
-- Review and update custom rules
-- Monitor for new security vulnerabilities
-- Keep documentation up to date
+### 4. CI/CD Integration
+Run linting in CI before building:
+```yaml
+- name: Lint
+  run: pnpm lint
+
+- name: Build
+  run: pnpm build:prod
+```

@@ -36,6 +36,7 @@ This comprehensive guide covers deployment strategies, configurations, and best 
     - [External Monitoring](#external-monitoring)
   - [Performance Optimization](#performance-optimization)
     - [Application Optimization](#application-optimization)
+    - [Memory Management](#memory-management)
     - [Infrastructure Optimization](#infrastructure-optimization)
   - [Backup and Recovery](#backup-and-recovery)
     - [Database Backup](#database-backup)
@@ -78,9 +79,10 @@ DB_PASSWORD=your-secure-password
 DB_DATABASE=your-db-name
 ENABLE_ORM_LOGS=false
 
-# JWT Authentication
-JWT_SECRET=your-super-secure-jwt-secret-key
-JWT_EXPIRATION_TIME=3600
+# JWT Authentication (RSA key pair — RS256 algorithm)
+# Generate with: openssl genpkey -algorithm RSA -out private.pem && openssl rsa -pubout -in private.pem -out public.pem
+JWT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
 
 # CORS
 CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
@@ -89,8 +91,8 @@ CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
 ENABLE_DOCUMENTATION=false
 
 # Throttling
-THROTTLE_TTL=60
-THROTTLE_LIMIT=100
+THROTTLER_TTL=60
+THROTTLER_LIMIT=100
 
 # NATS (if using microservices)
 NATS_ENABLED=false
@@ -101,10 +103,7 @@ NATS_PORT=4222
 AWS_S3_BUCKET_NAME=your-bucket-name
 AWS_ACCESS_KEY_ID=your-access-key
 AWS_SECRET_ACCESS_KEY=your-secret-key
-AWS_DEFAULT_S3_REGION=us-east-1
-
-# Monitoring
-SENTRY_DSN=your-sentry-dsn
+AWS_REGION=us-east-1
 ```
 
 ### Database Configuration
@@ -133,76 +132,57 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO your_db_user;
 
 ### Production Docker Setup
 
-**Dockerfile** (optimized for production):
+**Dockerfile** (multi-stage build, from the actual `Dockerfile` in the repo):
 
 ```dockerfile
-# Build stage
-FROM node:18-alpine AS builder
+# Stage 1: base — enable pnpm via corepack
+FROM node:24-slim AS base
+RUN corepack enable
 
-# Set working directory
+# Stage 2: build — install all deps, compile TypeScript
+FROM base AS build
 WORKDIR /app
-
-# Copy package files
-COPY package.json yarn.lock ./
-
-# Install dependencies
-RUN yarn install --frozen-lockfile --production=false
-
-# Copy source code
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --frozen-lockfile
 COPY . .
+RUN pnpm run build:prod
 
-# Build the application
-RUN yarn build:prod
-
-# Remove dev dependencies
-RUN yarn install --frozen-lockfile --production=true && yarn cache clean
-
-# Production stage
-FROM node:18-alpine AS production
-
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
-
-# Create app user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nestjs -u 1001
-
-# Set working directory
+# Stage 3: prod-deps — production-only dependencies
+FROM base AS prod-deps
 WORKDIR /app
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --frozen-lockfile --prod
 
-# Copy built application
-COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nestjs:nodejs /app/package.json ./
-
-# Switch to non-root user
-USER nestjs
-
-# Expose port
-EXPOSE 3000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node dist/health-check.js
-
-# Start the application
-ENTRYPOINT ["dumb-init", "--"]
+# Stage 4: runtime — lean final image
+FROM node:24-slim AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+ARG PORT=3000
+ARG secret_manager_arn
+EXPOSE $PORT
+COPY --from=build /app/dist ./dist
+COPY --from=prod-deps /app/node_modules ./node_modules
 CMD ["node", "dist/main.js"]
 ```
 
 ### Docker Compose Deployment
 
-**docker-compose.prod.yml**:
+The repo's `docker-compose.yml` provides the development stack. For production, adapt it or build your own. The development compose includes:
+
+- **app**: Builds from the multi-stage `Dockerfile`, depends on postgres (healthy) and meilisearch
+- **postgres**: Standard Postgres image with `pg_isready` health check and `init-data.sh` volume mount
+- **pgadmin**: dpage/pgadmin4, available at `http://localhost:8080`
+- **meilisearch**: getmeili/meilisearch, available at `http://localhost:7701`
+
+Example production-focused override (`docker-compose.prod.yml`):
 
 ```yaml
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-      target: production
     ports:
       - "3000:3000"
     environment:
@@ -212,54 +192,31 @@ services:
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATABASE=${DB_DATABASE}
-      - JWT_SECRET=${JWT_SECRET}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
+      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
+      - CORS_ORIGINS=${CORS_ORIGINS}
     depends_on:
       postgres:
         condition: service_healthy
     restart: unless-stopped
-    networks:
-      - app-network
 
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_DATABASE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
       interval: 10s
       timeout: 5s
       retries: 5
     restart: unless-stopped
-    networks:
-      - app-network
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./ssl:/etc/nginx/ssl
-    depends_on:
-      - app
-    restart: unless-stopped
-    networks:
-      - app-network
 
 volumes:
   postgres_data:
-
-networks:
-  app-network:
-    driver: bridge
 ```
 
 **Deployment commands**:
@@ -298,8 +255,9 @@ docker push your-registry/nest-boilerplate:v1.0.0
 
 ### Prerequisites
 
-- Node.js 18+ LTS
-- PostgreSQL 12+
+- Node.js 24+ LTS
+- pnpm 10.26+
+- PostgreSQL 14+
 - PM2 process manager
 - Nginx (recommended)
 
@@ -311,20 +269,20 @@ git clone https://github.com/your-username/your-nest-app.git
 cd your-nest-app
 
 # 2. Install dependencies
-yarn install --frozen-lockfile
+pnpm install --frozen-lockfile
 
 # 3. Build application
-yarn build:prod
+pnpm build:prod
 
 # 4. Set up environment
 cp .env.example .env
 # Edit .env with production values
 
 # 5. Run database migrations
-yarn typeorm migration:run
+pnpm migration:run
 
 # 6. Start application
-yarn start:prod
+pnpm start:prod
 ```
 
 ### Process Management
@@ -421,7 +379,7 @@ branch-defaults:
     environment: nest-boilerplate-prod
 global:
   application_name: nest-boilerplate
-  default_platform: Node.js 18
+  default_platform: Node.js 24
   default_region: us-east-1
   sc: git
 ```
@@ -454,8 +412,8 @@ eb open
   "family": "nest-boilerplate",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
+  "cpu": "512",
+  "memory": "1024",
   "executionRoleArn": "arn:aws:iam::account:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
@@ -486,17 +444,25 @@ eb open
 }
 ```
 
+**Memory Requirements**:
+- **Minimum**: 512MB (for basic applications without image processing)
+- **Recommended**: 1GB (for applications with image processing, file uploads, or heavy workloads)
+- **Production**: 2GB+ (for high-traffic applications with complex operations)
+
+The Dockerfile includes `NODE_OPTIONS="--max-old-space-size=8192"` for 8GB containers, which limits Node.js heap to 100% of container memory, leaving room for system overhead. For larger containers, adjust this value accordingly (e.g., `--max-old-space-size=16384` for 16GB containers).
+
 ### Google Cloud Platform
 
 **`app.yaml`** (App Engine):
 
 ```yaml
-runtime: nodejs18
+runtime: nodejs24
 
 env_variables:
   NODE_ENV: production
   DB_HOST: /cloudsql/project:region:instance
-  JWT_SECRET: your-jwt-secret
+  JWT_PRIVATE_KEY: your-rsa-private-key
+  JWT_PUBLIC_KEY: your-rsa-public-key
 
 automatic_scaling:
   min_instances: 1
@@ -525,7 +491,7 @@ gcloud app logs tail -s default
 
 ```
 web: node dist/main.js
-release: yarn typeorm migration:run
+release: pnpm migration:run
 ```
 
 **`package.json` scripts**:
@@ -533,7 +499,7 @@ release: yarn typeorm migration:run
 ```json
 {
   "scripts": {
-    "heroku-postbuild": "yarn build:prod"
+    "heroku-postbuild": "pnpm build:prod"
   }
 }
 ```
@@ -552,13 +518,14 @@ heroku addons:create heroku-postgresql:hobby-dev
 
 # Set environment variables
 heroku config:set NODE_ENV=production
-heroku config:set JWT_SECRET=your-jwt-secret
+heroku config:set JWT_PRIVATE_KEY="$(cat private.pem)"
+heroku config:set JWT_PUBLIC_KEY="$(cat public.pem)"
 
 # Deploy
 git push heroku main
 
 # Run migrations
-heroku run yarn typeorm migration:run
+heroku run pnpm migration:run
 
 # View logs
 heroku logs --tail
@@ -576,15 +543,18 @@ services:
   github:
     repo: your-username/nest-boilerplate
     branch: main
-  run_command: yarn start:prod
+  run_command: pnpm start:prod
   environment_slug: node-js
   instance_count: 1
   instance_size_slug: basic-xxs
   env:
   - key: NODE_ENV
     value: production
-  - key: JWT_SECRET
-    value: your-jwt-secret
+  - key: JWT_PRIVATE_KEY
+    value: your-rsa-private-key
+    type: SECRET
+  - key: JWT_PUBLIC_KEY
+    value: your-rsa-public-key
     type: SECRET
 databases:
 - name: postgres-db
@@ -610,40 +580,50 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'yarn'
+          node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Run tests
-        run: yarn test:cov
+        run: pnpm test:cov
 
       - name: Run e2e tests
-        run: yarn test:e2e
+        run: pnpm test:e2e
 
   build-and-deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'yarn'
+          node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: yarn build:prod
+        run: pnpm build:prod
 
       - name: Build Docker image
         run: |
@@ -680,14 +660,17 @@ variables:
 
 test:
   stage: test
-  image: node:18-alpine
+  image: node:24-slim
+  before_script:
+    - corepack enable
+    - pnpm config set store-dir .pnpm-store
   cache:
     paths:
-      - node_modules/
+      - .pnpm-store/
   script:
-    - yarn install --frozen-lockfile
-    - yarn test:cov
-    - yarn test:e2e
+    - pnpm install --frozen-lockfile
+    - pnpm test:cov
+    - pnpm test:e2e
 
 build:
   stage: build
@@ -722,13 +705,13 @@ deploy:
 pg_dump -h localhost -U username -d database_name > backup.sql
 
 # 2. Run migrations
-yarn typeorm migration:run
+pnpm migration:run
 
 # 3. Verify migration
-yarn typeorm migration:show
+pnpm migration:show
 
 # 4. Rollback if needed (be careful!)
-yarn typeorm migration:revert
+pnpm migration:revert
 ```
 
 **Zero-downtime migration approach**:
@@ -751,7 +734,7 @@ yarn typeorm migration:revert
 - Configure proper CORS settings
 - Implement rate limiting
 - Use security headers (helmet.js)
-- Regular security audits (`yarn audit`)
+- Regular security audits (`pnpm audit`)
 
 ### Infrastructure Security
 - Use private networks for database connections
@@ -802,7 +785,7 @@ logger.log(`Application is running on: ${await app.getUrl()}`);
 **Sentry Integration**:
 
 ```bash
-yarn add @sentry/node
+pnpm add @sentry/node
 ```
 
 ```typescript
@@ -824,6 +807,48 @@ if (process.env.NODE_ENV === 'production') {
 - Optimize database queries
 - Use connection pooling
 - Enable HTTP/2
+
+### Memory Management
+
+**Node.js Memory Configuration**:
+The application includes memory management to prevent Out-of-Memory (OOM) crashes:
+
+1. **Dockerfile Configuration**: Sets `NODE_OPTIONS="--max-old-space-size=8192"` (suitable for high-memory containers; adjust per your container allocation)
+   - Limits Node.js heap to the specified MB
+   - Leave headroom for system overhead and native modules
+
+2. **Memory Monitoring**: Application logs memory usage:
+   - On startup
+   - Every 5 minutes in production (configurable)
+   - Includes RSS, heap used/total, external memory, and array buffers
+
+3. **Container Memory Recommendations**:
+   - **1GB**: Minimum for basic applications
+   - **2GB**: Recommended for applications with image processing or S3 uploads
+   - **4GB+**: For high-traffic applications with complex operations
+
+**Adjusting Memory Limits**:
+Update the `NODE_OPTIONS` environment variable in the Dockerfile or at runtime:
+```dockerfile
+# For 2GB container (~75% of available memory)
+ENV NODE_OPTIONS="--max-old-space-size=1536"
+
+# For 4GB container
+ENV NODE_OPTIONS="--max-old-space-size=3072"
+```
+
+**Memory Optimization Best Practices**:
+- Monitor memory usage logs to identify memory growth patterns
+- Review image processing code to ensure buffers are properly released
+- Use streaming for large file operations when possible
+- Implement connection pooling to limit database connection memory
+- Set appropriate Bull queue job retention policies
+
+**Troubleshooting OOM Issues**:
+- Check application logs for memory usage patterns
+- Review container memory limits in your orchestration platform (ECS, Kubernetes, etc.)
+- Increase container memory allocation if consistently hitting limits
+- Investigate memory leaks using Node.js memory profiling tools
 
 ### Infrastructure Optimization
 - Use CDN for static assets

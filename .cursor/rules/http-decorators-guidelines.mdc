@@ -1,0 +1,309 @@
+---
+description: HTTP decorators, REST API standards, Swagger documentation, and authentication patterns for controllers
+globs: **/*.controller.ts
+alwaysApply: true
+---
+# HTTP Decorators and API Documentation Guidelines
+
+## Overview
+This guide covers the custom HTTP decorators used in the NestJS boilerplate for consistent API documentation and parameter handling.
+
+## UUID Parameter Decorators
+
+### ApiUUIDParam
+The `ApiUUIDParam` decorator is used to document UUID parameters in Swagger/OpenAPI documentation.
+
+```ts
+// ✅ Good Example
+@Get(':id')
+@ApiUUIDParam('id')
+@ApiOkResponse({ type: UserDto })
+async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+  return this.userService.getUser(userId);
+}
+
+// ❌ Bad Example
+@Get(':id')
+async getUser(@Param('id') userId: string): Promise<UserDto> {
+  return this.userService.getUser(userId);
+}
+```
+
+**Usage Pattern:**
+- Always use `@ApiUUIDParam('parameterName')` for Swagger documentation
+- Always pair with `@UUIDParam('parameterName')` for parameter parsing
+- Use descriptive parameter names (e.g., 'id', 'userId', 'postId')
+- Include proper response type documentation with `@ApiOkResponse`
+
+### UUIDParam
+The `UUIDParam` decorator automatically validates and parses UUID v4 parameters.
+
+```ts
+// ✅ Good Example
+@UUIDParam('id')
+userId: Uuid
+
+// ❌ Bad Example
+@Param('id')
+userId: string
+```
+
+**Features:**
+- Automatic UUID v4 validation
+- Type-safe parameter handling
+- Consistent error responses for invalid UUIDs
+
+## Authentication Decorators
+
+### Auth Decorator
+The `Auth` decorator provides comprehensive authentication and authorization.
+
+```ts
+// ✅ Good Example
+@Get('admin')
+@Auth([RoleType.USER])
+@HttpCode(HttpStatus.OK)
+async admin(@AuthUser() user: UserEntity) {
+  // Implementation
+}
+
+// ❌ Bad Example
+@Get('admin')
+@UseGuards(AuthGuard, RolesGuard)
+async admin(@Request() req) {
+  // Implementation
+}
+```
+
+**Usage Options:**
+```ts
+// Public route (no authentication required)
+@Auth([], { public: true })
+
+// Role-based access
+@Auth([RoleType.USER, RoleType.ADMIN])
+
+// No specific roles (any authenticated user)
+@Auth([])
+```
+
+## Complete Controller Example
+
+```ts
+@Controller('users')
+@ApiTags('users')
+export class UserController {
+  constructor(private userService: UserService) {}
+
+  @Get()
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.OK)
+  @ApiPageResponse({
+    description: 'Get users list',
+    type: PageDto,
+  })
+  getUsers(
+    @Query(new ValidationPipe({ transform: true }))
+    pageOptionsDto: UsersPageOptionsDto,
+  ): Promise<PageDto<UserDto>> {
+    return this.userService.getUsers(pageOptionsDto);
+  }
+
+  @Get(':id')
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.OK)
+  @ApiUUIDParam('id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Get user by ID',
+    type: UserDto,
+  })
+  getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
+    return this.userService.getUser(userId);
+  }
+
+  @Post()
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: UserDto })
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+    return this.userService.createUser(createUserDto);
+  }
+
+  @Put(':id')
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiUUIDParam('id')
+  @ApiAcceptedResponse()
+  updateUser(
+    @UUIDParam('id') userId: Uuid,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<void> {
+    return this.userService.updateUser(userId, updateUserDto);
+  }
+
+  @Delete(':id')
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiUUIDParam('id')
+  @ApiAcceptedResponse()
+  async deleteUser(@UUIDParam('id') userId: Uuid): Promise<void> {
+    await this.userService.deleteUser(userId);
+  }
+}
+```
+
+## REST API Standards (CRITICAL)
+
+### URL Naming Conventions
+```ts
+// ✅ CORRECT: Use plural nouns
+@Controller('users')         // /users
+@Controller('posts')         // /posts
+@Controller('categories')    // /categories
+
+// ❌ WRONG: Don't use verbs or singular
+@Controller('user')          // ❌ singular
+@Controller('getUsers')      // ❌ verb in URL
+@Controller('userManagement') // ❌ management suffix
+```
+
+### HTTP Methods & Status Codes
+```ts
+// ✅ CORRECT REST endpoints (based on actual implementation)
+@Get()                    // 200 OK - List all resources
+@HttpCode(HttpStatus.OK)
+
+@Post()                   // 201 CREATED - Create new resource
+@HttpCode(HttpStatus.CREATED)
+
+@Get(':id')              // 200 OK - Get specific resource
+@HttpCode(HttpStatus.OK)
+
+@Put(':id')              // 202 ACCEPTED - Update entire resource
+@HttpCode(HttpStatus.ACCEPTED)
+
+@Delete(':id')           // 202 ACCEPTED - Delete resource (as used in project)
+@HttpCode(HttpStatus.ACCEPTED)
+
+// ❌ WRONG: Non-RESTful endpoints
+@Post('create')          // ❌ verb in URL
+@Get('list')             // ❌ unnecessary action
+@Post('deleteUser')      // ❌ wrong method + verb
+@Get('getById/:id')      // ❌ unnecessary action
+```
+
+### Query Parameters for Filtering & Pagination
+```ts
+// ✅ CORRECT: Use query parameters
+@Get()
+async getUsers(
+  @Query() pageOptions: UsersPageOptionsDto,
+): Promise<PageDto<UserDto>> {
+  return this.userService.getUsers(pageOptions);
+}
+
+// Example: GET /users?page=1&limit=10&role=admin&search=john
+```
+
+## Best Practices
+
+### 1. Consistent Parameter Documentation
+- Always document UUID parameters with `@ApiUUIDParam`
+- Use descriptive parameter names
+- Include proper response types
+
+### 2. Authentication Patterns
+- Use `@Auth()` for all protected endpoints
+- Specify roles explicitly when required
+- Use `{ public: true }` for public endpoints
+
+### 3. HTTP Status Codes
+- Use `@HttpCode()` to specify response status codes
+- Project conventions (see controller examples above):
+  - `GET`: 200 (OK)
+  - `POST`: 201 (CREATED)
+  - `PUT`: 202 (ACCEPTED)
+  - `PATCH`: 200 (OK)
+  - `DELETE`: 202 (ACCEPTED)
+
+### 4. Swagger Documentation (REQUIRED)
+- **ALWAYS** use `@ApiOperation()` with meaningful description for every endpoint
+- Use `@ApiTags()` for controller grouping
+- Include `@ApiResponse()` for all endpoints
+- Use `@ApiPageResponse()` for paginated responses
+- Use `@ApiCreatedResponse()` for creation endpoints
+- Use `@ApiOkResponse()` for successful operations
+- Use `@ApiAcceptedResponse()` for PUT/DELETE operations
+
+### 5. Parameter Validation
+- Use `@UUIDParam()` for UUID parameters
+- Use `@Query()` with `ValidationPipe` for query parameters
+- Use `@Body()` for request body validation
+- Use `@AuthUser()` to inject authenticated user
+
+## Common Patterns
+
+### Paginated List Endpoint
+```ts
+@Get()
+@Auth([RoleType.USER])
+@ApiPageResponse({ type: UserDto })
+getUsers(
+  @Query(new ValidationPipe({ transform: true }))
+  pageOptionsDto: UsersPageOptionsDto,
+): Promise<PageDto<UserDto>>
+```
+
+### Single Resource Endpoint
+```ts
+@Get(':id')
+@Auth([RoleType.USER])
+@ApiUUIDParam('id')
+@ApiOkResponse({ type: UserDto })
+getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto>
+```
+
+### Creation Endpoint
+```ts
+@Post()
+@Auth([RoleType.USER])
+@HttpCode(HttpStatus.CREATED)
+@ApiCreatedResponse({ type: UserDto })
+createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto>
+```
+
+### Update Endpoint
+```ts
+@Put(':id')
+@Auth([RoleType.USER])
+@HttpCode(HttpStatus.ACCEPTED)
+@ApiUUIDParam('id')
+@ApiAcceptedResponse()
+updateUser(
+  @UUIDParam('id') userId: Uuid,
+  @Body() updateUserDto: UpdateUserDto,
+): Promise<void>
+```
+
+### Delete Endpoint
+```ts
+@Delete(':id')
+@Auth([RoleType.USER])
+@HttpCode(HttpStatus.ACCEPTED)
+@ApiUUIDParam('id')
+@ApiAcceptedResponse()
+async deleteUser(@UUIDParam('id') userId: Uuid): Promise<void>
+```
+
+## Error Handling
+The decorators automatically handle common error scenarios:
+- Invalid UUID format returns 400 Bad Request
+- Unauthorized access returns 401 Unauthorized
+- Forbidden access returns 403 Forbidden
+- Missing required parameters returns 400 Bad Request
+
+## Type Safety
+- Use `Uuid` type for UUID parameters
+- Use proper DTO types for request/response bodies
+- Leverage TypeScript's strict typing throughout

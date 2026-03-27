@@ -153,16 +153,20 @@ Separates read and write operations for better scalability and maintainability:
 
 ```typescript
 // Command for state changes
-export class CreatePostCommand implements ICommand {
+export class CreatePostCommand extends Command {
   constructor(
     public readonly userId: Uuid,
     public readonly createPostDto: CreatePostDto,
-  ) {}
+  ) {
+    super();
+  }
 }
 
 // Query for data retrieval
-export class GetPostQuery implements IQuery {
-  constructor(public readonly userId: Uuid) {}
+export class GetPostQuery extends Query {
+  constructor(public readonly userId: Uuid) {
+    super();
+  }
 }
 ```
 
@@ -399,7 +403,7 @@ export class ApiConfigService {
 - **Jest**: Testing framework
 
 ### Development Tools
-- **ESLint + Prettier**: Code linting and formatting
+- **Biome + ESLint**: Code linting and formatting
 - **Husky**: Git hooks for code quality
 - **Docker**: Containerized development environment
 - **Swagger**: API documentation generation

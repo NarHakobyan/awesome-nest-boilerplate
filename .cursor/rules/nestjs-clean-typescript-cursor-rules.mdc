@@ -3,788 +3,432 @@ description: Clean NestJs APIs with TypeScript Cursor Rules
 globs:
 alwaysApply: false
 ---
-# NestJS Code Style Guide
 
-This document serves as the definitive guide for code style, patterns, and conventions used in the Awesome NestJS Boilerplate. This guide should be used as context for all future code generation and development work.
+# NestJS Clean TypeScript Guidelines
 
-## Table of Contents
+## Core Principles
+1. **Type Safety**
+   - Explicit types everywhere
+   - No `any`; use `unknown` for uncertainty
+   - One type export per file
 
-- [Project Overview](mdc:#project-overview)
-- [General TypeScript Guidelines](mdc:#general-typescript-guidelines)
-- [File and Directory Structure](mdc:#file-and-directory-structure)
-- [Module Architecture](mdc:#module-architecture)
-- [Controllers](mdc:#controllers)
-- [Services](mdc:#services)
-- [DTOs and Validation](mdc:#dtos-and-validation)
-- [Entities](mdc:#entities)
-- [CQRS Pattern](mdc:#cqrs-pattern)
-- [Authentication and Authorization](mdc:#authentication-and-authorization)
-- [Exception Handling](mdc:#exception-handling)
-- [API Documentation](mdc:#api-documentation)
-- [Configuration and Environment](mdc:#configuration-and-environment)
-- [Testing Patterns](mdc:#testing-patterns)
-- [Code Quality and Linting](mdc:#code-quality-and-linting)
+2. **Code Structure**
+   - Function length ≤ 15 lines
+   - Class size ≤ 150 lines
+   - Max nesting depth: 2
+   - Single responsibility per file
 
-## Project Overview
+3. **Naming**
+   - 🔠 PascalCase: Classes, Types, Interfaces, Enums, Decorators
+   - 🐪 camelCase: variables, methods
+   - 🔗 kebab-case: files, dirs
+   - ⬆️ SCREAMING_SNAKE: env vars
 
-This is a modern NestJS boilerplate built with:
-- **NestJS 11.x** - Progressive Node.js framework
-- **TypeScript 5.x** - Strict type checking enabled
-- **TypeORM 0.3.x** - Database ORM with PostgreSQL
-- **CQRS Pattern** - Command Query Responsibility Segregation
-- **JWT Authentication** - JSON Web Token based auth
-- **Swagger/OpenAPI** - API documentation
-- **ESM Modules** - ES Module support with .ts extensions
-- **Vite** - Fast development server
-- **Jest** - Testing framework
+4. **ESM Module Support**
+   - Always use `.ts` extensions in imports for ESM compatibility
+   - Use type imports when only importing types
+   - Organize imports in specific order: Node modules → Internal → Relative
 
-## General TypeScript Guidelines
+## Import Organization (CRITICAL - ESM Support)
+**Always use .ts extensions for ESM compatibility**
 
-### Basic Principles
-
-- Use English for all code and documentation
-- Always declare types for variables and functions (avoid `any`)
-- Use strict TypeScript configuration
-- One export per file
-- No blank lines within functions
-- No comments in code (self-documenting code preferred)
-
-### Naming Conventions
-
-```typescript
-// PascalCase for classes
-export class UserService {}
-export class CreateUserDto {}
-
-// camelCase for variables, functions, methods
-const userName = 'john';
-async function createUser() {}
-
-// kebab-case for files and directories
-user.service.ts
-create-user.dto.ts
-user-settings.entity.ts
-
-// UPPERCASE for constants and environment variables
-const MAX_RETRY_ATTEMPTS = 3;
-process.env.DATABASE_URL
-
-// Use verbs for boolean variables
-const isLoading = true;
-const hasError = false;
-const canDelete = user.role === RoleType.ADMIN;
-```
-
-### Import Organization
-
-```typescript
+```ts
+// ✅ Correct import order with .ts extensions
 // 1. Node modules (external dependencies)
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 // 2. Internal imports with absolute paths and .ts extensions
 import { validateHash } from '../../common/utils.ts';
 import type { RoleType } from '../../constants/role-type.ts';
-import { UserNotFoundException } from '../../exceptions/user-not-found.exception.ts';
 
-// 3. Relative imports
+// 3. Relative imports with .ts extensions
 import type { UserEntity } from './user.entity.ts';
 import { UserService } from './user.service.ts';
+
+// ❌ Wrong - Missing .ts extensions
+import { UserService } from './user.service'; // ❌ No extension
 ```
 
-### TypeScript Conventions
+## Function Rules
+1. **Signature**
+   ```ts
+   function verbNoun(config: Config): Result
+   function isCondition(): boolean
+   ```
 
-```typescript
-// Use type imports for types only
-import type { RoleType } from '../constants/role-type.ts';
-import type { Reference } from '../types.ts';
+2. **Parameters**
+   ```ts
+   // ✅ Good
+   function process({ id, data }: ProcessConfig): void
 
-// Do not use readonly for DTO properties
-export class UserLoginDto {
-  @EmailField()
-  email!: string;
+   // ❌ Bad
+   function process(id: string, data: any): void
+   ```
 
-  @StringField()
-  password!: string;
-}
+3. **Returns**
+   - Early returns for guards
+   - Promise for async
+   - Typed objects for multiple returns
 
-// Use definite assignment assertion for decorated properties
-@Column({ unique: true })
-email!: string;
+## NestJS Architecture
+1. **Module Structure**
+   ```
+   module/
+   ├── dto/         # Data transfer objects
+   ├── entities/    # Database models
+   ├── interfaces/  # Type definitions
+   ├── services/    # Business logic
+   └── controllers/ # Route handlers
+   ```
 
-// Use optional properties appropriately
-phone?: string;
+2. **Common Module**
+   ```
+   common/
+   ├── configs/     # Global settings
+   ├── decorators/  # Custom decorators
+   ├── guards/      # Access control
+   ├── interceptors/# Request handlers
+   └── utils/       # Shared helpers
+   ```
+
+3. **Testing**
+   ```ts
+   describe('UnitName', () => {
+     it('should_do_one_thing', () => {
+       // given
+       const input = setupTest()
+       // when
+       const result = process(input)
+       // then
+       expect(result).toBe(expected)
+     })
+   })
+   ```
+
+## Error Handling
+1. **Exceptions**
+   ```ts
+   // ✅ Good
+   throw new CustomException('Specific error message')
+
+   // ❌ Bad
+   throw new Error('Generic error')
+   ```
+
+2. **Validation**
+   ```ts
+   // DTO
+   @StringField({
+     required: true,
+     minLength: 3,
+     maxLength: 50,
+   })
+   name: string;
+   ```
+
+## Best Practices
+1. **Dependency Injection**
+   ```ts
+   @Injectable()
+   class Service {
+     constructor(private readonly dep: Dependency) {}
+   }
+   ```
+
+2. **Configuration**
+   ```ts
+   @Module({
+     imports: [ConfigModule.forRoot()],
+     providers: [
+       {
+         provide: APP_INTERCEPTOR,
+         useClass: LoggingInterceptor,
+       },
+     ],
+   })
+   ```
+
+3. **API Design**
+   ```ts
+   @Controller('resource')
+   @ApiTags('resource')
+   class ResourceController {
+     @Get()
+     @UseGuards(AuthGuard)
+     @ApiOperation({
+       summary: 'Get all resources',
+       description: 'Retrieves all resources available to the authenticated user. Returns paginated results.'
+     })
+     @ApiOkResponse({ type: [ResourceDto] })
+     async getAll(): Promise<Resource[]>
+   }
+   ```
+
+4. **🚨 CRITICAL: @ApiOperation Required for ALL Endpoints**
+   ```ts
+   // ✅ ALWAYS include @ApiOperation - REQUIRED for semantic search
+   @Post()
+   @Auth([RoleType.ADMIN])
+   @HttpCode(HttpStatus.CREATED)
+   @ApiOperation({
+     summary: 'Create user',
+     description: 'Creates a new user account with validation. Validates input, checks for duplicates, and returns the created user with generated ID.'
+   })
+   @ApiCreatedResponse({ type: UserDto })
+   async createUser(@Body() dto: CreateUserDto): Promise<UserDto>
+
+   @Get(':id')
+   @Auth([RoleType.USER])
+   @ApiOperation({
+     summary: 'Get user by ID',
+     description: 'Retrieves a specific user by their unique identifier. Requires authentication and returns complete user profile.'
+   })
+   @ApiUUIDParam('id')
+   @ApiOkResponse({ type: UserDto })
+   async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto>
+   ```
+
+## Project Structure
+```
+awesome-nest-boilerplate/
+├── src/
+│   ├── main.ts                  # Application entry point
+│   ├── app.module.ts           # Root module
+│   ├── setup-swagger.ts        # Swagger configuration
+│   ├── types.ts                # Global type definitions
+│   ├── boilerplate.polyfill.ts # Global polyfills
+│   ├── snake-naming.strategy.ts # Database naming strategy
+│   ├── common/                 # Shared utilities and base classes
+│   │   ├── dto/               # Common DTOs (PageDto, AbstractDto)
+│   │   └── abstract.entity.ts # Base entity class
+│   ├── constants/             # Application constants
+│   │   └── role-type.ts      # User role enumeration
+│   ├── database/              # Database configuration and migrations
+│   │   └── migrations/        # TypeORM migration files
+│   ├── decorators/            # Custom decorators
+│   │   ├── auth-user.decorator.ts    # Extract authenticated user
+│   │   ├── http.decorators.ts        # HTTP-related decorators
+│   │   ├── field.decorators.ts       # DTO validation decorators
+│   │   └── use-dto.decorator.ts      # Entity-DTO mapping
+│   ├── entity-subscribers/    # TypeORM entity subscribers
+│   │   └── user-subscriber.ts # Password hashing subscriber
+│   ├── exceptions/            # Custom exception classes
+│   ├── filters/               # Exception filters
+│   │   ├── bad-request.filter.ts     # HTTP exception filter
+│   │   └── query-failed.filter.ts    # Database error filter
+│   ├── guards/                # Authentication and authorization guards
+│   ├── i18n/                  # Internationalization files
+│   │   ├── en_US/            # English translations
+│   │   └── ru_RU/            # Russian translations
+│   ├── interceptors/          # Request/Response interceptors
+│   │   ├── translation-interceptor.service.ts
+│   │   └── language-interceptor.service.ts
+│   ├── interfaces/            # TypeScript interfaces
+│   ├── modules/               # Feature modules
+│   │   ├── auth/             # Authentication module
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.module.ts
+│   │   │   └── dtos/          # Auth-specific DTOs
+│   │   ├── user/             # User management module
+│   │   │   ├── commands/      # CQRS command handlers
+│   │   │   ├── queries/       # CQRS query handlers
+│   │   │   ├── dtos/          # User DTOs
+│   │   │   ├── exceptions/    # User-specific exceptions
+│   │   │   ├── user.controller.ts
+│   │   │   ├── user.service.ts
+│   │   │   ├── user.module.ts
+│   │   │   ├── user.entity.ts
+│   │   │   └── user-settings.entity.ts
+│   │   ├── other-module/      # Other module with other features
+│   │   └── health-checker/   # Health check module
+│   ├── providers/             # Custom providers
+│   ├── shared/                # Shared services and utilities
+│   │   └── services/         # Global services (ApiConfigService, TranslationService)
+│   └── validators/            # Custom validators
+├── test/                      # E2E tests
+├── docs/                      # Documentation
+├── .cursor/                   # Cursor IDE configuration
+│   └── rules/                # Cursor coding rules
+├── docker-compose.yml         # Docker development setup
+├── ormconfig.ts              # TypeORM configuration
+└── package.json              # Dependencies and scripts
 ```
 
-## File and Directory Structure
+## 🚨 CRITICAL: Entity Module Ownership Rules
+- **One entity per module**: Every entity must be owned by exactly one feature module
+- **No cross-module entity sharing**: Do not import or use entities from other modules
+- **Use services for cross-module communication**: If you need data from another module, use their service methods
+- **Create dedicated entities**: If similar data structures are needed, create separate entities per module
+- **Exception for shared entities**: Only `AbstractEntity` and entities in `src/common/` can be shared
 
-### Project Structure
-
-```
-src/
-├── main.ts                    # Application bootstrap
-├── app.module.ts             # Root module
-├── setup-swagger.ts          # Swagger configuration
-├── types.ts                  # Global type definitions
-├── boilerplate.polyfill.ts   # Global polyfills
-├── snake-naming.strategy.ts  # Database naming strategy
-├── metadata.ts               # Application metadata
-├── common/                   # Shared utilities and base classes
-│   ├── dto/                  # Common DTOs
-│   └── abstract.entity.ts    # Base entity class
-├── constants/                # Application constants
-├── database/                 # Database configuration and migrations
-│   └── migrations/
-├── decorators/               # Custom decorators
-├── entity-subscribers/       # TypeORM entity subscribers
-├── exceptions/               # Custom exception classes
-├── filters/                  # Exception filters
-├── guards/                   # Authentication/authorization guards
-├── i18n/                     # Internationalization files
-│   ├── en_US/
-│   └── ru_RU/
-├── interceptors/             # Request/response interceptors
-├── interfaces/               # TypeScript interfaces
-├── modules/                  # Feature modules
-│   ├── auth/                 # Authentication module
-│   ├── user/                 # User management module
-│   ├── post/                 # Post management module
-│   └── health-checker/       # Health check module
-├── providers/                # Custom providers
-├── shared/                   # Shared services and modules
-│   └── services/
-└── validators/               # Custom validators
-```
-
-### Module Structure
-
-Each feature module follows this structure:
-
-```
-modules/feature-name/
-├── commands/                 # CQRS command handlers
-│   ├── create-feature.command.ts
-│   └── create-feature.handler.ts
-├── queries/                  # CQRS query handlers
-│   ├── get-feature.query.ts
-│   └── get-feature.handler.ts
-├── dtos/                     # Data Transfer Objects
-│   ├── create-feature.dto.ts
-│   ├── feature.dto.ts
-│   └── features-page-options.dto.ts
-├── exceptions/               # Module-specific exceptions
-│   └── feature-not-found.exception.ts
-├── feature.controller.ts     # REST API controller
-├── feature.service.ts        # Business logic service
-├── feature.module.ts         # Module definition
-├── feature.entity.ts         # Database entity
-└── feature-related.entity.ts # Related entities
-```
-
-### File Naming Conventions
-
-- Use kebab-case: `user-login.dto.ts`
-- Include type in filename: `.controller.ts`, `.service.ts`, `.dto.ts`, `.entity.ts`
-- Use singular names for entities: `user.entity.ts` not `users.entity.ts`
-- Use descriptive names: `create-user.command.ts`, `user-not-found.exception.ts`
-
-## Module Architecture
-
-### Module Definition Pattern
-
-```typescript
-import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { CreateUserHandler } from './commands/create-user.handler.ts';
-import { GetUserHandler } from './queries/get-user.handler.ts';
-import { UserController } from './user.controller.ts';
-import { UserEntity } from './user.entity.ts';
-import { UserService } from './user.service.ts';
-import { UserSettingsEntity } from './user-settings.entity.ts';
-
-const handlers = [CreateUserHandler, GetUserHandler];
-
+## Module Implementation
+```ts
+// feature.module.ts
 @Module({
   imports: [
-    CqrsModule,
-    TypeOrmModule.forFeature([UserEntity, UserSettingsEntity]),
+    TypeOrmModule.forFeature([FeatureEntity])
   ],
-  controllers: [UserController],
-  providers: [UserService, ...handlers],
-  exports: [UserService],
+  controllers: [FeatureNatsController],
+  providers: [
+    FeatureQueryService,
+    FeatureCommandService,
+    FeatureSagas,
+    ...handlers
+  ]
 })
-export class UserModule {}
-```
+export class FeatureModule {}
 
-## Controllers
-
-### Controller Structure Pattern
-
-```typescript
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Query,
-  ValidationPipe,
-} from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-
-import { PageDto } from '../../common/dto/page.dto.ts';
-import { RoleType } from '../../constants/role-type.ts';
-import { ApiPageResponse } from '../../decorators/api-page-response.decorator.ts';
-import { AuthUser } from '../../decorators/auth-user.decorator.ts';
-import { Auth, UUIDParam } from '../../decorators/http.decorators.ts';
-import { UserDto } from './dtos/user.dto.ts';
-import { UsersPageOptionsDto } from './dtos/users-page-options.dto.ts';
-import { UserEntity } from './user.entity.ts';
-import { UserService } from './user.service.ts';
-
-@Controller('users')
-@ApiTags('users')
-export class UserController {
-  constructor(
-    private userService: UserService,
-    private translationService: TranslationService,
-  ) {}
-
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @Auth([RoleType.ADMIN])
-  @ApiOkResponse({ type: UserDto, description: 'User created successfully' })
-  async createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<UserDto> {
-    return this.userService.createUser(createUserDto);
-  }
-
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @Auth([RoleType.USER])
-  @ApiOkResponse({ type: UserDto, description: 'Get user by ID' })
-  async getUser(@UUIDParam('id') userId: Uuid): Promise<UserDto> {
-    return this.userService.getUser(userId);
-  }
-
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @Auth([RoleType.USER])
-  @ApiPageResponse({
-    description: 'Get paginated users list',
-    type: PageDto,
-  })
-  async getUsers(
-    @Query(new ValidationPipe({ transform: true }))
-    pageOptionsDto: UsersPageOptionsDto,
-  ): Promise<PageDto<UserDto>> {
-    return this.userService.getUsers(pageOptionsDto);
-  }
-}
-```
-
-### Controller Best Practices
-
-1. **Use dependency injection via constructor**
-2. **Mark injected services as `private`**
-3. **Use specific HTTP status codes with `@HttpCode()`**
-4. **Apply authentication/authorization with `@Auth()` decorator**
-5. **Use comprehensive Swagger documentation**
-6. **Use ValidationPipe for query parameters**
-7. **Use custom decorators like `@UUIDParam()` for parameter validation**
-8. **Keep controllers thin - delegate business logic to services**
-9. **Use versioning when needed with `@Version()`**
-10. **Return DTOs, not entities**
-
-## Services
-
-### Service Structure Pattern
-
-```typescript
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-
-import { PageDto } from '../../common/dto/page.dto.ts';
-import { UserNotFoundException } from '../../exceptions/user-not-found.exception.ts';
-import type { IFile } from '../../interfaces/IFile.ts';
-import type { Reference } from '../../types.ts';
-import { CreateUserDto } from './dtos/create-user.dto.ts';
-import { UserDto } from './dtos/user.dto.ts';
-import { UsersPageOptionsDto } from './dtos/users-page-options.dto.ts';
-import { UserEntity } from './user.entity.ts';
-
+// feature.command-service.ts (based on actual implementation)
 @Injectable()
-export class UserService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
-  ) {}
-
-  async createUser(
-    createUserDto: CreateUserDto,
-    file?: Reference<IFile>,
-  ): Promise<UserEntity> {
-    const userEntity = this.userRepository.create(createUserDto);
-
-    if (file) {
-      userEntity.avatar = file.key;
-    }
-
-    await this.userRepository.save(userEntity);
-    return userEntity;
-  }
-
-  async findOne(findOptions: Partial<UserEntity>): Promise<UserEntity> {
-    const userEntity = await this.userRepository.findOne({
-      where: findOptions,
-    });
-
-    if (!userEntity) {
-      throw new UserNotFoundException();
-    }
-
-    return userEntity;
-  }
-
-  async getUser(userId: Uuid): Promise<UserDto> {
-    const userEntity = await this.findOne({ id: userId });
-    return userEntity.toDto();
-  }
-
-  async getUsers(
-    pageOptionsDto: UsersPageOptionsDto,
-  ): Promise<PageDto<UserDto>> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
-    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
-    return items.toPageDto(pageMetaDto);
-  }
-}
-```
-
-### Service Best Practices
-
-1. **Use `@Injectable()` decorator**
-2. **Inject repositories with `@InjectRepository()`**
-3. **Mark dependencies as `private`**
-4. **Create separate methods for finding entities vs returning DTOs**
-5. **Throw custom exceptions for not found cases**
-6. **Use TypeORM query builders for complex queries**
-7. **Return DTOs from public methods, entities from private/internal methods**
-8. **Use pagination for list endpoints**
-9. **Handle transactions when needed**
-
-## DTOs and Validation
-
-### Input DTO Pattern
-
-```typescript
-import {
-  EmailField,
-  PasswordField,
-  PhoneFieldOptional,
-  StringField,
-} from '../../../decorators/field.decorators.ts';
-
-export class CreateUserDto {
-  @StringField()
-  firstName!: string;
-
-  @StringField()
-  lastName!: string;
-
-  @EmailField()
-  email!: string;
-
-  @PasswordField({ minLength: 6 })
-  password!: string;
-
-  @PhoneFieldOptional()
-  phone?: string;
-}
-```
-
-### Response DTO Pattern
-
-```typescript
-import { AbstractDto } from '../../../common/dto/abstract.dto.ts';
-import { RoleType } from '../../../constants/role-type.ts';
-import {
-  BooleanFieldOptional,
-  EmailFieldOptional,
-  EnumFieldOptional,
-  PhoneFieldOptional,
-  StringFieldOptional,
-} from '../../../decorators/field.decorators.ts';
-import type { UserEntity } from '../user.entity.ts';
-
-export type UserDtoOptions = Partial<{ isActive: boolean }>;
-
-export class UserDto extends AbstractDto {
-  @StringFieldOptional({ nullable: true })
-  firstName?: string | null;
-
-  @StringFieldOptional({ nullable: true })
-  lastName?: string | null;
-
-  @EnumFieldOptional(() => RoleType)
-  role?: RoleType;
-
-  @EmailFieldOptional({ nullable: true })
-  email?: string | null;
-
-  @PhoneFieldOptional({ nullable: true })
-  phone?: string | null;
-
-  @BooleanFieldOptional()
-  isActive?: boolean;
-
-  constructor(user: UserEntity, options?: UserDtoOptions) {
-    super(user);
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
-    this.role = user.role;
-    this.email = user.email;
-    this.phone = user.phone;
-    this.isActive = options?.isActive;
-  }
-}
-```
-
-### Custom Field Decorators
-
-The project uses custom field decorators that combine validation and Swagger documentation:
-
-```typescript
-// String fields
-@StringField()                           // Required string, min length 1
-@StringFieldOptional()                   // Optional string
-@StringField({ minLength: 3, maxLength: 50 })  // With constraints
-
-// Email fields
-@EmailField()                            // Required email
-@EmailFieldOptional()                    // Optional email
-
-// Password fields
-@PasswordField({ minLength: 6 })         // Required password
-@PasswordFieldOptional()                 // Optional password
-
-// Phone fields
-@PhoneField()                            // Required phone
-@PhoneFieldOptional()                    // Optional phone
-
-// Boolean fields
-@BooleanField()                          // Required boolean
-@BooleanFieldOptional()                  // Optional boolean
-
-// Enum fields
-@EnumField(() => RoleType)               // Required enum
-@EnumFieldOptional(() => RoleType)       // Optional enum
-
-// UUID fields
-@UUIDField()                             // Required UUID
-@UUIDFieldOptional()                     // Optional UUID
-
-// Number fields
-@NumberField()                           // Required number
-@NumberFieldOptional()                   // Optional number
-@NumberField({ min: 0, max: 100, int: true })  // With constraints
-
-// Date fields
-@DateField()                             // Required date
-@DateFieldOptional()                     // Optional date
-
-// URL fields
-@URLField()                              // Required URL
-@URLFieldOptional()                      // Optional URL
-
-// Class fields
-@ClassField(() => UserDto)              // Required class field
-@ClassField(() => TokenPayloadDto)      // Required class field
-
-// Enum fields
-@EnumField(() => RoleType)               // Required enum
-@EnumFieldOptional(() => RoleType)       // Optional enum
-
-// Array Fields
-@StringField({ each: true })
-@StringFieldOptional({ each: true })
-@StringField({ each: true, minLength: 3, maxLength: 50 })
-@StringFieldOptional({ each: true, minLength: 3, maxLength: 50 })
-@ClassField(() => UserDto, { each: true })
-@ClassFieldOptional(() => TokenPayloadDto, { each: true })
-@EnumField(() => RoleType, { each: true })
-@EnumFieldOptional(() => RoleType, { each: true })
-@NumberField({ each: true })
-@NumberFieldOptional({ each: true })
-@NumberField({ each: true, min: 0, max: 100, int: true })
-@NumberFieldOptional({ each: true, min: 0, max: 100, int: true })
-@DateField({ each: true })
-```
-
-### DTO Best Practices
-
-1. **Do not use `readonly` for all input DTO properties**
-2. **Extend `AbstractDto` for response DTOs**
-3. **Use custom field decorators for validation and Swagger documentation**
-4. **Use optional fields with proper typing (`?` and `| null`)**
-5. **Implement constructor for response DTOs that maps from entities**
-6. **Use options type for additional DTO construction parameters**
-7. **Use definite assignment assertion (`!`) for required fields**
-
-## Entities
-
-### Entity Structure Pattern
-
-```typescript
-import { Column, Entity, OneToMany, OneToOne, VirtualColumn } from 'typeorm';
-
-import { AbstractEntity } from '../../common/abstract.entity.ts';
-import { RoleType } from '../../constants/role-type.ts';
-import { UseDto } from '../../decorators/use-dto.decorator.ts';
-import { PostEntity } from '../post/post.entity.ts';
-import type { UserDtoOptions } from './dtos/user.dto.ts';
-import { UserDto } from './dtos/user.dto.ts';
-import { UserSettingsEntity } from './user-settings.entity.ts';
-
-@Entity({ name: 'users' })
-@UseDto(UserDto)
-export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
-  @Column({ nullable: true, type: 'varchar' })
-  firstName!: string | null;
-
-  @Column({ nullable: true, type: 'varchar' })
-  lastName!: string | null;
-
-  @Column({ type: 'enum', enum: RoleType, default: RoleType.USER })
-  role!: RoleType;
-
-  @Column({ unique: true, nullable: true, type: 'varchar' })
-  email!: string | null;
-
-  @Column({ nullable: true, type: 'varchar' })
-  password!: string | null;
-
-  @Column({ nullable: true, type: 'varchar' })
-  phone!: string | null;
-
-  @Column({ nullable: true, type: 'varchar' })
-  avatar!: string | null;
-
-  @VirtualColumn({
-    query: (alias) =>
-      `SELECT CONCAT(${alias}.first_name, ' ', ${alias}.last_name)`,
-  })
-  fullName!: string;
-
-  @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
-  settings?: UserSettingsEntity;
-
-  @OneToMany(() => PostEntity, (postEntity) => postEntity.user)
-  posts?: PostEntity[];
-}
-```
-
-### Entity Best Practices
-
-1. **Extend `AbstractEntity` for common fields (id, createdAt, updatedAt)**
-2. **Use `@UseDto()` decorator to link entity with its DTO**
-3. **Use explicit column types: `type: 'varchar'`, `type: 'enum'`**
-4. **Use definite assignment assertion (`!`) for all properties**
-5. **Use proper nullable typing: `string | null` for nullable columns**
-6. **Use `@VirtualColumn` for computed fields**
-7. **Define relationships with proper decorators**
-8. **Use table names in plural: `{ name: 'users' }`**
-
-## CQRS Pattern
-
-### Command Structure
-
-```typescript
-// Command definition
-import type { ICommand } from '@nestjs/cqrs';
-import type { CreatePostDto } from '../dtos/create-post.dto.ts';
-
-export class CreatePostCommand implements ICommand {
-  constructor(
-    public userId: Uuid,
-    public createPostDto: CreatePostDto,
-  ) {}
-}
-```
-
-### Command Handler Structure
-
-```typescript
-// Command handler
-import type { ICommandHandler } from '@nestjs/cqrs';
-import { CommandHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-
-import { PostEntity } from '../post.entity.ts';
-import { CreatePostCommand } from './create-post.command.ts';
-
-@CommandHandler(CreatePostCommand)
-export class CreatePostHandler
-  implements ICommandHandler<CreatePostCommand, PostEntity>
-{
+export class PostService {
   constructor(
     @InjectRepository(PostEntity)
     private postRepository: Repository<PostEntity>,
+    private commandBus: CommandBus,
   ) {}
 
-  async execute(command: CreatePostCommand): Promise<PostEntity> {
-    const { userId, createPostDto } = command;
-    const postEntity = this.postRepository.create({ userId });
+  @Transactional()
+  createPost(userId: Uuid, createPostDto: CreatePostDto): Promise<PostEntity> {
+    return this.commandBus.execute<CreatePostCommand, PostEntity>(
+      new CreatePostCommand(userId, createPostDto),
+    );
+  }
+}
 
-    await this.postRepository.save(postEntity);
-    return postEntity;
+// feature.query-service.ts
+@Injectable()
+export class FeatureQueryService {
+  constructor(
+    @InjectRepository(FeatureEntity)
+    private readonly repo: Repository<FeatureEntity>,
+  ) {}
+
+  async find(id: string): Promise<Feature> {
+    return this.repo.findOneOrFail({ where: { id } });
   }
 }
 ```
 
-### Query Structure
+## CQRS Pattern
+1. **Commands (Based on Actual Implementation)**
+   ```ts
+   // create-post.command.ts
+   export class CreatePostCommand implements ICommand {
+     constructor(
+       public readonly userId: Uuid,
+       public readonly createPostDto: CreatePostDto,
+     ) {}
+   }
 
-```typescript
-// Query definition
-import type { IQuery } from '@nestjs/cqrs';
+   // create-post.handler.ts
+   @CommandHandler(CreatePostCommand)
+   export class CreatePostHandler implements ICommandHandler<CreatePostCommand, PostEntity> {
+     constructor(
+       @InjectRepository(PostEntity)
+       private postRepository: Repository<PostEntity>,
+       @InjectRepository(PostTranslationEntity)
+       private postTranslationRepository: Repository<PostTranslationEntity>,
+     ) {}
 
-export class GetUserQuery implements IQuery {
-  constructor(public userId: Uuid) {}
-}
+     async execute(command: CreatePostCommand): Promise<PostEntity> { // ✅ Explicit return type required
+       const { userId, createPostDto } = command;
+       const postEntity = this.postRepository.create({ userId });
+       // ... implementation
+       return postEntity;
+     }
+   }
+   ```
 
-// Query handler
-import type { IQueryHandler } from '@nestjs/cqrs';
-import { QueryHandler } from '@nestjs/cqrs';
+2. **Events**
+   ```ts
+   // feature-created.event.ts
+   export class FeatureCreatedEvent {
+     constructor(public readonly feature: Feature) {}
+   }
 
-@QueryHandler(GetUserQuery)
-export class GetUserHandler implements IQueryHandler<GetUserQuery> {
-  constructor(private userService: UserService) {}
+   // feature-created.handler.ts
+   @EventsHandler(FeatureCreatedEvent)
+   export class FeatureCreatedHandler {
+     async handle(event: FeatureCreatedEvent) {
+       // Implementation
+     }
+   }
+   ```
 
-  async execute(query: GetUserQuery): Promise<UserDto> {
-    return this.userService.getUser(query.userId);
+3. **Queries**
+   ```ts
+   // get-feature.query.ts
+   export class GetFeatureQuery {
+     constructor(public readonly id: string) {}
+   }
+
+   // get-feature.handler.ts
+   @QueryHandler(GetFeatureQuery)
+   export class GetFeatureHandler {
+     async execute(query: GetFeatureQuery) {
+       // Implementation
+     }
+   }
+   ```
+
+## Common Module Usage
+```ts
+// Using base entity class
+import { AbstractEntity } from '../../common/abstract.entity.ts';
+
+// Using base DTO class
+import { AbstractDto } from '../../common/dto/abstract.dto.ts';
+
+// Using shared config service
+import { ApiConfigService } from '../../shared/services/api-config.service.ts';
+```
+
+## Error Handling
+```ts
+// feature.exceptions.ts
+export class FeatureNotFoundException extends NotFoundException {
+  constructor(id: string) {
+    super(`Feature with id ${id} not found`);
   }
 }
-```
 
-### CQRS Best Practices
-
-1. **Use commands for write operations**
-2. **Use queries for read operations**
-3. **Keep commands and queries simple**
-4. **Register handlers in module providers**
-5. **Use proper typing with generics**
-6. **Separate command/query definitions from handlers**
-
-## Authentication and Authorization
-
-### Auth Decorator Usage
-
-```typescript
-// Role-based authentication
-@Auth([RoleType.ADMIN])                  // Admin only
-@Auth([RoleType.USER])                   // User only
-@Auth([RoleType.USER, RoleType.ADMIN])   // User or Admin
-
-// Get current user
-@AuthUser() user: UserEntity             // Inject current user
-
-// Public endpoints (no @Auth decorator)
-@Post('login')                           // Public login endpoint
-```
-
-### JWT Token Structure
-
-```typescript
-// Token payload interface
-export class TokenPayloadDto {
-  @NumberField()
-  expiresIn: number;
-
-  @StringField()
-  token: string;
+// Usage in service
+async find(id: string): Promise<Feature> {
+  const feature = await this.repo.findOne({ where: { id } });
+  if (!feature) {
+    throw new FeatureNotFoundException(id);
+  }
+  return feature;
 }
-// Token creation
-const token = await this.authService.createAccessToken({
-  userId: userEntity.id,
-  role: userEntity.role,
+```
+
+## Testing
+```ts
+describe('FeatureCommandService', () => {
+  let service: FeatureCommandService;
+  let commandBus: CommandBus;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        FeatureCommandService,
+        {
+          provide: CommandBus,
+          useValue: { execute: jest.fn() },
+        },
+      ],
+    }).compile();
+
+    service = module.get(FeatureCommandService);
+    commandBus = module.get(CommandBus);
+  });
+
+  it('should execute command', async () => {
+    const command = new CreateFeatureCommand({});
+    await service.execute(command);
+    expect(commandBus.execute).toHaveBeenCalledWith(command);
+  });
 });
 ```
-
-## Exception Handling
-
-### Custom Exception Pattern
-
-```typescript
-import { NotFoundException } from '@nestjs/common';
-
-export class UserNotFoundException extends NotFoundException {
-  constructor(error?: string) {
-    super('error.userNotFound', error);
-  }
-}
-```
-
-## Configuration and Environment
-
-### Environment Variables Pattern
-
-```typescript
-// Use UPPERCASE for environment variables
-DATABASE_URL=postgresql://user:pass@localhost:5432/db
-JWT_SECRET=your-secret-key
-CORS_ORIGINS=http://localhost:3000,http://localhost:3001
-
-// Access in code
-process.env.DATABASE_URL
-process.env.JWT_SECRET
-```
-
-### Configuration Service Pattern
-
-```typescript
-@Injectable()
-export class ApiConfigService {
-  constructor(private configService: ConfigService) {}
-
-  get isDevelopment(): boolean {
-    return this.nodeEnv === 'development';
-  }
-
-  get postgresConfig(): TypeOrmModuleOptions {
-    return {
-      type: 'postgres',
-      host: this.configService.get('DB_HOST'),
-      port: this.configService.get('DB_PORT'),
-      username: this.configService.get('DB_USERNAME'),
-      password: this.configService.get('DB_PASSWORD'),
-      database: this.configService.get('DB_DATABASE'),
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
-    };
-  }
-}
-```
-
-
-## Summary
-
-This NestJS boilerplate follows modern TypeScript and NestJS best practices with:
-
-- **Strict typing** throughout the codebase
-- **Modular architecture** with clear separation of concerns
-- **CQRS pattern** for scalable command/query operations
-- **Custom decorators** for validation and documentation
-- **Comprehensive error handling** with custom exceptions
-- **JWT-based authentication** with role-based authorization
-- **Swagger documentation** auto-generated from decorators
-- **ESM modules** with explicit .ts extensions
-- **Comprehensive testing** setup with Jest
-
-Use this guide as the definitive reference for all code generation and development work on this project.

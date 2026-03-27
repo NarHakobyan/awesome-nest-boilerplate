@@ -1,0 +1,202 @@
+---
+description: Shared module patterns, interceptors, client services, base classes, and cross-cutting concerns
+globs: src/shared/**/*.ts, src/common/**/*.ts
+alwaysApply: false
+---
+
+# NestJS Common Module Guidelines
+
+## Structure
+
+The boilerplate has two shared areas: `src/shared/` for injectable services and `src/common/` for base classes and DTOs.
+
+```
+src/
+├── shared/
+│   ├── shared.module.ts        # @Global() module — exports all shared services
+│   └── services/
+│       ├── api-config.service.ts   # Typed env var accessor (wraps @nestjs/config)
+│       ├── aws-s3.service.ts       # S3 file upload
+│       ├── generator.service.ts    # UUID and filename generation
+│       ├── translation.service.ts  # nestjs-i18n wrapper
+│       └── validator.service.ts    # Image MIME type validation
+│
+├── common/
+│   ├── abstract.entity.ts      # AbstractEntity<DTO, O> — base for all entities
+│   ├── abstract-client.service.ts  # Base for NATS microservice clients
+│   └── dto/
+│       ├── abstract.dto.ts         # AbstractDto — base for all response DTOs
+│       ├── page.dto.ts             # Paginated response wrapper
+│       ├── page-meta.dto.ts        # Pagination metadata
+│       ├── page-options.dto.ts     # Pagination query params
+│       └── create-translation.dto.ts  # i18n translation input DTO
+```
+
+## Implementation Examples
+
+1. **HTTP Cache Interceptor**
+```ts
+@Injectable()
+export class HttpCacheInterceptor implements NestInterceptor {
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private reflector: Reflector,
+  ) {}
+
+  async intercept(context: ExecutionContext, next: CallHandler) {
+    const cacheKey = this.getCacheKey(context);
+    const cachedResponse = await this.cacheManager.get(cacheKey);
+
+    if (cachedResponse) {
+      return of(cachedResponse);
+    }
+
+    return next.handle().pipe(
+      tap(response => {
+        const ttl = this.reflector.get<number>('cache-ttl', context.getHandler());
+        if (ttl) {
+          this.cacheManager.set(cacheKey, response, { ttl });
+        }
+      }),
+    );
+  }
+}
+```
+
+2. **Language Interceptor**
+```ts
+@Injectable()
+export class LanguageInterceptor implements NestInterceptor {
+  constructor(private readonly cls: ClsService) {}
+
+  intercept(context: ExecutionContext, next: CallHandler) {
+    const type = context.getType<ContextType | 'grammy'>();
+    let language: string | undefined;
+
+    switch (type) {
+      case 'http': {
+        language = context.switchToHttp()
+          .getRequest()
+          .headers['x-language-code']?.toUpperCase();
+        break;
+      }
+      case 'rpc': {
+        const data = context.switchToRpc().getData();
+        language = data.__language;
+        break;
+      }
+    }
+
+    this.cls.set(
+      ContextTypeEnum.LANGUAGE,
+      language && LanguageCodeEnum[language]
+        ? language
+        : LanguageCodeEnum.EN
+    );
+
+    return next.handle();
+  }
+}
+```
+
+3. **Entity Base Class** (`src/common/abstract.entity.ts`)
+```ts
+// AbstractEntity<DTO, O> is the base for all entities.
+// It provides id (UUID v4 PK), createdAt, updatedAt, and a toDto() helper.
+// Bind a DTO class using @UseDto(YourDto) on the entity class.
+@Entity()
+export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
+  // entity-specific columns here
+}
+
+// Usage in code:
+const dto = userEntity.toDto();           // returns UserDto
+const dtos = userEntities.toDtos();       // array helper (via Array.prototype polyfill)
+```
+
+4. **Client Service Base**
+```ts
+@Injectable()
+export abstract class BaseClientService {
+  constructor(
+    @Inject('SERVICE_NAME')
+    protected readonly client: ClientProxy,
+    protected readonly logger: Logger,
+  ) {}
+
+  protected async sendRequest<T>(
+    pattern: string,
+    data: unknown,
+    timeout = 5000,
+  ): Promise<T> {
+    try {
+      return await firstValueFrom(
+        this.client.send<T>(pattern, {
+          ...data,
+          __language: this.cls.get(ContextTypeEnum.LANGUAGE),
+          __authUserId: this.cls.get(ContextTypeEnum.AUTH_USER_ID),
+          __authUserRole: this.cls.get(ContextTypeEnum.AUTH_USER_ROLE),
+        }),
+        { timeout },
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to send request: ${pattern}`,
+        error.stack,
+        { data },
+      );
+      throw error;
+    }
+  }
+}
+```
+
+## Best Practices
+
+1. **Cross-Cutting Concerns**
+   - Implement reusable interceptors
+   - Use CLS for request context
+   - Handle i18n consistently
+   - Implement caching strategy
+
+2. **Entity Design**
+   - Use base entity class
+   - Add proper auditing fields
+   - Use soft deletes
+   - Add metadata support
+
+3. **Client Services**
+   - Use base client service
+   - Handle timeouts properly
+   - Propagate context
+   - Proper error handling
+
+4. **CQRS Actions**
+   - Keep actions immutable
+   - Use proper typing
+   - Follow naming conventions
+   - Document purpose
+
+5. **Error Handling**
+   - Create specific exceptions
+   - Use proper HTTP status codes
+   - Add proper error messages
+   - Log errors appropriately
+
+6. **Caching Strategy**
+   - Use proper cache keys
+   - Set appropriate TTL
+   - Handle cache invalidation
+   - Cache response selectively
+
+7. **Internationalization**
+   - Support multiple languages
+   - Use language interceptor
+   - Handle fallback languages
+   - Validate language codes
+
+8. **Testing**
+   - Test shared utilities
+   - Mock external dependencies
+   - Test edge cases
+   - Use proper test factories

@@ -14,7 +14,7 @@ Make sure you have the [Awesome Nest Schematics](https://github.com/NarHakobyan/
 
 If you don't have it installed, you can install it by running the following command:
 ```bash
-yarn add -D awesome-nest-schematics
+pnpm add -D awesome-nest-schematics
 ```
 
 ## Usage
@@ -28,14 +28,14 @@ $ nest g -c awesome-nestjs-schematics <schematic>
 OR
 
 ```bash
-$ yarn generate <schematic> <name>
+$ pnpm generate<schematic> <name>
 ```
 
 
 For example, to generate a new controller:
 
 ```bash
-$ yarn generate controller
+$ pnpm generatecontroller
 ```
 
 ## Generators and Their Commands
@@ -44,67 +44,67 @@ $ yarn generate controller
 
 Generate a new Nest resource, including a controller, service, and module.
   ```bash
-  $ yarn generate resource
+  $ pnpm generateresource
   ```
 
 - **DTO**: Generate a new Data Transfer Object.
   ```bash
-  $ yarn generate dto
+  $ pnpm generatedto
   ```
 
 - **Controller**: Generate a new Nest controller.
   ```bash
-  $ yarn generate controller
+  $ pnpm generatecontroller
   ```
 
 - **Decorator**: Generate a new Nest decorator.
   ```bash
-  $ yarn generate decorator
+  $ pnpm generatedecorator
   ```
 
 - **Filter**: Generate a new Nest filter.
   ```bash
-  $ yarn generate filter
+  $ pnpm generatefilter
   ```
 
 - **Guard**: Generate a new Nest guard.
   ```bash
-  $ yarn generate guard
+  $ pnpm generateguard
   ```
 
 - **Interceptor**: Generate a new Nest interceptor.
   ```bash
-  $ yarn generate interceptor
+  $ pnpm generateinterceptor
   ```
 
 - **Interface**: Generate a new Nest interface.
   ```bash
-  $ yarn generate interface
+  $ pnpm generateinterface
   ```
 
 - **Middleware**: Generate a new Nest middleware.
   ```bash
-  $ yarn generate middleware
+  $ pnpm generatemiddleware
   ```
 
 - **Module**: Generate a new Nest module.
   ```bash
-  $ yarn generate module
+  $ pnpm generatemodule
   ```
 
 - **Pipe**: Generate a new Nest pipe.
   ```bash
-  $ yarn generate pipe
+  $ pnpm generatepipe
   ```
 
 - **Provider**: Generate a new Nest provider.
   ```bash
-  $ yarn generate provider
+  $ pnpm generateprovider
   ```
 
 - **Service**: Generate a new Nest service.
   ```bash
-  $ yarn generate service
+  $ pnpm generateservice
   ```
 
 ## Stay in touch

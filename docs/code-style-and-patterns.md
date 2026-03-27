@@ -39,9 +39,6 @@ This document serves as a comprehensive guide for code style, patterns, and conv
     - [Parameter Validation](#parameter-validation)
   - [API Documentation](#api-documentation)
     - [Swagger Documentation Patterns](#swagger-documentation-patterns)
-  - [Testing Patterns](#testing-patterns)
-    - [Unit Test Structure](#unit-test-structure)
-    - [E2E Test Structure](#e2e-test-structure)
   - [Best Practices](#best-practices)
     - [Code Organization](#code-organization)
     - [Performance](#performance)
@@ -253,7 +250,7 @@ export class UserService {
     const userEntity = this.userRepository.create(createUserDto);
 
     if (file) {
-      userEntity.avatar = file.key;
+      this.userRepository.merge(userEntity, { avatar: file.key });
     }
 
     await this.userRepository.save(userEntity);
@@ -262,9 +259,10 @@ export class UserService {
   }
 
   async findOne(findOptions: Partial<UserEntity>): Promise<UserEntity> {
-    const userEntity = await this.userRepository.findOne({
-      where: findOptions,
-    });
+    const userEntity = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id: findOptions.id })
+      .getOne();
 
     if (!userEntity) {
       throw new UserNotFoundException();
@@ -556,7 +554,7 @@ userId!: Uuid;
 ### Command Structure
 
 ```typescript
-import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { Command, type ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -564,32 +562,36 @@ import { Repository } from 'typeorm';
 import type { CreateUserDto } from '../dtos/create-user.dto.ts';
 import { UserEntity } from '../user.entity.ts';
 
-export class CreateUserCommand implements ICommand {
+export class CreateUserCommand extends Command {
   constructor(
     public readonly createUserDto: CreateUserDto,
     public readonly avatarFile?: IFile,
-  ) {}
+  ) {
+    super();
+  }
 }
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler
-  implements ICommandHandler<CreateUserCommand, UserEntity>
+  implements ICommandHandler<CreateUserCommand>
 {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async execute(command: CreateUserCommand): Promise<UserEntity> {
+  async execute(command: CreateUserCommand): Promise<UserDto> {
     const { createUserDto, avatarFile } = command;
 
     const userEntity = this.userRepository.create(createUserDto);
 
     if (avatarFile) {
-      userEntity.avatar = avatarFile.key;
+      this.userRepository.merge(userEntity, { avatar: avatarFile.key });
     }
 
-    return this.userRepository.save(userEntity);
+    await this.userRepository.save(userEntity);
+
+    return userEntity.toDto();
   }
 }
 ```
@@ -610,25 +612,26 @@ export class GetUserQuery implements IQuery {
 }
 
 @QueryHandler(GetUserQuery)
-export class GetUserHandler implements IQueryHandler<GetUserQuery, UserEntity> {
+export class GetUserHandler implements IQueryHandler<GetUserQuery> {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async execute(query: GetUserQuery): Promise<UserEntity> {
+  async execute(query: GetUserQuery): Promise<UserDto> {
     const { userId } = query;
 
-    const userEntity = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['settings', 'posts'],
-    });
+    const userEntity = await this.userRepository.createQueryBuilder('user')
+    .where('user.id = :userId', { userId })
+      .leftJoinAndSelect('user.settings', 'settings')
+      .leftJoinAndSelect('user.posts', 'posts')
+      .getOne();
 
     if (!userEntity) {
       throw new UserNotFoundException();
     }
 
-    return userEntity;
+    return userEntity.toDto();
   }
 }
 ```
@@ -796,135 +799,6 @@ export class UserController {
     return this.service.updateAvatar(user.id, file);
   }
 }
-```
-
-## Testing Patterns
-
-### Unit Test Structure
-
-```typescript
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-
-import { UserNotFoundException } from '../../../exceptions/user-not-found.exception.ts';
-import { UserEntity } from '../user.entity.ts';
-import { UserService } from '../user.service.ts';
-
-describe('UserService', () => {
-  let service: UserService;
-  let mockRepository: MockRepository;
-
-  const mockRepository = {
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    find: jest.fn(),
-    createQueryBuilder: jest.fn(),
-  };
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UserService,
-        {
-          provide: getRepositoryToken(UserEntity),
-          useValue: mockRepository,
-        },
-      ],
-    }).compile();
-
-    service = module.get<UserService>(UserService);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe('findOne', () => {
-    it('should return user when found', async () => {
-      const userId = 'test-uuid';
-      const mockUser = { id: userId, email: 'test@test.com' };
-
-      mockRepository.findOne.mockResolvedValue(mockUser);
-
-      const result = await service.findOne({ id: userId });
-
-      expect(result).toEqual(mockUser);
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: userId },
-      });
-    });
-
-    it('should throw UserNotFoundException when user not found', async () => {
-      mockRepository.findOne.mockResolvedValue(null);
-
-      await expect(service.findOne({ id: 'non-existent' }))
-        .rejects
-        .toThrow(UserNotFoundException);
-    });
-  });
-});
-```
-
-### E2E Test Structure
-
-```typescript
-import { HttpStatus, INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import request from 'supertest';
-
-import { AppModule } from '../../../app.module.ts';
-
-describe('UserController (e2e)', () => {
-  let app: INestApplication;
-
-  beforeAll(async () => {
-    const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
-
-  describe('POST /users', () => {
-    it('should create a new user', () => {
-      const createUserDto = {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        password: 'password123',
-      };
-
-      return request(app.getHttpServer())
-        .post('/users')
-        .send(createUserDto)
-        .expect(HttpStatus.CREATED)
-        .expect((res) => {
-          expect(res.body.email).toBe(createUserDto.email);
-          expect(res.body.password).toBeUndefined();
-        });
-    });
-
-    it('should return validation error for invalid email', () => {
-      const invalidDto = {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'invalid-email',
-        password: 'password123',
-      };
-
-      return request(app.getHttpServer())
-        .post('/users')
-        .send(invalidDto)
-        .expect(HttpStatus.BAD_REQUEST);
-    });
-  });
-});
 ```
 
 ## Best Practices

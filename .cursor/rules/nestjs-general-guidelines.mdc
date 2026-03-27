@@ -1,0 +1,144 @@
+---
+description: High-level NestJS architectural principles and modular design standards
+globs: src/**/*.ts
+alwaysApply: true
+---
+
+# NestJS General Architecture Guidelines
+
+## Core Architectural Principles
+
+### 1. Modular Architecture
+- **Domain-Driven Design**: Organize code around business domains
+- **Single Responsibility**: Each module handles one specific domain
+- **Encapsulation**: Keep related functionality together
+- **Separation of Concerns**: Clear boundaries between layers
+
+### 2. Module Structure Standards
+```
+modules/domain-name/
+├── commands/              # CQRS command handlers
+├── queries/               # CQRS query handlers
+├── dtos/                  # Data Transfer Objects
+├── exceptions/            # Domain-specific exceptions
+├── domain.controller.ts   # HTTP endpoints
+├── domain.service.ts      # Business logic
+├── domain.module.ts       # Module definition
+├── domain.entity.ts       # Database entity
+└── domain-related.entity.ts # Related entities
+```
+
+### 3. Core Module Responsibilities
+```
+src/
+├── filters/               # Global exception filters
+├── guards/                # Authentication & authorization
+├── interceptors/          # Cross-cutting concerns
+├── middleware/            # Request/response processing
+├── decorators/            # Custom decorators
+└── shared/                # Shared utilities
+```
+
+## Module Design Rules
+
+### Domain Modules
+1. **One module per main domain/business capability**
+   - User management → `UserModule`
+   - Post management → `PostModule`
+   - Authentication → `AuthModule`
+
+2. **Controller Organization**
+   - One primary controller per domain route
+   - Additional controllers for secondary/nested routes
+   - Follow REST API conventions strictly
+
+3. **Service Layer**
+   - Business logic encapsulation
+   - One service per entity (primary pattern)
+   - Cross-domain communication via services, not entities
+
+4. **Data Layer**
+   - DTOs with class-validator for inputs
+   - Response DTOs for outputs
+   - TypeORM entities for data persistence
+   - **Entity ownership**: One entity per module only
+
+### Shared Module
+- **Utilities**: Common helper functions
+- **Shared business logic**: Cross-domain services
+- **Configuration services**: Environment and app config
+- **Translation services**: i18n support
+
+## Testing Standards
+
+### Testing Strategy
+1. **Unit Tests**: Each controller and service
+2. **Integration Tests**: Module interactions
+3. **E2E Tests**: Complete API workflows
+4. **Smoke Tests**: Basic functionality verification
+
+### Test Organization
+```
+modules/domain/
+├── __tests__/
+│   ├── domain.controller.spec.ts
+│   ├── domain.service.spec.ts
+│   └── domain.handler.spec.ts
+test/
+├── e2e/
+│   └── domain.e2e-spec.ts
+```
+
+### Testing Requirements
+- **Jest framework**: Standard testing framework
+- **Test coverage**: Aim for >80% coverage
+- **Mock properly**: External dependencies and databases
+- **Test error scenarios**: Not just happy paths
+
+## Implementation Standards
+
+### CQRS Pattern
+- **Commands**: For state-changing operations
+- **Queries**: For data retrieval operations
+- **Handlers**: Process commands and queries
+- **Events**: For side effects and notifications
+
+### Dependency Injection
+- Use NestJS DI container consistently
+- Inject dependencies via constructor
+- Mark dependencies as `private readonly`
+- Use proper provider configuration
+
+### Error Handling
+- **Global exception filters**: Consistent error responses
+- **Custom exceptions**: Domain-specific error types
+- **Validation**: Input validation with DTOs
+- **Logging**: Proper error logging and monitoring
+
+## Best Practices
+
+### Code Organization
+1. **Feature-based structure**: Group by business feature
+2. **Layered architecture**: Controller → Service → Repository
+3. **Clean interfaces**: Well-defined contracts between layers
+4. **Consistent naming**: Follow established conventions
+
+### Performance
+1. **Database optimization**: Proper indexing and queries
+2. **Caching strategy**: Where appropriate
+3. **Lazy loading**: Load data when needed
+4. **Connection pooling**: Efficient database connections
+
+### Security
+1. **Authentication**: JWT-based auth system
+2. **Authorization**: Role-based access control
+3. **Input validation**: Validate all incoming data
+4. **Error information**: Don't leak sensitive data
+
+### Maintainability
+1. **Documentation**: API docs with Swagger
+2. **Type safety**: Full TypeScript typing
+3. **Testing**: Comprehensive test coverage
+4. **Code quality**: ESLint and Prettier
+
+These guidelines ensure scalable, maintainable, and robust NestJS applications following industry best practices.

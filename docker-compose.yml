@@ -3,7 +3,7 @@ services:
   app:
     env_file:
       - .env
-    container_name: awesome_nest_boilerplate
+    container_name: pixera_backend
     restart: always
     build: .
     ports:
@@ -36,7 +36,21 @@ services:
       - .env
     links:
       - postgres
-
+  meilisearch:
+    image: getmeili/meilisearch
+    hostname: meilisearch
+    container_name: meilisearch
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - meilisearch:/meili_data
+    ports:
+      - "7701:7700"
+    restart: always
 volumes:
   postgres:
+    driver: local
+  meilisearch:
     driver: local

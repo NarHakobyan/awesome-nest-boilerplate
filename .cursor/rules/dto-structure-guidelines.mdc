@@ -1,0 +1,206 @@
+---
+description: DTO structure patterns, validation decorators, and constructor guidelines for input/response DTOs
+globs: **/*.dto.ts
+alwaysApply: true
+---
+# DTO Structure Guidelines
+
+## Base Structure
+- All DTOs should extend `AbstractDto` for consistent base functionality
+- Use descriptive interfaces for DTO options/configuration
+- Implement proper constructor pattern with null checks
+- Follow strict typing principles
+- **DO use `readonly` for input DTO properties** (as seen in actual implementation)
+- **DO NOT use `readonly` for response DTO properties**
+- Use definite assignment assertion (`!`) for required fields
+
+## Decorator Usage
+```ts
+// ✅ Good Input DTO Example
+export class UserLoginDto {
+  @EmailField()
+  readonly email!: string;
+
+  @StringField()
+  readonly password!: string;
+}
+
+// ✅ Good Response DTO Example
+export class UserDto extends AbstractDto {
+  @StringFieldOptional({ nullable: true })
+  firstName?: string | null;
+
+  @EnumFieldOptional(() => RoleType)
+  role?: RoleType;
+
+  @EmailFieldOptional({ nullable: true })
+  email?: string | null;
+
+  @ClassField(() => UserSettingsDto)
+  settings!: UserSettingsDto;
+
+  constructor(user: UserEntity, options?: UserDtoOptions) {
+    super(user);
+    this.firstName = user.firstName;
+    this.role = user.role;
+    this.email = user.email;
+    this.settings = user.settings.toDto();
+  }
+}
+
+// ❌ Bad Example
+export class UserDto {
+  name: string;
+  age: number;
+  avatar: any;
+}
+```
+
+## Field Decorators (Custom Validation + Swagger)
+1. **Required Fields**
+   - `@StringField({ minLength?: number, maxLength?: number, toLowerCase?: boolean })` - String validation
+   - `@NumberField({ min?: number, max?: number, int?: boolean, isPositive?: boolean })` - Number validation
+   - `@BooleanField()` - Boolean validation
+   - `@DateField()` - Date validation
+   - `@EnumField(() => EnumType)` - Enum validation
+   - `@ClassField(() => Type)` - Complex object validation
+   - `@UUIDField()` - UUID v4 validation
+   - `@EmailField()` - Email validation
+   - `@PasswordField({ minLength?: number })` - Password validation
+   - `@PhoneField()` - Phone number validation
+   - `@URLField()` - URL validation
+
+2. **Optional Fields**
+   - `@StringFieldOptional({ nullable?: boolean, minLength?: number, maxLength?: number })` - Optional string
+   - `@NumberFieldOptional({ nullable?: boolean, min?: number, max?: number })` - Optional number
+   - `@DateFieldOptional({ nullable?: boolean })` - Optional date
+   - `@ClassFieldOptional(() => Type, { nullable?: boolean })` - Optional objects
+   - `@EmailFieldOptional({ nullable?: boolean })` - Optional email
+   - `@PhoneFieldOptional({ nullable?: boolean })` - Optional phone
+   - `@URLFieldOptional({ nullable?: boolean })` - Optional URL
+   - `@UUIDFieldOptional({ nullable?: boolean })` - Optional UUID
+   - `@BooleanFieldOptional({ nullable?: boolean })` - Optional boolean
+   - `@EnumFieldOptional(() => EnumType, { nullable?: boolean })` - Optional enum
+
+3. **Array Fields**
+   - `@StringField({ each: true, minLength?: number, maxLength?: number })` - Array of strings
+   - `@ClassField(() => Type, { each: true })` - Array of objects
+   - `@EnumField(() => EnumType, { each: true })` - Array of enums
+   - `@NumberField({ each: true, min?: number, max?: number })` - Array of numbers
+
+4. **Special Field Types**
+   - `@DynamicTranslate()` - For translatable fields (used with translations)
+   - Add `{ swagger: false }` to exclude from Swagger documentation
+
+## Constructor Pattern
+```ts
+export class ExampleDto extends AbstractDto {
+  constructor(entity: EntityType | null, options?: IDtoOptions) {
+    super(entity);
+
+    if (!entity) {
+      return;
+    }
+
+    // Required field validation
+    invariant(entity.requiredField, 'Required field is missing');
+
+    // Basic field assignments
+    this.field = entity.field;
+
+    // Complex object transformation
+    this.subObject = entity.subObject?.toDto();
+
+    // Array transformation
+    this.items = entity.items?.toDtos();
+
+    // Conditional assignments
+    if (entity.optionalField) {
+      this.optionalField = entity.optionalField;
+    }
+
+    // Translation handling
+    if (entity.translations) {
+      this.translate(entity.translations);
+    }
+
+    // Optional inclusions based on options
+    if (options?.includeDetails) {
+      this.details = entity.details?.toDtos();
+    }
+  }
+}
+```
+
+## Translation Handling
+```ts
+// ✅ Good Example
+@StringField()
+@DynamicTranslate()
+title!: string;
+
+constructor(entity: Entity | null) {
+  super(entity);
+  if (!entity) return;
+
+  if (entity.translations) {
+    this.translate(entity.translations);
+  }
+}
+// ❌ Bad Example
+title!: { [key: string]: string };
+```
+
+## Array and Complex Object Handling
+```ts
+// ✅ Good Example
+@ClassFieldOptional(() => ChildDto, { each: true })
+children?: ChildDto[];
+
+constructor(entity: Entity | null) {
+  super(entity);
+  if (!entity) return;
+
+  this.children = entity.children?.toDtos();
+}
+
+// ❌ Bad Example
+children: any[];
+```
+
+## Validation and Invariants
+```ts
+constructor(entity: Entity | null) {
+  super(entity);
+  if (!entity) return;
+
+  // Required field validation
+  invariant(entity.requiredField, 'Required field validation message');
+
+  // Complex validation
+  if (entity.type === 'special') {
+    invariant(entity.specialField, 'Special field is required for special type');
+  }
+}
+```
+
+## Best Practices
+1. **Naming Conventions**
+   - Suffix all DTOs with `Dto`
+   - Use descriptive names for option interfaces (e.g., `IUserDtoOptions`)
+   - Keep consistent naming between entity fields and DTO fields
+
+2. **Code Organization**
+   - Group related DTOs in the same file
+   - Order fields logically (required fields first, optional fields later)
+   - Keep constructor logic clean and organized
+
+3. **Type Safety**
+   - Always use strict typing
+   - Avoid using `any` type
+   - Properly handle null and undefined cases
+
+4. **Documentation**
+   - Document complex transformation logic
+   - Add JSDoc comments for non-obvious options
+   - Include examples for complex usage scenarios
