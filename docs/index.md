@@ -27,3 +27,16 @@ features:
   - title: Biome + ESLint
     details: Fast, opinionated formatting and linting with pre-commit hooks via Husky.
 ---
+
+## Gold Sponsors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://moneteam.com" target="_blank"><b>M One</b></a>
+    </td>
+    <td align="center">
+      <a href="https://hrdrone.am" target="_blank"><b>HR Drone</b></a>
+    </td>
+  </tr>
+</table>

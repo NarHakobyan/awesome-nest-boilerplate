@@ -159,6 +159,19 @@ This project includes a `docs` folder with more details on:
 1.  [Linting](https://narhakobyan.github.io/awesome-nest-boilerplate/linting.html)
 1.  [Code Generation](https://narhakobyan.github.io/awesome-nest-boilerplate/code-generation.html)
 
+## Gold Sponsors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://moneteam.com" target="_blank"><b>M One</b></a>
+    </td>
+    <td align="center">
+      <a href="https://hrdrone.am" target="_blank"><b>HR Drone</b></a>
+    </td>
+  </tr>
+</table>
+
 ## Community
 
 For help, discussion about best practices, or any other conversation that would benefit from being searchable:
