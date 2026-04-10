@@ -36,6 +36,7 @@ export default defineConfig({
         text: 'Operations',
         items: [
           { text: 'API Documentation', link: '/api-documentation' },
+          { text: 'OpenAPI MCP Integration', link: '/openapi-mcp' },
           { text: 'Testing', link: '/testing' },
           { text: 'Deployment', link: '/deployment' },
         ],
