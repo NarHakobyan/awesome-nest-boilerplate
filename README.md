@@ -141,6 +141,9 @@ And you will see the generated file in `dist` that is ready to be served.
   <dt><b>Swagger Api Documentation</b></dt>
   <dd>Already integrated API documentation. To see all available endpoints visit http://localhost:3000/documentation</dd>
 
+  <dt><b>OpenAPI MCP Integration</b></dt>
+  <dd>Let any AI assistant (Claude, Cursor, Windsurf, etc.) call your API directly. Point the OpenAPI MCP server at <code>/documentation-json</code> and every endpoint becomes a callable tool — zero code changes required. See <a href="https://narhakobyan.github.io/awesome-nest-boilerplate/openapi-mcp.html">OpenAPI MCP Integration</a>.</dd>
+
   <dt><b>Node, Bun, Deno</b></dt>
   <dd>Support for Node, Bun, and Deno. You can run, build, and test your application using any of these runtime.</dd>
 
@@ -158,6 +161,7 @@ This project includes a `docs` folder with more details on:
 1.  [Naming Cheatsheet](https://narhakobyan.github.io/awesome-nest-boilerplate/naming-cheatsheet.html)
 1.  [Linting](https://narhakobyan.github.io/awesome-nest-boilerplate/linting.html)
 1.  [Code Generation](https://narhakobyan.github.io/awesome-nest-boilerplate/code-generation.html)
+1.  [OpenAPI MCP Integration](https://narhakobyan.github.io/awesome-nest-boilerplate/openapi-mcp.html)
 
 ## Gold Sponsors
 
