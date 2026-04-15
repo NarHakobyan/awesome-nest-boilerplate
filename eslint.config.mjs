@@ -14,6 +14,16 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
+  {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'coverage/**',
+      '.yarn/**',
+      'docs/.vitepress/**',
+      '**/*.d.ts',
+    ],
+  },
   eslint.configs.recommended,
   promisePlugin.configs['flat/recommended'],
   {
@@ -441,7 +451,14 @@ export default tseslint.config(
       },
       parserOptions: {
         projectService: {
-          extraFileExtensions: ['.ts'],
+          allowDefaultProject: [
+            'eslint.config.mjs',
+            'vite.config.mts',
+            'taze.config.js',
+            'ormconfig.ts',
+            'test/app.e2e-spec.ts',
+            'src/modules/auth/auth.controller.spec.ts',
+          ],
           defaultProject: 'tsconfig.eslint.json',
         },
         // @ts-ignore
