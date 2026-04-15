@@ -1,4 +1,4 @@
-FROM node:24-slim AS base
+FROM node:25-slim AS base
 RUN corepack enable
 
 # --- Build stage: compile TypeScript ---
@@ -16,7 +16,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile --prod
 
 # --- Final runtime image ---
-FROM node:24-slim
+FROM node:25-slim
 
 ARG PORT=3000
 ARG secret_manager_arn
