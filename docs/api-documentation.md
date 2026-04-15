@@ -5,6 +5,7 @@ This guide covers the API documentation practices and standards used in the Awes
 - [API Documentation](#api-documentation)
   - [OpenAPI (Swagger) Documentation](#openapi-swagger-documentation)
     - [Accessing the Documentation](#accessing-the-documentation)
+    - [Using the API from AI Assistants](#using-the-api-from-ai-assistants)
     - [Swagger Configuration](#swagger-configuration)
   - [API Structure](#api-structure)
     - [Base URL and Versioning](#base-url-and-versioning)
@@ -64,6 +65,10 @@ When the application is running in development mode:
 - **Swagger UI**: `http://localhost:3000/documentation`
 - **OpenAPI JSON**: `http://localhost:3000/documentation-json`
 - **OpenAPI YAML**: `http://localhost:3000/documentation-yaml`
+
+### Using the API from AI Assistants
+
+Want Claude, Cursor, or any other MCP-compatible assistant to call these endpoints directly — with no glue code? Point an MCP client at the `/documentation-json` URL via the OpenAPI MCP bridge and every route becomes a callable tool. See the dedicated guide: [OpenAPI MCP Integration](./openapi-mcp.md).
 
 ### Swagger Configuration
 
