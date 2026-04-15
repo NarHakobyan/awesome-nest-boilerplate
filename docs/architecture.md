@@ -15,6 +15,7 @@ This document describes the high-level architecture of the Awesome NestJS Boiler
       - [TypeORM Configuration](#typeorm-configuration)
       - [Entity Relationships](#entity-relationships)
       - [Transaction Support](#transaction-support)
+      - [UUID v7 Strategy](#uuid-v7-strategy)
     - [Authentication \& Authorization](#authentication--authorization)
       - [JWT-based Authentication](#jwt-based-authentication)
       - [Role-based Access Control (RBAC)](#role-based-access-control-rbac)
@@ -234,6 +235,32 @@ user!: Relation<UserEntity>;
 async createPost(userId: Uuid, createPostDto: CreatePostDto): Promise<PostEntity> {
   // All database operations within this method are wrapped in a transaction
 }
+```
+
+#### UUID v7 Strategy
+All primary keys use **UUID v7** generated at the application layer via a `@BeforeInsert()` hook in `AbstractEntity`. UUID v7 encodes a Unix millisecond timestamp in its most-significant 48 bits, which provides two key advantages over random UUID v4:
+
+- **Chronological ordering** — UUIDs sort in insertion order, so PostgreSQL B-tree indexes remain sequential and avoid the random page splits that degrade v4 performance at scale.
+- **Embedded timestamp** — creation time is recoverable directly from the ID without a separate `created_at` lookup:
+
+```typescript
+// Extract creation datetime from a UUID v7 string
+function extractDateFromUuidV7(uuid: string): Date {
+  const hex = uuid.replace(/-/g, '').slice(0, 12); // first 48 bits
+  const ms = Number(BigInt(`0x${hex}`));
+  return new Date(ms);
+}
+
+// Example
+const createdAt = extractDateFromUuidV7('018e9b5f-c000-7000-8000-0123456789ab');
+// → 2024-04-15T...
+```
+
+You can also sort records chronologically using `ORDER BY id ASC` — no secondary timestamp index needed:
+
+```typescript
+// Chronological ordering via UUID v7 (no extra index required)
+await this.userRepository.find({ order: { id: 'ASC' } });
 ```
 
 ### Authentication & Authorization

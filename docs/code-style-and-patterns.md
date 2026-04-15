@@ -424,9 +424,9 @@ export class UserDto extends AbstractDto {
 @EnumField(() => RoleType)              // Required enum
 @EnumFieldOptional(() => RoleType)      // Optional enum
 
-// UUID fields
-@UUIDField()                           // Required UUID
-@UUIDFieldOptional()                   // Optional UUID
+// UUID v7 fields — IDs embed a millisecond timestamp for natural ordering
+@UUIDField()                           // Required UUID v7
+@UUIDFieldOptional()                   // Optional UUID v7
 
 // Date fields
 @DateField()                           // Required date
@@ -727,7 +727,7 @@ async getDataWithOptionalAuth(@AuthUser() user?: UserEntity) {
 ### Parameter Validation
 
 ```typescript
-// UUID parameter validation
+// UUID v7 parameter validation (@UUIDParam enforces v7 format via ParseUUIDPipe)
 @Get(':id')
 async getUser(@UUIDParam('id') userId: Uuid) {
   return this.service.getUser(userId);
@@ -743,6 +743,19 @@ async updateUserPost(
   return this.service.updateUserPost(userId, postId, updateDto);
 }
 ```
+
+> **UUID v7 ordering tip:** Because UUID v7 embeds a millisecond timestamp, you can sort or paginate records chronologically by `id` alone — no secondary timestamp index is required:
+>
+> ```typescript
+> // Chronological listing without a separate sort column
+> await repository.find({ order: { id: 'ASC' } });
+>
+> // Extract creation time directly from an ID
+> function createdAtFromId(id: Uuid): Date {
+>   const ms = Number(BigInt(`0x${id.replace(/-/g, '').slice(0, 12)}`));
+>   return new Date(ms);
+> }
+> ```
 
 ## API Documentation
 
