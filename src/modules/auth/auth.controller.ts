@@ -48,7 +48,10 @@ export class AuthController {
       role: userEntity.role,
     });
 
-    return new LoginPayloadDto(userEntity.toDto(), token);
+    return LoginPayloadDto.create({
+      user: userEntity.toDto(),
+      accessToken: token,
+    });
   }
 
   @Post('register')

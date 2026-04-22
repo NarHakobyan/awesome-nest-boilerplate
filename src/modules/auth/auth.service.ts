@@ -23,7 +23,7 @@ export class AuthService {
     role: RoleType;
     userId: Uuid;
   }): Promise<TokenPayloadDto> {
-    return new TokenPayloadDto({
+    return TokenPayloadDto.create({
       expiresIn: this.configService.authConfig.jwtExpirationTime,
       token: await this.jwtService.signAsync({
         userId: data.userId,

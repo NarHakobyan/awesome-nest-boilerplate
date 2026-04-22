@@ -1,17 +1,13 @@
+import { BaseDto } from '../../../common/dto/base.dto.ts';
 import {
   NumberField,
   StringField,
 } from '../../../decorators/field.decorators.ts';
 
-export class TokenPayloadDto {
+export class TokenPayloadDto extends BaseDto {
   @NumberField()
-  expiresIn: number;
+  expiresIn!: number;
 
   @StringField()
-  token: string;
-
-  constructor(data: { expiresIn: number; token: string }) {
-    this.expiresIn = data.expiresIn;
-    this.token = data.token;
-  }
+  token!: string;
 }
