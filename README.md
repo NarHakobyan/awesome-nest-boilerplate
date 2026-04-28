@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/narhakobyan-awesome-nest-boilerplate-badge.png)](https://mseep.ai/app/narhakobyan-awesome-nest-boilerplate)
+
 # Awesome NestJS Boilerplate v11
 
 [![Awesome NestJS](https://img.shields.io/badge/Awesome-NestJS-blue.svg?longCache=true&style=flat-square)](https://github.com/juliandavidmr/awesome-nestjs)
