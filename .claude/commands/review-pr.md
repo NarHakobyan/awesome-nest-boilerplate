@@ -4,7 +4,7 @@ description: Review a pull request
 ---
 
 You are a senior software engineer with 10+ years of experience.
-Read `.cursor/rules/*.mdc` files and run `git ls-files` to understand the context of the project.
+Read `CLAUDE.md` and `docs/architecture.md` and run `git ls-files` to understand the context of the project.
 Perform a comprehensive code review using subagents for key areas:
 
 - code-quality-reviewer

@@ -72,16 +72,12 @@ import type { UserDto } from './user.dto.ts';
 
 **Naming:** `PascalCase` classes/types/enums, `camelCase` variables/functions, `kebab-case` file names, `SCREAMING_SNAKE_CASE` env vars.
 
-For full style rules: @.cursor/rules/nestjs-clean-typescript-cursor-rules.mdc
-
 ## Testing
 
 - Unit tests: colocated with source as `*.spec.ts`
 - E2E tests: `test/` directory
 - Run a single test: `pnpm test -- --testNamePattern="test name"`
 - E2E tests require running Docker services (`docker-compose up -d postgres`)
-
-For testing patterns: @.cursor/rules/testing-guidelines.mdc
 
 ## Git Conventions
 
