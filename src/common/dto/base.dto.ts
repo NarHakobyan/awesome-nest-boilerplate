@@ -19,7 +19,10 @@ export abstract class BaseDto {
     this: new (...args: unknown[]) => T,
     data: Plain<T>,
   ): T {
-    const instance = plainToInstance<T, Plain<T>>(this, data);
+    const instance = plainToInstance<T, Plain<T>>(this, data, {
+      excludeExtraneousValues: true,
+      exposeUnsetFields: false,
+    });
 
     if (process.env.NODE_ENV !== 'production') {
       const errors = validateSync(instance as object);

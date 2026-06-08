@@ -17,6 +17,12 @@ declare global {
   export type Todo = any & { _todoBrand: undefined };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
+  interface Promise<T> {
+    try(this: Promise<T>): Promise<T | undefined>;
+    try<U>(this: Promise<T>, defaultValue: U): Promise<T | U>;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface Array<T> {
     toDtos<Dto extends AbstractDto>(this: T[], options?: unknown): Dto[];
 
@@ -96,6 +102,13 @@ declare module 'typeorm' {
     ): this;
   }
 }
+
+Promise.prototype.try = function <T, U>(
+  this: Promise<T>,
+  defaultValue?: U,
+): Promise<T | U | undefined> {
+  return this.catch(() => defaultValue);
+};
 
 Array.prototype.toDtos = function <
   Entity extends AbstractEntity<Dto>,

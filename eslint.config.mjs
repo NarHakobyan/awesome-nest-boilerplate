@@ -456,12 +456,9 @@ export default tseslint.config(
             'vite.config.mts',
             'taze.config.js',
             'ormconfig.ts',
-            'test/app.e2e-spec.ts',
-            'src/modules/auth/auth.controller.spec.ts',
           ],
           defaultProject: 'tsconfig.eslint.json',
         },
-        // @ts-ignore
         tsconfigRootDir: import.meta.dirname,
       },
     },

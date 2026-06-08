@@ -272,12 +272,8 @@ TELEGRAM_BOT_USERNAME=your-telegram-bot-username
 # AWS S3 (optional)
 AWS_S3_BUCKET_NAME=your-bucket-name
 
-# MeiliSearch (optional)
-MEILI_HOST=http://localhost:7700
-MEILI_MASTER_KEY=your-meilisearch-master-key
-
 # CORS
-CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+CORS_ORIGINS=http://localhost:3000
 
 # API Documentation
 ENABLE_DOCUMENTATION=true
@@ -325,8 +321,6 @@ The `docker-compose.yml` includes:
 - **app**: NestJS application
 - **postgres**: PostgreSQL database
 - **pgAdmin**: Database administration tool (available at `http://localhost:8080`)
-- **meilisearch**: Meilisearch search engine (available at `http://localhost:7701`)
-
 For MySQL development, use:
 ```bash
 docker-compose -f docker-compose_mysql.yml up

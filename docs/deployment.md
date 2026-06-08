@@ -136,7 +136,7 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO your_db_user;
 
 ```dockerfile
 # Stage 1: base — enable pnpm via corepack
-FROM node:24-slim AS base
+FROM node:25-slim AS base
 RUN corepack enable
 
 # Stage 2: build — install all deps, compile TypeScript
@@ -154,7 +154,7 @@ COPY pnpm-lock.yaml package.json ./
 RUN pnpm install --frozen-lockfile --prod
 
 # Stage 4: runtime — lean final image
-FROM node:24-slim AS runtime
+FROM node:25-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max-old-space-size=8192"
@@ -170,10 +170,9 @@ CMD ["node", "dist/main.js"]
 
 The repo's `docker-compose.yml` provides the development stack. For production, adapt it or build your own. The development compose includes:
 
-- **app**: Builds from the multi-stage `Dockerfile`, depends on postgres (healthy) and meilisearch
+- **app**: Builds from the multi-stage `Dockerfile`, depends on postgres (healthy)
 - **postgres**: Standard Postgres image with `pg_isready` health check and `init-data.sh` volume mount
 - **pgadmin**: dpage/pgadmin4, available at `http://localhost:8080`
-- **meilisearch**: getmeili/meilisearch, available at `http://localhost:7701`
 
 Example production-focused override (`docker-compose.prod.yml`):
 
@@ -255,7 +254,7 @@ docker push your-registry/nest-boilerplate:v1.0.0
 
 ### Prerequisites
 
-- Node.js 24+ LTS
+- Node.js 25+
 - pnpm 10.26+
 - PostgreSQL 14+
 - PM2 process manager
@@ -379,7 +378,7 @@ branch-defaults:
     environment: nest-boilerplate-prod
 global:
   application_name: nest-boilerplate
-  default_platform: Node.js 24
+  default_platform: Node.js 25
   default_region: us-east-1
   sc: git
 ```
@@ -456,7 +455,7 @@ The Dockerfile includes `NODE_OPTIONS="--max-old-space-size=8192"` for 8GB conta
 **`app.yaml`** (App Engine):
 
 ```yaml
-runtime: nodejs24
+runtime: nodejs25
 
 env_variables:
   NODE_ENV: production
@@ -590,7 +589,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '25'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -616,7 +615,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '25'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -660,7 +659,7 @@ variables:
 
 test:
   stage: test
-  image: node:24-slim
+  image: node:25-slim
   before_script:
     - corepack enable
     - pnpm config set store-dir .pnpm-store

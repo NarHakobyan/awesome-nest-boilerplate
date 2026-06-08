@@ -14,5 +14,6 @@ const handlers = [CreatePostHandler, GetPostHandler];
   imports: [TypeOrmModule.forFeature([PostEntity, PostTranslationEntity])],
   providers: [PostService, ...handlers],
   controllers: [PostController],
+  exports: [PostService],
 })
 export class PostModule {}

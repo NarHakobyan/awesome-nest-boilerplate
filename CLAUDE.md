@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Enterprise-grade NestJS 11 boilerplate — TypeScript, PostgreSQL + TypeORM, JWT auth (RS256), CQRS, i18n, AWS S3, NATS microservices (conditional), multi-runtime (Node/Bun/Deno).
+Enterprise-grade NestJS 11 boilerplate — TypeScript, PostgreSQL + TypeORM, JWT auth (RS256), CQRS, i18n, AWS S3, multi-runtime (Node/Bun/Deno), with NATS microservice scaffolding (disabled by default).
 
 ## Package Manager
 
@@ -98,9 +98,9 @@ Copy `.env.example` to `.env`. Key vars to configure:
 - `DB_*` — PostgreSQL connection
 - `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` — RSA keys (examples in `.env.example`)
 - `CORS_ORIGINS` — comma-separated allowed origins
-- `REDIS_URL` / `MEILI_HOST` / `MEILI_MASTER_KEY` — used by Docker services; not yet wired into application code
+- `REDIS_URL` — used by Docker services; not yet wired into application code
 
-Docker services: `docker-compose up -d` starts Postgres, pgAdmin (port 8080), and Meilisearch (port 7701).
+Docker services: `docker-compose up -d` starts Postgres and pgAdmin (port 8080).
 
 ## Formatter
 

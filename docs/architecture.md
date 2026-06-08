@@ -71,19 +71,23 @@ awesome-nest-boilerplate/
 │   ├── exceptions/            # Custom exception classes
 │   ├── filters/               # Exception filters
 │   │   ├── bad-request.filter.ts     # HTTP exception filter
+│   │   ├── constraint-errors.ts      # Constraint error types
 │   │   └── query-failed.filter.ts    # Database error filter
 │   ├── guards/                # Authentication and authorization guards
 │   ├── i18n/                  # Internationalization files
 │   │   ├── en_US/            # English translations
 │   │   └── ru_RU/            # Russian translations
 │   ├── interceptors/          # Request/Response interceptors
-│   │   ├── translation-interceptor.service.ts
-│   │   └── language-interceptor.service.ts
+│   │   ├── auth-user-interceptor.service.ts
+│   │   ├── language-interceptor.service.ts
+│   │   └── translation-interceptor.service.ts
 │   ├── interfaces/            # TypeScript interfaces
 │   ├── modules/               # Feature modules
 │   │   ├── auth/             # Authentication module
 │   │   ├── user/             # User management module
 │   │   ├── post/             # Post management module
+│   │   ├── chat/             # Chat history (JSONB-persisted)
+│   │   ├── agent/            # ai-sdk v6 agent (streaming + tools + HITL)
 │   │   └── health-checker/   # Health check module
 │   ├── providers/             # Custom providers
 │   ├── shared/                # Shared services and utilities

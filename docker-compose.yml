@@ -8,13 +8,11 @@ services:
     build: .
     environment:
       DB_HOST: postgres
-      MEILI_HOST: http://meilisearch:7700
     ports:
       - "$PORT:$PORT"
     depends_on:
       postgres:
         condition: service_healthy
-      meilisearch: {}
   postgres:
     image: postgres
     container_name: postgres
@@ -46,21 +44,6 @@ services:
       - .env
     links:
       - postgres
-  meilisearch:
-    image: getmeili/meilisearch
-    hostname: meilisearch
-    container_name: meilisearch
-    environment:
-      MEILI_ENV: development
-      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
-      MEILI_NO_ANALYTICS: "true"
-    volumes:
-      - meilisearch:/meili_data
-    ports:
-      - "7701:7700"
-    restart: always
 volumes:
   postgres:
-    driver: local
-  meilisearch:
     driver: local

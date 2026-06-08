@@ -13,6 +13,7 @@ import {
   ApiAcceptedResponse,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -41,6 +42,7 @@ export class PostController {
   @Post()
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create a post' })
   @ApiCreatedResponse({ type: PostDto })
   async createPost(
     @Body() createPostDto: CreatePostDto,
@@ -57,6 +59,7 @@ export class PostController {
   @Get()
   @Auth([RoleType.USER])
   @UseLanguageInterceptor()
+  @ApiOperation({ summary: 'List posts (paginated)' })
   @ApiPageResponse({ type: PostDto })
   async getPosts(
     @Query() postsPageOptionsDto: PostPageOptionsDto,
@@ -68,6 +71,7 @@ export class PostController {
   @Auth([])
   @HttpCode(HttpStatus.OK)
   @ApiUUIDParam('id')
+  @ApiOperation({ summary: 'Get a post by ID' })
   @ApiOkResponse({ type: PostDto })
   async getSinglePost(@UUIDParam('id') id: Uuid): Promise<PostDto> {
     const entity = await this.postService.getSinglePost(id);
@@ -78,6 +82,7 @@ export class PostController {
   @Put(':id')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiUUIDParam('id')
+  @ApiOperation({ summary: 'Update a post' })
   @ApiAcceptedResponse()
   updatePost(
     @UUIDParam('id') id: Uuid,
@@ -89,6 +94,7 @@ export class PostController {
   @Delete(':id')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiUUIDParam('id')
+  @ApiOperation({ summary: 'Delete a post' })
   @ApiAcceptedResponse()
   async deletePost(@UUIDParam('id') id: Uuid): Promise<void> {
     await this.postService.deletePost(id);
