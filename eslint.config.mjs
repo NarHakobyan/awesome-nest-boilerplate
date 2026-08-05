@@ -10,6 +10,7 @@ import promisePlugin from 'eslint-plugin-promise';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import importPlugin from 'eslint-plugin-import';
 import unicornPlugin from 'eslint-plugin-unicorn';
+import nestjsSecurityPlugin from 'eslint-plugin-nestjs-security';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -461,6 +462,18 @@ export default tseslint.config(
         },
         tsconfigRootDir: import.meta.dirname,
       },
+    },
+  },
+  {
+    // One rule, not the recommended preset: `require-guards` reports a route
+    // handler that has no guard anywhere in its chain. It recognises the
+    // `@Auth()` wrapper in src/decorators/http.decorators.ts by resolving the
+    // decorator to the module it comes from, so wrapping UseGuards does not
+    // hide it.
+    files: ['src/**/*.controller.ts'],
+    plugins: { 'nestjs-security': nestjsSecurityPlugin },
+    rules: {
+      'nestjs-security/require-guards': 'error',
     },
   },
 );
