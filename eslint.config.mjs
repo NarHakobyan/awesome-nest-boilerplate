@@ -4,6 +4,7 @@ import eslint from '@eslint/js';
 import stylisticPlugin from '@stylistic/eslint-plugin';
 import canonicalPlugin from 'eslint-plugin-canonical';
 import nPlugin from 'eslint-plugin-n';
+import nestjsSecurity from 'eslint-plugin-nestjs-security';
 import prettierPlugin from 'eslint-plugin-prettier/recommended';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
 import promisePlugin from 'eslint-plugin-promise';
@@ -439,6 +440,24 @@ export default tseslint.config(
       'use-isnan': 'error',
       'valid-typeof': 'off',
       'space-before-function-paren': 'off',
+    },
+  },
+  {
+    // One rule, not the plugin's recommended preset — nothing else it ships is
+    // enabled here. `require-guards` reports a route handler with no guard
+    // anywhere in its chain, which is the gap this PR's first commit closed on
+    // @Put(':id') and @Delete(':id').
+    //
+    // It resolves a decorator to the module it was imported from rather than
+    // matching on names, so the @Auth() wrapper in src/decorators/http.decorators.ts
+    // counts as a guard and does not have to be configured. Routes that are
+    // public by design — login, register, health — are recognised and stay
+    // silent, which is why auth.controller.ts and health-checker.controller.ts
+    // do not report.
+    files: ['src/**/*.controller.ts'],
+    plugins: { 'nestjs-security': nestjsSecurity },
+    rules: {
+      'nestjs-security/require-guards': 'error',
     },
   },
   {
