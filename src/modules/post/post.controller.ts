@@ -80,6 +80,7 @@ export class PostController {
   }
 
   @Put(':id')
+  @Auth([RoleType.USER])
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiUUIDParam('id')
   @ApiOperation({ summary: 'Update a post' })
@@ -92,6 +93,7 @@ export class PostController {
   }
 
   @Delete(':id')
+  @Auth([RoleType.USER])
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiUUIDParam('id')
   @ApiOperation({ summary: 'Delete a post' })
