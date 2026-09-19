@@ -463,4 +463,14 @@ export default tseslint.config(
       },
     },
   },
+  {
+    // scripts/ holds developer-facing CLIs; exiting with a status code and
+    // printing to the terminal is the whole point of them.
+    files: ['scripts/**/*.ts'],
+    rules: {
+      'n/no-process-exit': 'off',
+      'unicorn/no-process-exit': 'off',
+      'no-console': 'off',
+    },
+  },
 );

@@ -54,7 +54,6 @@ The project uses [TypeORM](https://github.com/typeorm/typeorm) with the Data Map
 
 ```env
 # Database Configuration
-DB_TYPE=postgres
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
@@ -67,12 +66,12 @@ ENABLE_ORM_LOGS=true
 
 ### MySQL/MariaDB Alternative
 
-If you prefer MySQL/MariaDB over PostgreSQL:
+If you prefer MySQL/MariaDB over PostgreSQL, the driver is chosen in code rather
+than by an environment variable, so this takes two steps:
 
 1. Update your `.env` file:
 ```env
 # Database Configuration
-DB_TYPE=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_USERNAME=mysql
@@ -241,52 +240,60 @@ pnpm g controller feature-name
 
 ## Environment Variables
 
-Create a `.env` file based on `.env.example`:
+Environment variables are schema-driven. `src/config/env/env.definition.ts` declares
+every variable — its type, whether it is required, its default, what reads it and
+what it is for — and four things are generated from that one file:
 
-```env
-# Application
-NODE_ENV=development
-PORT=3000
+- the validation that runs at startup (`ConfigModule.forRoot({ validate })`)
+- the `Env` type `ApiConfigService` is written against
+- `.env.example`
+- [the environment reference](./env-reference.md)
 
-# Database
-DB_TYPE=postgres
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_DATABASE=nest_boilerplate
-ENABLE_ORM_LOGS=true
+### First-time setup
 
-# JWT Authentication (RSA key pair — RS256 algorithm)
-# Generate keys: openssl genpkey -algorithm RSA -out private.pem && openssl rsa -pubout -in private.pem -out public.pem
-JWT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
-JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# Telegram Bot (for Telegram authentication)
-TELEGRAM_BOT_TOKEN=your-telegram-bot-token
-TELEGRAM_BOT_USERNAME=your-telegram-bot-username
-
-# AWS S3 (optional)
-AWS_S3_BUCKET_NAME=your-bucket-name
-
-# CORS
-CORS_ORIGINS=http://localhost:3000
-
-# API Documentation
-ENABLE_DOCUMENTATION=true
-
-# Throttling
-THROTTLE_TTL=60
-THROTTLE_LIMIT=10
-
-# NATS (optional)
-NATS_ENABLED=false
-NATS_HOST=localhost
-NATS_PORT=4222
+```bash
+cp .env.example .env
+pnpm env:keygen       # writes a fresh RS256 keypair into .env
 ```
+
+`.env.example` ships placeholders rather than a working keypair, so the keys signing
+your tokens are yours alone. Everything else has a working local default.
+
+### Adding a variable
+
+1. Add an entry to `src/config/env/env.definition.ts`.
+2. Run `pnpm env:sync` to regenerate `.env.example` and `docs/env-reference.md`.
+3. Commit both generated files along with the schema change.
+
+Skipping step 2 fails `pnpm env:check`, which runs in the pre-commit hook and in CI.
+That is the point: there is no way to add a variable and forget the example file.
+
+### Commands
+
+| Command | What it does |
+|---|---|
+| `pnpm env:sync` | Regenerate `.env.example` and `docs/env-reference.md` from the schema |
+| `pnpm env:check` | Fail if those files are stale; report on your local `.env` if you have one |
+| `pnpm env:validate` | Same checks, but every finding is an error — use it as a deploy preflight |
+| `pnpm env:keygen` | Write a fresh RS256 keypair into `.env` |
+
+`env:check` treats the two kinds of drift differently on purpose. A stale
+`.env.example` is repository drift that everybody inherits, so it is a hard failure.
+An unknown or missing key in your own untracked `.env` is your local setup, so it is
+a loud warning that never blocks your commit. `--strict` (what `env:validate` uses)
+escalates both.
+
+Set `ENV_SCHEMA_SKIP=1` to bypass the checks entirely for a one-off.
+
+### Scope
+
+Each entry declares a `scope`:
+
+- `app` — the NestJS application reads it. It is validated at boot, appears on the
+  `Env` type and is reachable through `ApiConfigService`.
+- `external` — something else reads it: docker-compose, `init-data.sh`, the AWS SDK
+  credential chain. It is documented and accepted, but deliberately absent from
+  `Env`, so nobody can read a value the application never honours.
 
 ## Docker Development
 

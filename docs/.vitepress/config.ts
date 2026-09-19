@@ -19,6 +19,7 @@ export default defineConfig({
         text: 'Development',
         items: [
           { text: 'Development Guide', link: '/development' },
+          { text: 'Environment Reference', link: '/env-reference' },
           { text: 'Architecture', link: '/architecture' },
           { text: 'Code Generation', link: '/code-generation' },
         ],

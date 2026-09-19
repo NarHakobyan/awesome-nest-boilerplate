@@ -50,6 +50,9 @@
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    // Stale generated artifact: imported by nothing and still referencing
+    // modules that no longer exist. Already excluded from Biome for the same
+    // reason. Delete or regenerate it to bring it back under type checking.
+    "src/metadata.ts"
   ]
 }

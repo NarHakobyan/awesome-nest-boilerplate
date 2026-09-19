@@ -17,6 +17,7 @@ import {
   getDataSourceByName,
 } from 'typeorm-transactional';
 
+import { validateEnv } from './config/env/env.schema.ts';
 import { AuthModule } from './modules/auth/auth.module.ts';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module.ts';
 import { PostModule } from './modules/post/post.module.ts';
@@ -26,6 +27,16 @@ import { SharedModule } from './shared/shared.module.ts';
 
 @Module({
   imports: [
+    /*
+     * First, so a misconfigured environment stops the process here with a full
+     * report rather than throwing from whichever consumer happens to run first.
+     */
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      envFilePath: '.env',
+      validate: validateEnv,
+    }),
     AuthModule,
     UserModule,
     PostModule,
@@ -41,10 +52,6 @@ import { SharedModule } from './shared/shared.module.ts';
         throttlers: [configService.throttlerConfigs],
       }),
       inject: [ApiConfigService],
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [SharedModule],

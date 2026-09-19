@@ -1,1 +1,4 @@
+set -e
+
 pnpm exec lint-staged
+pnpm exec tsx scripts/env.ts validate

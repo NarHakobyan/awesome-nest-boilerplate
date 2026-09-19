@@ -94,11 +94,30 @@ Pre-commit hooks (Husky + lint-staged) automatically run Biome + ESLint on stage
 
 ## Environment Setup
 
-Copy `.env.example` to `.env`. Key vars to configure:
-- `DB_*` — PostgreSQL connection
-- `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` — RSA keys (examples in `.env.example`)
-- `CORS_ORIGINS` — comma-separated allowed origins
-- `REDIS_URL` — used by Docker services; not yet wired into application code
+Environment variables are **schema-driven**. `src/config/env/env.definition.ts` is the
+single source of truth; `.env.example`, `docs/env-reference.md`, the startup
+validation and the `Env` type are all generated from it.
+
+```bash
+cp .env.example .env
+pnpm env:keygen       # writes a fresh RS256 keypair into .env
+```
+
+**Adding or changing an environment variable:**
+
+1. Edit `src/config/env/env.definition.ts` — declare the Zod schema, section,
+   description, scope, requiredness and default.
+2. Run `pnpm env:sync` to regenerate `.env.example` and `docs/env-reference.md`.
+3. Commit the generated files with the schema change.
+
+Never hand-edit `.env.example` or `docs/env-reference.md` — `pnpm env:check` runs in
+the pre-commit hook and in CI and will fail. Never add a raw `process.env.X` read;
+use `ApiConfigService` (DI) or `getEnv()` (static call sites) so the variable stays
+declared and typed.
+
+Set `scope: 'external'` for variables the NestJS app never reads (docker-compose,
+`init-data.sh`, the AWS SDK credential chain). They are documented and accepted, but
+kept off the `Env` type.
 
 Docker services: `docker-compose up -d` starts Postgres and pgAdmin (port 8080).
 
