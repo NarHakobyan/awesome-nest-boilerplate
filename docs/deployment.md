@@ -63,48 +63,32 @@ The Awesome NestJS Boilerplate supports multiple deployment strategies:
 
 ### Production Environment Variables
 
-Create a production `.env` file with the following variables:
+The full list, with types, defaults and which of them are required, is generated
+from the schema: see [the environment reference](./env-reference.md). It is always
+current, because CI fails if it drifts from
+`src/config/env/env.definition.ts`.
 
-```env
-# Application
-NODE_ENV=production
-PORT=3000
+Before deploying, validate the environment you are about to deploy into:
 
-# Database
-DB_TYPE=postgres
-DB_HOST=your-db-host
-DB_PORT=5432
-DB_USERNAME=your-db-user
-DB_PASSWORD=your-secure-password
-DB_DATABASE=your-db-name
-ENABLE_ORM_LOGS=false
-
-# JWT Authentication (RSA key pair — RS256 algorithm)
-# Generate with: openssl genpkey -algorithm RSA -out private.pem && openssl rsa -pubout -in private.pem -out public.pem
-JWT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
-JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
-
-# CORS
-CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
-
-# API Documentation (disable in production)
-ENABLE_DOCUMENTATION=false
-
-# Throttling
-THROTTLER_TTL=60
-THROTTLER_LIMIT=100
-
-# NATS (if using microservices)
-NATS_ENABLED=false
-NATS_HOST=your-nats-host
-NATS_PORT=4222
-
-# AWS S3 (if using file uploads)
-AWS_S3_BUCKET_NAME=your-bucket-name
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-AWS_REGION=us-east-1
+```bash
+pnpm env:validate     # every finding is an error, including missing required vars
 ```
+
+Production-specific notes:
+
+- `NODE_ENV=production` additionally requires `AWS_ACCESS_KEY_ID` and
+  `AWS_SECRET_ACCESS_KEY`, and rejects the sample RSA keypair that older versions of
+  this project shipped in `.env.example`. Those keys are in the git history and
+  cannot be rotated — generate your own with `pnpm env:keygen`.
+- Set `ENABLE_DOCUMENTATION=false` to keep the Swagger UI off a public deployment.
+- Set `ENABLE_ORM_LOGS=false` so TypeORM stops logging every statement.
+- `CORS_ORIGINS` is a comma-separated list, e.g.
+  `https://yourdomain.com,https://www.yourdomain.com`.
+- `THROTTLER_TTL` is a duration (`1m`, `30s`, `500ms`), not a bare number.
+
+The application validates its whole environment at startup and refuses to boot if
+anything is wrong, so a misconfigured deploy fails immediately and visibly rather
+than at the first request that happens to touch the missing value.
 
 ### Database Configuration
 

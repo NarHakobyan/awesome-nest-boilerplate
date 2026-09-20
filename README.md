@@ -119,17 +119,25 @@ src/
 
 ## Environment Variables
 
-Copy `.env.example` → `.env`. Most variables come pre-configured with working defaults. You only need to change these:
+Every variable this project reads is declared in
+[`src/config/env/env.definition.ts`](src/config/env/env.definition.ts). That file is
+the single source of truth: `.env.example`, the runtime validation and
+[`docs/env-reference.md`](docs/env-reference.md) are all generated from it, so they
+cannot drift apart.
 
-| Variable | What to set |
-|---|---|
-| `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` | PostgreSQL connection (or use `docker-compose up -d postgres` — defaults match) |
-| `JWT_PRIVATE_KEY` | RS256 private key — generate your own or use the example PEM in `.env.example` |
-| `JWT_PUBLIC_KEY` | RS256 public key — matching public key |
+```bash
+cp .env.example .env
+pnpm env:keygen       # writes a fresh RS256 keypair into .env
+```
 
-Every other variable in `.env.example` has a working default for local development. Optional features (NATS, S3, Email, AI providers) are off by default — enable them when you need them.
+Everything else ships with a working local default. The application validates the
+whole environment at startup and refuses to boot with a report of every problem at
+once, rather than failing later from whichever consumer happens to run first.
 
-[All environment variables →](https://narhakobyan.github.io/awesome-nest-boilerplate/development.html)
+To add a variable: add an entry to `env.definition.ts`, run `pnpm env:sync`, and
+commit the regenerated files. `pnpm env:check` fails the build if you forget.
+
+[All environment variables →](docs/env-reference.md)
 
 ## Multi-Runtime Support
 

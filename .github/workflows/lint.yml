@@ -41,3 +41,36 @@ jobs:
         with:
           eslint: true
           eslint_extensions: ts
+
+  env-schema:
+    name: Check environment schema
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25
+          cache: pnpm
+
+      - name: Install Node.js dependencies
+        run: pnpm install --frozen-lockfile
+
+      # There is no .env in CI, so only the generated-file half of the check
+      # runs: .env.example and docs/env-reference.md must match the schema.
+      - name: Verify generated environment files are in sync
+        run: pnpm env:check
+
+      - name: Run environment schema tests
+        run: pnpm test -- src/config/env
+
+      # Without this the inferred Env type catches nothing in CI, and a
+      # misspelled variable name can creep back in.
+      - name: Type check
+        run: pnpm typecheck

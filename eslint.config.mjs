@@ -22,6 +22,12 @@ export default tseslint.config(
       '.yarn/**',
       'docs/.vitepress/**',
       '**/*.d.ts',
+      /*
+       * Stale generated artifact, excluded from tsconfig and from Biome for the
+       * same reason. Keep the three in step: without this, ESLint tries to
+       * parse a file that is no longer in the TypeScript project and aborts.
+       */
+      'src/metadata.ts',
     ],
   },
   eslint.configs.recommended,
@@ -461,6 +467,18 @@ export default tseslint.config(
         },
         tsconfigRootDir: import.meta.dirname,
       },
+    },
+  },
+  {
+    /*
+     * scripts/ holds developer-facing CLIs; exiting with a status code and
+     * printing to the terminal is the whole point of them.
+     */
+    files: ['scripts/**/*.ts'],
+    rules: {
+      'n/no-process-exit': 'off',
+      'unicorn/no-process-exit': 'off',
+      'no-console': 'off',
     },
   },
 );

@@ -1,6 +1,8 @@
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 
+import { getEnv } from '../../config/env/env.schema.ts';
+
 export type Plain<T> = T extends Date | ((...args: never[]) => unknown)
   ? T
   : T extends Array<infer U>
@@ -24,7 +26,7 @@ export abstract class BaseDto {
       exposeUnsetFields: false,
     });
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (getEnv().NODE_ENV !== 'production') {
       const errors = validateSync(instance as object);
 
       if (errors.length > 0) {

@@ -1,7 +1,11 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { ApiConfigService } from './shared/services/api-config.service.ts';
+import { SharedModule } from './shared/shared.module.ts';
+
 export function setupSwagger(app: INestApplication): void {
+  const configService = app.select(SharedModule).get(ApiConfigService);
   const documentBuilder = new DocumentBuilder()
     .setTitle('API')
     .setDescription(
@@ -50,9 +54,7 @@ Routes is following REST standard (Richardson level 3)
     )
     .addBearerAuth();
 
-  if (process.env.API_VERSION) {
-    documentBuilder.setVersion(process.env.API_VERSION);
-  }
+  documentBuilder.setVersion(configService.apiVersion);
 
   const document = SwaggerModule.createDocument(app, documentBuilder.build());
   SwaggerModule.setup('documentation', app, document, {
@@ -62,6 +64,6 @@ Routes is following REST standard (Richardson level 3)
   });
 
   console.info(
-    `Documentation: http://localhost:${process.env.PORT}/documentation`,
+    `Documentation: http://localhost:${configService.appConfig.port}/documentation`,
   );
 }

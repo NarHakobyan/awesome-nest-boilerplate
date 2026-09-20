@@ -409,20 +409,38 @@ describe('UserService', () => {
 5. **SQL Injection Prevention**: TypeORM query parameterization
 
 #### Environment-based Configuration
+
+Environment variables are schema-driven. `src/config/env/env.definition.ts` declares
+every variable once; the Zod schema, the `Env` type, `.env.example` and
+`docs/env-reference.md` are all derived from it, and the whole environment is
+validated at startup by `ConfigModule.forRoot({ validate })`.
+
+`ApiConfigService` therefore does no parsing — it is a typed projection of the
+already-validated `Env` onto the shapes each Nest module wants:
+
 ```typescript
 export class ApiConfigService {
-  get corsOrigins(): string[] {
-    return this.getString('CORS_ORIGINS')?.split(',') || ['http://localhost:3000'];
+  get corsConfig(): CorsOptions {
+    return {
+      origin: this.get('CORS_ORIGINS'), // already a string[]
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+      credentials: true,
+    };
   }
 
   get throttlerConfigs(): ThrottlerOptions {
     return {
-      ttl: this.getNumber('THROTTLE_TTL', 60),
-      limit: this.getNumber('THROTTLE_LIMIT', 10),
+      ttl: this.get('THROTTLER_TTL'), // a duration like `1m`, already in ms
+      limit: this.get('THROTTLER_LIMIT'),
     };
   }
+
+  private get<K extends keyof Env>(key: K): Env[K] { /* ... */ }
 }
 ```
+
+Reading a variable that is not declared in the schema is a compile error. See
+[the environment reference](./env-reference.md) for the full list.
 
 ## Technology Stack
 

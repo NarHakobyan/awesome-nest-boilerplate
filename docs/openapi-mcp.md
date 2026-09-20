@@ -233,7 +233,7 @@ Exposing an OpenAPI spec through a public MCP server is convenient but carries r
 
 - **Never point production traffic at `/documentation-json` without auth.** The spec reveals every route, parameter, and response shape. Disable it in production by setting `ENABLE_DOCUMENTATION=false`, or protect it behind a gateway / basic auth / IP allow-list.
 - **The hosted MCP Worker is a third party.** Every tool call passes through Cloudflare first. For sensitive workloads, [self-host the MCP](#self-hosting-the-mcp-server) instead.
-- **Rate limit your API.** The boilerplate already ships with a configurable throttler (`THROTTLE_TTL`, `THROTTLE_LIMIT`) — keep it enabled so that a misbehaving AI client cannot hammer your endpoints.
+- **Rate limit your API.** The boilerplate already ships with a configurable throttler (`THROTTLER_TTL`, `THROTTLER_LIMIT`) — keep it enabled so that a misbehaving AI client cannot hammer your endpoints.
 - **Scope tokens narrowly.** If you pass a JWT to the MCP, use a short-lived, low-privilege token. Never hand over an admin refresh token.
 - **Audit logs.** Review your API logs after an MCP session to make sure the assistant called only the routes you intended.
 

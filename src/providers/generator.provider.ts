@@ -1,6 +1,8 @@
 /* eslint-disable sonarjs/pseudo-random */
 import { v1 as uuid } from 'uuid';
 
+import { getEnv } from '../config/env/env.schema.ts';
+
 export class GeneratorProvider {
   static uuid(): string {
     return uuid();
@@ -15,7 +17,10 @@ export class GeneratorProvider {
       throw new TypeError('key is required');
     }
 
-    return `https://s3.${process.env.AWS_S3_BUCKET_NAME_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/${key}`;
+    const { AWS_S3_BUCKET_REGION: region, AWS_S3_BUCKET_NAME: bucket } =
+      getEnv();
+
+    return `https://s3.${region}.amazonaws.com/${bucket}/${key}`;
   }
 
   static getS3Key(publicUrl: string): string {
@@ -23,8 +28,11 @@ export class GeneratorProvider {
       throw new TypeError('key is required');
     }
 
+    const { AWS_S3_BUCKET_REGION: region, AWS_S3_BUCKET_NAME: bucket } =
+      getEnv();
+
     const exec = new RegExp(
-      `(?<=https://s3.${process.env.AWS_S3_BUCKET_NAME_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/).*`,
+      `(?<=https://s3.${region}.amazonaws.com/${bucket}/).*`,
     ).exec(publicUrl);
 
     if (!exec) {

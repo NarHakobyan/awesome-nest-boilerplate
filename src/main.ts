@@ -29,16 +29,10 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(),
-    {
-      cors: {
-        origin: process.env.CORS_ORIGINS?.split(',') || [
-          'http://localhost:3000',
-        ],
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-        credentials: true,
-      },
-    },
   );
+  const configService = app.select(SharedModule).get(ApiConfigService);
+
+  app.enableCors(configService.corsConfig);
   app.enable('trust proxy');
   app.use(helmet());
   // app.setGlobalPrefix('/api'); use api as global prefix if you don't have subdomain
@@ -70,8 +64,6 @@ export async function bootstrap(): Promise<NestExpressApplication> {
       exceptionFactory: (errors) => new UnprocessableEntityException(errors),
     }),
   );
-
-  const configService = app.select(SharedModule).get(ApiConfigService);
 
   // only start nats if it is enabled
   if (configService.natsEnabled) {
