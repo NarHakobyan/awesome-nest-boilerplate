@@ -4,9 +4,9 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
 import { RolesGuard } from '../../guards/roles.guard.ts';
-import { AuthService } from './auth.service.ts';
-import { AuthController } from './auth.controller.ts';
 import { UserService } from '../user/user.service.ts';
+import { AuthController } from './auth.controller.ts';
+import { AuthService } from './auth.service.ts';
 
 describe('AuthController', () => {
   let controller: AuthController;
