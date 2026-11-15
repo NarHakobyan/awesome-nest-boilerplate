@@ -156,6 +156,7 @@ Node is the primary runtime. Bun and Deno support is included for teams that pre
 4. [Naming Cheatsheet](https://narhakobyan.github.io/awesome-nest-boilerplate/naming-cheatsheet.html) — file, class, and variable conventions
 5. [Linting](https://narhakobyan.github.io/awesome-nest-boilerplate/linting.html) — Biome + ESLint setup
 6. [OpenAPI MCP](https://narhakobyan.github.io/awesome-nest-boilerplate/openapi-mcp.html) — AI assistants calling your API
+7. [No Stairs Please MCP](https://nostairsplease.com/mcp) - Example production OAuth 2.1 MCP server for live music venue discovery
 
 ## Community
 
